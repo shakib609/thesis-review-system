@@ -5,6 +5,9 @@ from .forms import StudentSignUpForm
 
 
 def register(request):
+    redirect_to = 'registration:register'
+    if request.user.is_authenticated():
+        return redirect(redirect_to)
     if request.method == 'POST':
         form = StudentSignUpForm(request.POST)
         if form.is_valid():
@@ -13,7 +16,7 @@ def register(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('registration:register')
+            return redirect(redirect_to)
     else:
         form = StudentSignUpForm()
-    return render(request, 'trs/register.html', {'form': form})
+    return render(request, 'registration/register.html', {'form': form})
