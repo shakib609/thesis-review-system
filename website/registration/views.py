@@ -4,6 +4,13 @@ from django.contrib.auth import login, authenticate
 from .forms import StudentSignUpForm
 
 
+def home(request):
+    if request.user.is_authenticated:
+        pass  # TODO: redirect by user role
+    else:
+        return render(request, 'registration/home.html')
+
+
 def register(request):
     redirect_to = 'registration:register'
     if request.user.is_authenticated:
