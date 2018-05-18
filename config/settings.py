@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'website.registration',
+    'website.thesis',
 ]
 
 AUTH_USER_MODEL = 'registration.User'
