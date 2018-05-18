@@ -1,3 +1,46 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group
+from django.utils.translation import gettext_lazy as _
 
-# Register your models here.
+from .models import User
+from .forms import UserCreationFormExtended
+
+
+UserAdmin.add_form = UserCreationFormExtended
+
+UserAdmin.add_fieldsets = (('User Info', {
+    'classes': ('wide', ),
+    'fields': (
+        'username',
+        'email',
+        'phone_number',
+        'password1',
+        'password2',
+    )
+}), ('Permissions', {
+    'classes': ('wide', ),
+    'fields': ('is_teacher', )
+}))
+
+UserAdmin.fieldsets = fieldsets = (
+    (None, {
+        'fields': ('username', 'password')
+    }),
+    (_('Personal info'), {
+        'fields': ('first_name', 'last_name', 'email', 'phone_number')
+    }),
+    (_('Permissions'), {
+        'fields': ('is_staff', 'is_teacher')
+    }),
+    (_('Important dates'), {
+        'fields': ('last_login', 'date_joined')
+    }),
+)
+
+UserAdmin.list_display = ('username', 'first_name', 'last_name', 'is_teacher')
+
+UserAdmin.list_filter = ('is_teacher', 'is_superuser', 'is_active')
+
+admin.site.unregister(Group)
+admin.site.register(User, UserAdmin)
