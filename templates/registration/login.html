@@ -25,10 +25,15 @@
             class="form-control"
             placeholder="Password"
             required="">
+
+        {% if form.errors %}
+        <p class="font-weight-bold text-danger">
+            Invalid Username/Password!
+        </p>
+        {% endif %}
         <button type="submit" class="btn btn-lg btn-success btn-block">Login</button>
         <p class="mt-3 text-left">Don't have an account?
         <a href="{% url 'registration:register' %}">Register Now!</a></p>
-
         <p class="mt-5 mb-3 text-muted">© IIUC 2017-2018</p>
 
         {% csrf_token %}
