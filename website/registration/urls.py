@@ -8,5 +8,5 @@ app_name = 'registration'
 urlpatterns = [
     path('', login, name='login'),
     path('register/', register, name='register'),
-    path('logout/', logout, name='logout'),
+    path('logout/', logout, {'next_page': '/'}, name='logout'),
 ]

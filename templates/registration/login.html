@@ -1,11 +1,34 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock extra_css %}
+
 
 {% block content %}
-    <h2>Login</h2>
-    <form method="post">
+    <form method="post" class="form-signin text-center">
+        <h1 class="h3 mb-3 font-weight-normal">Thesis Review System</h1>
+
+        <label for="username" class="sr-only">Username</label>
+        <input type="text"
+            id="username"
+            name="username"
+            class="form-control"
+            placeholder="Username"
+            required="" autofocus="">
+        <label for="password" class="sr-only">Password</label>
+        <input type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            placeholder="Password"
+            required="">
+        <button type="submit" class="btn btn-lg btn-primary btn-block">Login</button>
+
+        <p class="mt-5 mb-3 text-muted">© IIUC 2017-2018</p>
+
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
     </form>
 {% endblock content %}

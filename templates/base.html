@@ -22,10 +22,8 @@
 
     <body>
     {% block body %}
-        <div class="main-content">
-            {% block content %}
-            {% endblock content %}
-        </div>
+        {% block content %}
+        {% endblock content %}
 
         {% block js %}
         <script src="{% static 'js/jquery-3.3.1.slim.min.js' %}"></script>
