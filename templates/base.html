@@ -22,6 +22,27 @@
 
     <body>
     {% block body %}
+        <nav class="navbar fixed-top navbar-dark bg-success">
+            <a class="navbar-brand" href="{% url 'registration:login' %}">Thesis Review System</a>
+            <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+                <li class="nav-item">
+                    <a class="nav-link p-2 active"
+                href="{% url 'registration:login' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link p-2 active"
+                href="{% url 'registration:register' %}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link p-2 active "
+                href="{% url 'registration:register' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link p-2 active"
+                href="{% url 'registration:register' %}"> Contact</a>
+                </li>
+            </ul>
+        </nav>
         {% block content %}
         {% endblock content %}
 
