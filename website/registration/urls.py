@@ -1,13 +1,12 @@
 from django.urls import path
 from django.contrib.auth.views import login, logout
 
-from .views import register, home
+from .views import register
 
 app_name = 'registration'
 
 urlpatterns = [
-    path('', home, name='home'),
+    path('', login, name='login'),
     path('register/', register, name='register'),
-    path('login/', login, name='login'),
     path('logout/', logout, name='logout'),
 ]
