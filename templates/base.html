@@ -10,11 +10,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         {% block css %}
         <link rel="stylesheet" href="{% static 'css/bulma.min.css' %}">
-        <link rel="stylesheet" href="{% static 'css/fontawesome-all.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/fa-svg-with-js.css' %}">
         <link rel="stylesheet" href="{% static 'css/main.css' %}">
             {% block extra_css %}
             {% endblock extra_css %}
         {% endblock css %}
+        <script src="{% static 'js/fontawesome-all.min.js' %}"></script>
         <script src="{% static 'js/navbar.js' %}"></script>
 
         <title>{% block title %}Thesis Review System{% endblock title %}</title>
