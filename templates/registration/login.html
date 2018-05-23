@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-
+{% load my_tags %}
 
 {% block body %}
-<section class="hero is-primary is-fullheight">
+<section class="hero {% random_classname %} is-fullheight">
   <!-- Hero head: will stick at the top -->
   <div class="hero-head">
     <nav class="navbar">
@@ -11,7 +11,8 @@
           <a class="navbar-item" href="{% url 'registration:login' %}">
             <h1 class="has-text-weight-bold">Thesis Review System</h1>
           </a>
-          <span class="navbar-burger burger" data-target="navbarMenuHeroA">
+          <span span class="navbar-burger burger" data-target="navbarMenuHeroA"
+                aria-label="menu" aria-expanded="false" role="button">
             <span></span>
             <span></span>
             <span></span>

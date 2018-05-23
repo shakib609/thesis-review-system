@@ -15,6 +15,7 @@
             {% block extra_css %}
             {% endblock extra_css %}
         {% endblock css %}
+        <script src="{% static 'js/navbar.js' %}"></script>
 
         <title>{% block title %}Thesis Review System{% endblock title %}</title>
     {% endblock head %}
@@ -22,27 +23,37 @@
 
     <body>
     {% block body %}
-        {% comment %} <nav class="navbar fixed-top navbar-dark bg-success">
-            <a class="navbar-brand" href="{% url 'registration:login' %}">Thesis Review System</a>
-            <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
-                <li class="nav-item">
-                    <a class="nav-link p-2 active"
-                href="{% url 'registration:login' %}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link p-2 active"
-                href="{% url 'registration:register' %}">Register</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link p-2 active "
-                href="{% url 'registration:register' %}">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link p-2 active"
-                href="{% url 'registration:register' %}"> Contact</a>
-                </li>
-            </ul>
-        </nav> {% endcomment %}
+
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'registration:login' %}">
+                <h1 class="has-text-weight-bold">Thesis Review System</h1>
+            </a>
+            <span class="navbar-burger burger" data-target="navbarMenuHeroA">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+            </div>
+                <div id="navbarMenuHeroA" class="navbar-menu">
+                    <div class="navbar-end">
+                        <a href="" class="navbar-item">
+                        Profile
+                        </a>
+                        {% if user.is_teacher %}
+                        <a href="" class="navbar-item">
+                        Groups
+                        </a>
+                        {% else %}
+                        <a href="" class="navbar-item">
+                        Group
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
         {% block content %}
         {% endblock content %}
 
