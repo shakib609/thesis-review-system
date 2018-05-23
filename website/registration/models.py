@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils.translation import gettext_lazy as _
 
+from ..thesis.models import StudentGroup
+
 
 class CutomUserManager(UserManager):
     def get_by_natural_key(self, username):
@@ -20,4 +22,9 @@ class User(AbstractUser):
         help_text=_(
             'Designates whether this user should be treated as teacher. '),
         default=False)
+    studentgroup = models.ForeignKey(
+        StudentGroup,
+        related_name='students',
+        on_delete=models.SET_NULL,
+        null=True)
     objects = CutomUserManager()
