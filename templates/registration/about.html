@@ -20,6 +20,13 @@
         </div>
         <div id="navbarMenuHeroA" class="navbar-menu">
           <div class="navbar-end">
+
+            {% if user.is_authenticated %}
+            <a class="navbar-item"
+                href="{% url 'registration:logout' %}">
+              Logout
+            </a>
+            {% else %}
             <a class="navbar-item"
                 href="{% url 'registration:login' %}">
               Login
@@ -32,6 +39,7 @@
                 href="{% url 'registration:about' %}">
               About
             </a>
+            {% endif %}
           </div>
         </div>
       </div>
