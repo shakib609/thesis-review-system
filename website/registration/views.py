@@ -4,6 +4,10 @@ from django.contrib.auth import login, authenticate
 from .forms import StudentSignUpForm
 
 
+def about(request):
+    return render(request, 'registration/about.html')
+
+
 def register(request):
     redirect_to = 'registration:login'
     if request.user.is_authenticated:

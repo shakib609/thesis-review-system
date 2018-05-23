@@ -1,23 +1,13 @@
 from django.urls import path
 from django.contrib.auth.views import login, logout
 
-from .views import register
+from .views import register, about
 
 app_name = 'registration'
 
 urlpatterns = [
-    path(
-        '',
-        login,
-        {'redirect_authenticated_user': True},
-        name='login'),
-    path(
-        'register/',
-        register,
-        name='register'),
-    path(
-        'logout/',
-        logout,
-        {'next_page': '/'},
-        name='logout'),
+    path('', login, {'redirect_authenticated_user': True}, name='login'),
+    path('register/', register, name='register'),
+    path('logout/', logout, {'next_page': '/'}, name='logout'),
+    path('about/', about, name='about'),
 ]
