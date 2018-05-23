@@ -5,7 +5,7 @@ from .forms import StudentSignUpForm
 
 
 def register(request):
-    redirect_to = 'registration:register'
+    redirect_to = 'registration:login'
     if request.user.is_authenticated:
         return redirect(redirect_to)
     if request.method == 'POST':

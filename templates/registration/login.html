@@ -8,8 +8,8 @@
     <nav class="navbar">
       <div class="container">
         <div class="navbar-brand">
-          <a class="navbar-item">
-            <h1 class="has-text-bold">Thesis Review System</h1>
+          <a class="navbar-item" href="{% url 'registration:login' %}">
+            <h1 class="has-text-weight-bold">Thesis Review System</h1>
           </a>
           <span class="navbar-burger burger" data-target="navbarMenuHeroA">
             <span></span>
@@ -21,7 +21,7 @@
           <div class="navbar-end">
             <a class="navbar-item is-active"
                 href="{% url 'registration:login' %}">
-              Home
+              Login
             </a>
             <a class="navbar-item"
                 href="{% url 'registration:register' %}">
@@ -56,10 +56,10 @@
                             {% endif %}
                                 type="text"
                                 name="username"
-                                placeholder="Username" autofocus=""
+                                placeholder="Varsity ID" autofocus=""
                                 required="">
                             <span class="icon is-small is-left">
-                                <i class="fas fa-user"></i>
+                                <i class="fas fa-hashtag"></i>
                             </span>
                         </div>
                     </div>
@@ -78,6 +78,12 @@
                             <span class="icon is-small is-left">
                                 <i class="fas fa-key"></i>
                             </span>
+
+                            {% if form.errors %}
+                                <p class="help is-danger">
+                                    Invalid Username/Password!
+                                </p>
+                            {% endif %}
                         </div>
                     </div>
                     <input type="submit"
