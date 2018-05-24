@@ -15,8 +15,6 @@
             {% block extra_css %}
             {% endblock extra_css %}
         {% endblock css %}
-        <script src="{% static 'js/fontawesome-all.min.js' %}"></script>
-        <script src="{% static 'js/navbar.js' %}"></script>
 
         <title>{% block title %}Thesis Review System{% endblock title %}</title>
     {% endblock head %}
@@ -39,18 +37,25 @@
             </div>
                 <div id="navbarMenuHeroA" class="navbar-menu">
                     <div class="navbar-end">
-                        <a href="" class="navbar-item">
-                        Profile
+                        <a href=""
+                           class="navbar-item {% block is_profile %}{% endblock is_profile %}">
+                            Profile
                         </a>
                         {% if user.is_teacher %}
-                        <a href="" class="navbar-item">
-                        Groups
+                        <a href=""
+                           class="navbar-item {% block is_groups %}{% endblock is_groups %}">
+                            Groups
                         </a>
                         {% else %}
-                        <a href="" class="navbar-item">
-                        Group
+                        <a href=""
+                           class="navbar-item {% block is_group %}{% endblock is_group %}">
+                            Group
                         </a>
                         {% endif %}
+                        <a href="{% url 'registration:logout' %}"
+                           class="navbar-item">
+                            Logout
+                        </a>
                     </div>
                 </div>
             </div>
@@ -60,7 +65,8 @@
 
         {% block js %}
         <script src="{% static 'js/jquery-3.3.1.slim.min.js' %}"></script>
-
+        <script src="{% static 'js/fontawesome-all.min.js' %}"></script>
+        <script src="{% static 'js/navbar.js' %}"></script>
             {% block extra_js %}
             {% endblock extra_js %}
         {% endblock js %}
