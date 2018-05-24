@@ -21,4 +21,7 @@ urlpatterns = [
     path(
         '',
         include('website.registration.urls'), name='registration'),
+    path(
+        'account/',
+        include('website.thesis.urls'), name='thesis'),
 ]
