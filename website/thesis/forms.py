@@ -14,3 +14,13 @@ class StudentGroupForm(forms.ModelForm):
     class Meta:
         model = StudentGroup
         fields = 'title', 'teacher'
+
+
+class StudentGroupJoinForm(forms.ModelForm):
+    md5hash = forms.CharField(
+        max_length=10,
+        label='Group Code')
+
+    class Meta:
+        model = StudentGroup
+        fields = 'md5hash',
