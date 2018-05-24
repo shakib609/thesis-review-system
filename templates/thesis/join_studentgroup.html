@@ -1,11 +1,6 @@
 {% extends 'base.html' %}
 
 
-{% block is_group %}
-    is-active
-{% endblock is_group %}
-
-
 {% block content %}
 <form method="POST">
     {% csrf_token %}

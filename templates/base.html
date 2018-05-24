@@ -47,10 +47,20 @@
                             Groups
                         </a>
                         {% else %}
-                        <a href=""
-                           class="navbar-item {% block is_group %}{% endblock is_group %}">
-                            Group
-                        </a>
+                        <div class="navbar-item  has-dropdown is-hoverable
+                                    {% block is_group %}{% endblock is_group %}">
+                            <a class="navbar-link">
+                                Group
+                            </a>
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item" href="{% url 'thesis:create_studentgroup' %}">
+                                    Create
+                                </a>
+                                <a class="navbar-item" href="{% url 'thesis:join_studentgroup' %}">
+                                    Join
+                                </a>
+                            </div>
+                        </div>
                         {% endif %}
                         <a href="{% url 'registration:logout' %}"
                            class="navbar-item">
