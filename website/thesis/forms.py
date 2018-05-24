@@ -23,4 +23,4 @@ class StudentGroupJoinForm(forms.ModelForm):
 
     class Meta:
         model = StudentGroup
-        fields = 'md5hash',
+        fields = ('md5hash', )

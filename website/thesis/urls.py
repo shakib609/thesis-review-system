@@ -9,5 +9,9 @@ urlpatterns = [
     path(
         'group/create/',
         views.create_studentgroup,
-        name='create_studentgroup')
+        name='create_studentgroup'),
+    path(
+        'group/join/',
+        views.join_studentgroup,
+        name='join_studentgroup'),
 ]
