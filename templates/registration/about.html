@@ -1,74 +1,17 @@
-{% extends 'base.html' %}
-{% load my_tags %}
+{% extends 'base/base_hero.html' %}
 
-{% block body %}
-<section class="hero {% random_classname %} is-fullheight">
-  <!-- Hero head: will stick at the top -->
-  <div class="hero-head">
-    <nav class="navbar">
-      <div class="container">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="{% url 'registration:login' %}">
-            <h1 class="has-text-weight-bold">Thesis Review System</h1>
-          </a>
-          <span span class="navbar-burger burger" data-target="navbarMenuHeroA"
-                aria-label="menu" aria-expanded="false" role="button">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-        </div>
-        <div id="navbarMenuHeroA" class="navbar-menu">
-          <div class="navbar-end">
+{% block title %}
+    {{ block.super }} | About
+{% endblock title %}
 
-            {% if user.is_authenticated %}
-            <a class="navbar-item"
-                href="{% url 'registration:logout' %}">
-              Logout
-            </a>
-            {% else %}
-            <a class="navbar-item"
-                href="{% url 'registration:login' %}">
-              Login
-            </a>
-            <a class="navbar-item"
-                href="{% url 'registration:register' %}">
-              Register
-            </a>
-            <a class="navbar-item is-active"
-                href="{% url 'registration:about' %}">
-              About
-            </a>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    </nav>
-  </div>
-
-  <!-- Hero content: will be in the middle -->
-  <div class="hero-body">
-    <div class="container">
-        <h1 class="title">
-            Made with
-            <i class="fab fa-html5"></i>,
-            <i class="fab fa-css3-alt"></i> and
-            <i class="fab fa-python" data-fa-transform="shrink-2" data-fa-mask="fas fa-square"></i>.
-        </h1>
-        <h2 class="subtitle">Created by Shakib Hossain.</h2>
-    </div>
-  </div>
-
-  <!-- Hero footer: will stick at the bottom -->
-  <div class="hero-foot has-text-centered">
-    <p>&copy; IIUC 2018.</p>
-  </div>
-</section>
-
-
-{% block js %}
-    {{ block.super }}
-{% endblock js %}
-
-
-{% endblock body %}
+{% block content %}
+<div class="container">
+    <h1 class="title">
+        Made with
+        <i class="fab fa-html5"></i>,
+        <i class="fab fa-css3-alt"></i> and
+        <i class="fab fa-python" data-fa-transform="shrink-2" data-fa-mask="fas fa-square"></i>.
+    </h1>
+    <h2 class="subtitle">Created by Shakib Hossain.</h2>
+</div>
+{% endblock content %}

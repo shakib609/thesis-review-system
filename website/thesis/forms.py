@@ -24,3 +24,13 @@ class StudentGroupJoinForm(forms.ModelForm):
     class Meta:
         model = StudentGroup
         fields = ('md5hash', )
+
+    def clean_md5hash(self):
+        md5hash = self.cleaned_data.get('md5hash')
+        if md5hash:
+            g = StudentGroup.objects.filter(md5hash=md5hash).count()
+            if g == 0:
+                raise forms.ValidationError(
+                    'The group with this code does not exist.'
+                )
+        return md5hash

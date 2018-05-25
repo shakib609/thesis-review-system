@@ -1,113 +1,62 @@
-{% extends 'base.html' %}
-{% load my_tags %}
+{% extends 'base/base_hero.html' %}
 
-{% block body %}
-<section class="hero {% random_classname %} is-fullheight">
-  <!-- Hero head: will stick at the top -->
-  <div class="hero-head">
-    <nav class="navbar">
-      <div class="container">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="{% url 'registration:login' %}">
-            <h1 class="has-text-weight-bold">Thesis Review System</h1>
-          </a>
-          <span span class="navbar-burger burger" data-target="navbarMenuHeroA"
-                aria-label="menu" aria-expanded="false" role="button">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-        </div>
-        <div id="navbarMenuHeroA" class="navbar-menu">
-          <div class="navbar-end">
-            <a class="navbar-item is-active"
-                href="{% url 'registration:login' %}">
-              Login
-            </a>
-            <a class="navbar-item"
-                href="{% url 'registration:register' %}">
-              Register
-            </a>
-            <a class="navbar-item"
-                href="{% url 'registration:about' %}">
-              About
-            </a>
-          </div>
-        </div>
-      </div>
-    </nav>
-  </div>
-
-  <!-- Hero content: will be in the middle -->
-  <div class="hero-body">
-    <div class="container has-text-centered">
-        <div class="column is-4 is-offset-4">
-            <h3 class="title">Login</h3>
-            <p class="subtitle">Please login to proceed.</p>
-            <div class="box">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="field">
-                        <div class="control has-icons-left">
-                            <input
-                            {% if form.errors %}
-                                class="input is-large is-danger"
-                            {% else %}
-                                <input class="input is-large"
-                            {% endif %}
-                                type="text"
-                                name="username"
-                                placeholder="Varsity ID" autofocus=""
-                                required="">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-hashtag"></i>
-                            </span>
-                        </div>
+{% block content %}
+<div class="container has-text-centered">
+    <div class="column is-4 is-offset-4">
+        <h3 class="title">Login</h3>
+        <p class="subtitle">Please login to proceed.</p>
+        <div class="box">
+            <form method="post">
+                {% csrf_token %}
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <input
+                        {% if form.errors %}
+                            class="input is-large is-danger"
+                        {% else %}
+                            <input class="input is-large"
+                        {% endif %}
+                            type="text"
+                            name="username"
+                            placeholder="Varsity ID" autofocus=""
+                            required="">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-hashtag"></i>
+                        </span>
                     </div>
-                    <div class="field">
-                        <div class="control has-icons-left">
-                            <input
-                            {% if form.errors %}
-                                class="input is-large is-danger"
-                            {% else %}
-                                <input class="input is-large"
-                            {% endif %}
-                                type="password"
-                                name="password"
-                                placeholder="Password"
-                                required="">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-key"></i>
-                            </span>
+                </div>
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <input
+                        {% if form.errors %}
+                            class="input is-large is-danger"
+                        {% else %}
+                            <input class="input is-large"
+                        {% endif %}
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            required="">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-key"></i>
+                        </span>
 
-                            {% if form.errors %}
-                                <p class="help is-danger">
-                                    Invalid Username/Password!
-                                </p>
-                            {% endif %}
-                        </div>
+                        {% if form.errors %}
+                            <p class="help is-danger">
+                                Invalid Username/Password!
+                            </p>
+                        {% endif %}
                     </div>
-                    <input type="submit"
-                        value="Login"
-                        class="button is-block is-info is-large is-fullwidth">
-                </form>
-            </div>
-            <p>
-                <a href="{% url 'registration:register' %}">Register</a> &nbsp;·&nbsp;
-                <a href="{% url 'registration:about' %}">About</a>
-            </p>
+                </div>
+                <input type="submit"
+                    value="Login"
+                    class="button is-block is-info is-large is-fullwidth">
+            </form>
         </div>
+        <p>
+            <a href="{% url 'registration:register' %}">Register</a> &nbsp;·&nbsp;
+            <a href="{% url 'registration:about' %}">About</a>
+        </p>
     </div>
-  </div>
-
-  <!-- Hero footer: will stick at the bottom -->
-  <div class="hero-foot has-text-centered">
-    <p>&copy; IIUC 2018.</p>
-  </div>
-</section>
-
-{% block js %}
-    {{ block.super }}
-{% endblock js %}
-
-{% endblock body %}
+</div>
+{% endblock content %}

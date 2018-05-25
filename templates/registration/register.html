@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base/base_hero.html' %}
 {% load my_tags %}
 
 {% block title %}
@@ -6,240 +6,188 @@
 {% endblock title %}
 
 
-{% block body %}
-<section class="hero {% random_classname %} is-fullheight">
-  <!-- Hero head: will stick at the top -->
-  <div class="hero-head">
-    <nav class="navbar">
-      <div class="container">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="{% url 'registration:login' %}">
-            <h1 class="has-text-weight-bold">Thesis Review System</h1>
-          </a>
-          <span class="navbar-burger burger" data-target="navbarMenuHeroA"
-                aria-label="menu" aria-expanded="false" role="button">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-        </div>
-        <div id="navbarMenuHeroA" class="navbar-menu">
-          <div class="navbar-end">
-            <a class="navbar-item"
-                href="{% url 'registration:login' %}">
-              Login
-            </a>
-            <a class="navbar-item is-active"
-                href="{% url 'registration:register' %}">
-              Register
-            </a>
-            <a class="navbar-item"
-                href="{% url 'registration:about' %}">
-              About
-            </a>
-          </div>
-        </div>
-      </div>
-    </nav>
-  </div>
+{% block content %}
+<div class="container has-text-centered">
+    <div class="column is-4 is-offset-4">
+        <h3 class="title">Register</h3>
+        <div class="box">
+            <form method="post">
+                {% csrf_token %}
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <input
+                        {% if 'first_name' in form.errors %}
+                            class="input is-danger"
+                        {% else %}
+                            <input class="input"
+                        {% endif %}
+                            type="text"
+                            name="first_name"
+                            placeholder="First Name" autofocus=""
+                            required="">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-id-card"></i>
+                        </span>
+                        {% if 'first_name' in form.errors %}
+                        <ul class="help is-danger">
+                            {% for error in form.errors|get_item:'first_name' %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
 
-  <!-- Hero content: will be in the middle -->
-  <div class="hero-body">
-    <div class="container has-text-centered">
-        <div class="column is-4 is-offset-4">
-            <h3 class="title">Register</h3>
-            <div class="box">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="field">
-                        <div class="control has-icons-left">
-                            <input
-                            {% if 'first_name' in form.errors %}
-                                class="input is-danger"
-                            {% else %}
-                                <input class="input"
-                            {% endif %}
-                                type="text"
-                                name="first_name"
-                                placeholder="First Name" autofocus=""
-                                required="">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-id-card"></i>
-                            </span>
-                            {% if 'first_name' in form.errors %}
-                            <ul class="help is-danger">
-                              {% for error in form.errors|get_item:'first_name' %}
-                                <li>{{ error }}</li>
-                              {% endfor %}
-                            </ul>
-                            {% endif %}
-                        </div>
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <input
+                        {% if 'last_name' in form.errors %}
+                            class="input is-danger"
+                        {% else %}
+                            <input class="input"
+                        {% endif %}
+                            type="text"
+                            name="last_name"
+                            placeholder="Last Name"
+                            required="">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-id-card"></i>
+                        </span>
+                        {% if 'last_name' in form.errors %}
+                        <ul class="help is-danger">
+                            {% for error in form.errors|get_item:'last_name' %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                     </div>
+                </div>
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <input
+                        {% if 'email' in form.errors %}
+                            class="input is-danger"
+                        {% else %}
+                            <input class="input"
+                        {% endif %}
+                            type="email"
+                            name="email"
+                            placeholder="E-mail"
+                            required="">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-at"></i>
+                        </span>
+                        {% if 'email' in form.errors %}
+                        <ul class="help is-danger">
+                            {% for error in form.errors|get_item:'email' %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <input
+                        {% if 'phone_number' in form.errors %}
+                            class="input is-danger"
+                        {% else %}
+                            <input class="input"
+                        {% endif %}
+                            type="tel"
+                            name="phone_number"
+                            placeholder="Phone Number"
+                            required="">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-phone" data-fa-transform="flip-h"></i>
+                        </span>
+                        {% if 'phone_number' in form.errors %}
+                        <ul class="help is-danger">
+                            {% for error in form.errors|get_item:'phone_number' %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <input
+                        {% if 'username' in form.errors %}
+                            class="input is-danger"
+                        {% else %}
+                            <input class="input is-capitalized"
+                        {% endif %}
+                            type="text"
+                            name="username"
+                            placeholder="Varsity ID"
+                            required="">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-hashtag"></i>
+                        </span>
+                        {% if 'username' in form.errors %}
+                        <ul class="help is-danger">
+                            {% for error in form.errors|get_item:'username' %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <input
+                        {% if 'password1' in form.errors %}
+                            class="input is-danger"
+                        {% else %}
+                            <input class="input"
+                        {% endif %}
+                            type="password"
+                            name="password1"
+                            placeholder="Password"
+                            required="">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-key"></i>
+                        </span>
 
-                    <div class="field">
-                        <div class="control has-icons-left">
-                            <input
-                            {% if 'last_name' in form.errors %}
-                                class="input is-danger"
-                            {% else %}
-                                <input class="input"
-                            {% endif %}
-                                type="text"
-                                name="last_name"
-                                placeholder="Last Name"
-                                required="">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-id-card"></i>
-                            </span>
-                            {% if 'last_name' in form.errors %}
-                            <ul class="help is-danger">
-                              {% for error in form.errors|get_item:'last_name' %}
-                                <li>{{ error }}</li>
-                              {% endfor %}
-                            </ul>
-                            {% endif %}
-                        </div>
+                        {% if 'password1' in form.errors %}
+                        <ul class="help is-danger">
+                            {% for error in form.errors|get_item:'password1' %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                     </div>
-                    <div class="field">
-                        <div class="control has-icons-left">
-                            <input
-                            {% if 'email' in form.errors %}
-                                class="input is-danger"
-                            {% else %}
-                                <input class="input"
-                            {% endif %}
-                                type="email"
-                                name="email"
-                                placeholder="E-mail"
-                                required="">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-at"></i>
-                            </span>
-                            {% if 'email' in form.errors %}
-                            <ul class="help is-danger">
-                              {% for error in form.errors|get_item:'email' %}
-                                <li>{{ error }}</li>
-                              {% endfor %}
-                            </ul>
-                            {% endif %}
-                        </div>
+                </div>
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <input
+                        {% if 'password2' in form.errors %}
+                            class="input is-danger"
+                        {% else %}
+                            <input class="input"
+                        {% endif %}
+                            type="password"
+                            name="password2"
+                            placeholder="Confirm Password"
+                            required="">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-key"></i>
+                        </span>
+                        {% if 'password2' in form.errors %}
+                        <ul class="help is-danger">
+                            {% for error in form.errors|get_item:'password2' %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                     </div>
-                    <div class="field">
-                        <div class="control has-icons-left">
-                            <input
-                            {% if 'phone_number' in form.errors %}
-                                class="input is-danger"
-                            {% else %}
-                                <input class="input"
-                            {% endif %}
-                                type="tel"
-                                name="phone_number"
-                                placeholder="Phone Number"
-                                required="">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-phone" data-fa-transform="flip-h"></i>
-                            </span>
-                            {% if 'phone_number' in form.errors %}
-                            <ul class="help is-danger">
-                              {% for error in form.errors|get_item:'phone_number' %}
-                                <li>{{ error }}</li>
-                              {% endfor %}
-                            </ul>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="control has-icons-left">
-                            <input
-                            {% if 'username' in form.errors %}
-                                class="input is-danger"
-                            {% else %}
-                                <input class="input is-capitalized"
-                            {% endif %}
-                                type="text"
-                                name="username"
-                                placeholder="Varsity ID"
-                                required="">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-hashtag"></i>
-                            </span>
-                            {% if 'username' in form.errors %}
-                            <ul class="help is-danger">
-                              {% for error in form.errors|get_item:'username' %}
-                                <li>{{ error }}</li>
-                              {% endfor %}
-                            </ul>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="control has-icons-left">
-                            <input
-                            {% if 'password1' in form.errors %}
-                                class="input is-danger"
-                            {% else %}
-                                <input class="input"
-                            {% endif %}
-                                type="password"
-                                name="password1"
-                                placeholder="Password"
-                                required="">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-key"></i>
-                            </span>
-
-                            {% if 'password1' in form.errors %}
-                            <ul class="help is-danger">
-                              {% for error in form.errors|get_item:'password1' %}
-                                <li>{{ error }}</li>
-                              {% endfor %}
-                            </ul>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="control has-icons-left">
-                            <input
-                            {% if 'password2' in form.errors %}
-                                class="input is-danger"
-                            {% else %}
-                                <input class="input"
-                            {% endif %}
-                                type="password"
-                                name="password2"
-                                placeholder="Confirm Password"
-                                required="">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-key"></i>
-                            </span>
-                            {% if 'password2' in form.errors %}
-                            <ul class="help is-danger">
-                              {% for error in form.errors|get_item:'password2' %}
-                                <li>{{ error }}</li>
-                              {% endfor %}
-                            </ul>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <input type="submit"
-                        value="Register"
-                        class="button is-block is-info is-fullwidth">
-                </form>
-            </div>
+                </div>
+                <input type="submit"
+                    value="Register"
+                    class="button is-block is-info is-fullwidth">
+            </form>
         </div>
     </div>
-  </div>
-
-  <!-- Hero footer: will stick at the bottom -->
-  <div class="hero-foot has-text-centered">
-    <p>&copy; IIUC 2018.</p>
-  </div>
-</section>
-
-
-{% block js %}
-    {{ block.super }}
-{% endblock js %}
-
-
-{% endblock body %}
+</div>
+{% endblock content %}

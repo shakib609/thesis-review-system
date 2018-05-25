@@ -1,0 +1,26 @@
+{% extends 'base/base.html' %}
+{% load my_tags %}
+
+{% block body %}
+<section class="hero is-info is-fullheight">
+  <!-- Hero head: will stick at the top -->
+  <div class="hero-head">
+    {% include 'include/navbar.html' %}
+  </div>
+
+  <!-- Hero content: will be in the middle -->
+  <div class="hero-body">
+    {% block content %}
+    {% endblock content %}
+  </div>
+
+  <!-- Hero footer: will stick at the bottom -->
+  <div class="hero-foot has-text-centered">
+    <p>&copy; IIUC 2018.</p>
+  </div>
+</section>
+
+    {% block js %}
+    {{ block.super }}
+    {% endblock js %}
+{% endblock body %}

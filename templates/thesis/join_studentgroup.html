@@ -1,11 +1,37 @@
-{% extends 'base.html' %}
+{% extends 'base/base_hero.html' %}
+{% load my_tags %}
 
 
 {% block content %}
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Join">
-</form>
+<div class="container has-text-centered">
+    <div class="column is-4 is-offset-4">
+        <h3 class="title">Join Group</h3>
+        <h4 class="subtitle">Join a group your friend created!</h3>
+        <div class="box">
+            <form method="POST" class="has-text-left">
+                {% csrf_token %}
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <input class="input is-large{% if 'md5hash' in form.errors %} is-danger{% endif %}"
+                                type="text" name="md5hash"
+                                placeholder="Group Code" autofocus="" required="">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-hashtag"></i>
+                        </span>
+                        {% if 'md5hash' in form.errors %}
+                        <ul class="help is-danger">
+                            {% for error in form.errors|get_item:'md5hash' %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <input type="submit" class="button is-large is-info is-fullwidth"
+                        value="Join">
+            </form>
+        </div>
+    </div>
+</div>
 
 {% endblock content %}

@@ -1,0 +1,65 @@
+<nav class="navbar is-info">
+    <div class="container">
+        <div class="navbar-brand">
+        <a class="navbar-item" href="{% url 'registration:login' %}">
+            <h1 class="has-text-weight-bold">Thesis Review System</h1>
+        </a>
+        <span class="navbar-burger burger" data-target="navbarMenuHeroA">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+        </div>
+        <div id="navbarMenuHeroA" class="navbar-menu">
+            <div class="navbar-end">
+                {% url 'registration:login' as login %}
+                {% url 'registration:register' as register %}
+                {% url 'registration:about' as about %}
+                {% if user.is_authenticated %}
+                    <a href=""
+                        class="navbar-item {% block is_profile %}{% endblock is_profile %}">
+                        Profile
+                    </a>
+                    {% if user.is_teacher %}
+                    <a href=""
+                        class="navbar-item {% block is_groups %}{% endblock is_groups %}">
+                        Groups
+                    </a>
+                    {% else %}
+                    <div class="navbar-item  has-dropdown is-hoverable
+                                {% block is_group %}{% endblock is_group %}">
+                        <a class="navbar-link">
+                            Group
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item" href="{% url 'thesis:create_studentgroup' %}">
+                                Create
+                            </a>
+                            <a class="navbar-item" href="{% url 'thesis:join_studentgroup' %}">
+                                Join
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <a href="{% url 'registration:logout' %}"
+                        class="navbar-item">
+                        Logout
+                    </a>
+                {% else %}
+                    <a class="navbar-item {% if request.path == login %}is-active{% endif %}"
+                        href="{% url 'registration:login' %}">
+                    Login
+                    </a>
+                    <a class="navbar-item {% if request.path == register %}is-active{% endif %}"
+                        href="{% url 'registration:register' %}">
+                    Register
+                    </a>
+                    <a class="navbar-item {% if request.path == about %}is-active{% endif %}"
+                        href="{% url 'registration:about' %}">
+                    About
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
