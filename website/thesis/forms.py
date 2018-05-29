@@ -48,3 +48,4 @@ class DocumentUploadForm(forms.ModelForm):
             raise forms.ValidationError(
                 'Invalid Format! Only PDF(Portable Document Format)'
                 ' files are allowed')
+        return f
