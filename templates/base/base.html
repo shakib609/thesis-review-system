@@ -22,10 +22,19 @@
 
     <body>
     {% block body %}
-        {% include 'include/navbar.html' %}
+        {% block navbar %}
+            {% include 'include/navbar.html' %}
+        {% endblock navbar %}
 
         {% block content %}
         {% endblock content %}
+        <footer class="footer">
+            <div class="container">
+                <div class="content has-text-centered">
+                <p>&copy; IIUC 2017-2018.</p>
+                </div>
+            </div>
+        </footer>
 
         {% block js %}
         <script src="{% static 'js/jquery-3.3.1.slim.min.js' %}"></script>

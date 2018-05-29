@@ -2,10 +2,12 @@
 {% load my_tags %}
 
 {% block body %}
-<section class="hero is-primary is-fullheight">
+<section class="hero is-link is-fullheight">
   <!-- Hero head: will stick at the top -->
   <div class="hero-head">
-    {% include 'include/navbar.html' %}
+    {% block navbar %}
+      {% include 'include/navbar.html' %}
+    {% endblock navbar %}
   </div>
 
   <!-- Hero content: will be in the middle -->

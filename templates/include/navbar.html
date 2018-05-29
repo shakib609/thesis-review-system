@@ -1,4 +1,4 @@
-<nav class="navbar is-primary">
+<nav class="navbar is-link">
     <div class="container">
         <div class="navbar-brand">
         <a class="navbar-item" href="{% url 'registration:login' %}">
@@ -28,7 +28,7 @@
                     {% else %}
                     <div class="navbar-item  has-dropdown is-hoverable
                                 {% block is_group %}{% endblock is_group %}">
-                        <a class="navbar-link">
+                        <a class="navbar-link" href="{% url 'thesis:group_page' %}">
                             Group
                         </a>
                         <div class="navbar-dropdown">

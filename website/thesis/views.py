@@ -8,6 +8,12 @@ from .decorators import is_student
 
 @login_required
 @is_student
+def group_page(request):
+    return render(request, 'thesis/group_page.html')
+
+
+@login_required
+@is_student
 def create_studentgroup(request):
     if request.method == 'POST':
         form = StudentGroupForm(data=request.POST)

@@ -7,6 +7,10 @@ app_name = 'thesis'
 
 urlpatterns = [
     path(
+        'group/',
+        views.group_page,
+        name='group_page'),
+    path(
         'group/create/',
         views.create_studentgroup,
         name='create_studentgroup'),
