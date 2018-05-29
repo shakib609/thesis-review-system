@@ -17,18 +17,17 @@
                 {% url 'registration:about' as about %}
                 {% if user.is_authenticated %}
                     <a href=""
-                        class="navbar-item {% block is_profile %}{% endblock is_profile %}">
+                        class="navbar-item">
                         Profile
                     </a>
                     {% if user.is_teacher %}
                     <a href=""
-                        class="navbar-item {% block is_groups %}{% endblock is_groups %}">
+                        class="navbar-item">
                         Groups
                     </a>
                     {% else %}
-                    <div class="navbar-item  has-dropdown is-hoverable
-                                {% block is_group %}{% endblock is_group %}">
-                        <a class="navbar-link" href="{% url 'thesis:group_page' %}">
+                    <div class="navbar-item  has-dropdown is-hoverable">
+                        <a class="navbar-link" href="{% url 'thesis:group_create_join' %}">
                             Group
                         </a>
                         <div class="navbar-dropdown">

@@ -9,7 +9,7 @@ urlpatterns = [
     path(
         'group/',
         views.group_page,
-        name='group_page'),
+        name='group_create_join'),
     path(
         'group/create/',
         views.create_studentgroup,

@@ -8,8 +8,8 @@ from .decorators import is_student
 
 @login_required
 @is_student
-def group_page(request):
-    return render(request, 'thesis/group_page.html')
+def group_create_join(request):
+    return render(request, 'thesis/group_create_join.html')
 
 
 @login_required
