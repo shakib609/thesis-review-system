@@ -44,7 +44,7 @@ class DocumentUploadForm(forms.ModelForm):
 
     def clean_file(self):
         f = self.cleaned_data.get('file')
-        if f[-3:].lower != 'pdf':
+        if f[-3:].lower() != 'pdf':
             raise forms.ValidationError(
                 'Invalid Format! Only PDF(Portable Document Format)'
                 ' files are allowed')
