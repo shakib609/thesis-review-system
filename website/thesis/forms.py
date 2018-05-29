@@ -1,7 +1,7 @@
 from django import forms
 
 from ..registration.models import User
-from .models import StudentGroup
+from .models import StudentGroup, Document
 
 
 class StudentGroupForm(forms.ModelForm):
@@ -34,3 +34,17 @@ class StudentGroupJoinForm(forms.ModelForm):
                     'The group with this code does not exist.'
                 )
         return md5hash
+
+
+class DocumentUploadForm(forms.ModelForm):
+
+    class Meta:
+        model = Document
+        fields = ('file', )
+
+    def clean_file(self):
+        f = self.cleaned_data.get('file')
+        if f[:3].lower != 'pdf':
+            raise forms.ValidationError(
+                'Invalid Format! Only PDF(Portable Document Format)'
+                ' files are allowed')
