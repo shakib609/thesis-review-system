@@ -1,0 +1,34 @@
+{% extends 'base/base.html' %}
+
+
+{% block title %}
+    {{ block.super }} | Group
+{% endblock title %}
+
+
+{% block content %}
+
+<div class="hero is-medium">
+    <div class="hero-body">
+        <div class="container">
+            <div class="column is-4 is-offset-4 has-text-centered">
+                <h2 class="title">Student Group</h2>
+                <h3 class="subtitle">Create or Join a Student Group for your thesis!</h3>
+                <div class="columns has-text-centered is-mobile">
+                    <div class="column">
+                    <a href="{% url 'thesis:create_studentgroup' %}" class="button is-large is-primary is-fullwidth">
+                        Create</a>
+                    </div>
+                    <div class="column">
+                    <a href="{% url 'thesis:join_studentgroup' %}" class="button is-large is-info is-fullwidth">
+                        Join</a>
+                    </div>
+                </div>
+                <p>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+

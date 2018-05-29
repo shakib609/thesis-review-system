@@ -7,6 +7,15 @@ from .decorators import is_student
 
 
 @login_required
+def account_redirect(request):
+    if request.user.is_teacher:
+        return redirect('thesis:groups')
+    if request.user.studentgroup:
+        return redirect('group_home')
+    return redirect('thesis:group_create_join')
+
+
+@login_required
 @is_student
 def group_create_join(request):
     return render(request, 'thesis/group_create_join.html')

@@ -7,8 +7,12 @@ app_name = 'thesis'
 
 urlpatterns = [
     path(
+        '',
+        views.account_redirect,
+        name='account_redirect'),
+    path(
         'group/',
-        views.group_page,
+        views.group_create_join,
         name='group_create_join'),
     path(
         'group/create/',
