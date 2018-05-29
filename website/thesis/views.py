@@ -30,13 +30,10 @@ def join_studentgroup(request):
         if form.is_valid():
             md5hash = form.cleaned_data.get('md5hash')
             u = request.user
-            s = StudentGroup.objects.filter(md5hash=md5hash)
-            if len(s) > 0:
-                u.studentgroup = s[0]
-                u.save()
-                return redirect('/')
-            else:
-                form.add_error('md5hash', 'The Group does not exist!')
+            s = StudentGroup.objects.get(md5hash=md5hash)
+            u.studentgroup = s
+            u.save()
+            return redirect('/')
     else:
         form = StudentGroupJoinForm()
     return render(request, 'thesis/join_studentgroup.html', {'form': form})
