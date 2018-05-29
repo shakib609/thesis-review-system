@@ -8,6 +8,15 @@ from datetime import datetime
 from .signals import generate_and_save_hash
 
 
+def generate_upload_location(instance, filename):
+    filename = filename + str(datetime.now())
+    m = md5(filename.encode())
+    filename = m.hexdigest()[:10] + '.pdf'
+    return 'sg_{}/{}'.format(
+        instance.studentgroup.md5hash,
+        filename)
+
+
 class StudentGroup(models.Model):
     teacher = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -25,6 +34,18 @@ class StudentGroup(models.Model):
         text = self.title + str(datetime.now())
         m = md5(text.encode())
         return m.hexdigest()[:8]
+
+
+class Document(models.Model):
+    studentgroup = models.ForeignKey(
+        StudentGroup,
+        on_delete=models.CASCADE,
+        related_name='documents')
+    upload_time = models.DateTimeField(auto_now_add=True)
+    file = models.FileField(upload_to=generate_upload_location)
+
+    def __str__(self):
+        return self.studentgroup.title + ' ' + str(self.upload_time)
 
 
 # Signals
