@@ -5,6 +5,8 @@ from django.db.models.signals import post_save
 from hashlib import md5
 from datetime import datetime
 
+from .signals import generate_and_save_hash
+
 
 class StudentGroup(models.Model):
     teacher = models.ForeignKey(
@@ -25,11 +27,5 @@ class StudentGroup(models.Model):
         return m.hexdigest()[:8]
 
 
-def generate_and_save_hash(sender, instance, **kwargs):
-    if not instance.md5hash:
-        h = instance.generate_hash()
-        instance.md5hash = h
-        instance.save()
-
-
+# Signals
 post_save.connect(generate_and_save_hash, sender=StudentGroup)

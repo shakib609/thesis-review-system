@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import pre_save
 
 from ..thesis.models import StudentGroup
+from .signals import remove_studentgroup_if_empty
 
 
 class CutomUserManager(UserManager):
@@ -31,14 +32,5 @@ class User(AbstractUser):
     objects = CutomUserManager()
 
 
-def remove_studentgroup_if_empty(sender, instance, **kwargs):
-    if instance.id:
-        old_user = User.objects.get(pk=instance.id)
-        if old_user.studentgroup:
-            old_s = old_user.studentgroup
-            if old_s.students.count() == 1:
-                if old_s != instance.studentgroup:
-                    old_s.delete()
-
-
+# Signals
 pre_save.connect(remove_studentgroup_if_empty, sender=User)
