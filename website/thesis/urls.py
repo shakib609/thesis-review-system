@@ -22,4 +22,12 @@ urlpatterns = [
         'group/join/',
         views.join_studentgroup,
         name='join_studentgroup'),
+    path(
+        'group/my/',
+        views.group_home,
+        name='group_home'),
+    path(
+        'groups/',
+        views.teacher_groups,
+        name='teacher_groups'),
 ]

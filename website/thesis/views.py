@@ -3,13 +3,13 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import StudentGroupForm, StudentGroupJoinForm
 from .models import StudentGroup
-from .decorators import is_student
+from .decorators import is_student, is_teacher
 
 
 @login_required
 def account_redirect(request):
     if request.user.is_teacher:
-        return redirect('thesis:groups')
+        return redirect('thesis:teacher_groups')
     if request.user.studentgroup:
         return redirect('thesis:group_home')
     return redirect('thesis:group_create_join')
@@ -52,3 +52,15 @@ def join_studentgroup(request):
     else:
         form = StudentGroupJoinForm()
     return render(request, 'thesis/join_studentgroup.html', {'form': form})
+
+
+@login_required
+@is_student
+def group_home(request):
+    return render(request, 'thesis/group_home.html')
+
+
+@login_required
+@is_teacher
+def teacher_groups(request):
+    return render(request, 'thesis/teacher_groups.html')
