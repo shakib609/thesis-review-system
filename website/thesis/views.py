@@ -9,7 +9,7 @@ from .decorators import is_student, is_teacher
 @login_required
 def account_redirect(request):
     if request.user.is_teacher:
-        return redirect('thesis:teacher_groups')
+        return redirect('thesis:groups_home')
     if request.user.studentgroup:
         return redirect('thesis:group_home')
     return redirect('thesis:group_create_join')
@@ -23,7 +23,7 @@ def group_create_join(request):
 
 @login_required
 @is_student
-def create_studentgroup(request):
+def group_create(request):
     if request.method == 'POST':
         form = StudentGroupForm(data=request.POST)
         if form.is_valid():
@@ -34,12 +34,12 @@ def create_studentgroup(request):
             return redirect('/')
     else:
         form = StudentGroupForm()
-    return render(request, 'thesis/create_studentgroup.html', {'form': form})
+    return render(request, 'thesis/group_create.html', {'form': form})
 
 
 @login_required
 @is_student
-def join_studentgroup(request):
+def group_join(request):
     if request.method == 'POST':
         form = StudentGroupJoinForm(data=request.POST)
         if form.is_valid():
@@ -51,7 +51,7 @@ def join_studentgroup(request):
             return redirect('/')
     else:
         form = StudentGroupJoinForm()
-    return render(request, 'thesis/join_studentgroup.html', {'form': form})
+    return render(request, 'thesis/group_join.html', {'form': form})
 
 
 @login_required
@@ -62,5 +62,5 @@ def group_home(request):
 
 @login_required
 @is_teacher
-def teacher_groups(request):
-    return render(request, 'thesis/teacher_groups.html')
+def groups_home(request):
+    return render(request, 'thesis/groups_home.html')

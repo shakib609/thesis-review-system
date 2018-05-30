@@ -12,22 +12,22 @@ urlpatterns = [
         name='account_redirect'),
     path(
         'group/',
+        views.group_home,
+        name='group_home'),
+    path(
+        'group/create_join/',
         views.group_create_join,
         name='group_create_join'),
     path(
         'group/create/',
-        views.create_studentgroup,
-        name='create_studentgroup'),
+        views.group_create,
+        name='group_create'),
     path(
         'group/join/',
-        views.join_studentgroup,
-        name='join_studentgroup'),
-    path(
-        'group/my/',
-        views.group_home,
-        name='group_home'),
+        views.group_join,
+        name='group_join'),
     path(
         'groups/',
-        views.teacher_groups,
-        name='teacher_groups'),
+        views.groups_home,
+        name='groups_home'),
 ]
