@@ -11,7 +11,7 @@ def account_redirect(request):
     if request.user.is_teacher:
         return redirect('thesis:groups')
     if request.user.studentgroup:
-        return redirect('group_home')
+        return redirect('thesis:group_home')
     return redirect('thesis:group_create_join')
 
 
