@@ -1,0 +1,45 @@
+{% extends 'base/base.html' %}
+
+
+{% block extra_css %}
+<style>
+    nav.navbar {margin-bottom: 1rem;}
+</style>
+{% endblock extra_css %}
+
+
+{% block content %}
+{% url 'thesis:group_home' as group_home %}
+<div class="container">
+    <div class="columns">
+        <div class="column is-2">
+            <div class="hero is-fullheight">
+                <aside class="menu">
+                    <p class="menu-label">Group</p>
+                    <ul class="menu-list">
+                        <li><a href="{{ group_home }}"
+                        class="{% if request.path == group_home %}is-active{% endif %}">
+                            Documents</a></li>
+                        <li><a href="">Upload Document</a></li>
+                        <li><a href="">Group Settings</a></li>
+                    </ul>
+                    <p class="menu-label">Account</p>
+                    <ul class="menu-list">
+                        <li><a href="">Account Settings</a></li>
+                        <li><a href="">Account Removal</a></li>
+                    </ul>
+                </aside>
+            </div>
+        </div>
+        <div class="column">
+            <h3 class="title">{{ studentgroup.title }}</h3>
+            <h4 class="subtitle">Members:
+                {{ studentgroup.students.all|join:", " }}.
+            </h4>
+
+            {% block dashboard_content %}
+            {% endblock dashboard_content %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

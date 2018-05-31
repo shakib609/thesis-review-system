@@ -45,7 +45,7 @@ class Document(models.Model):
     file = models.FileField(upload_to=generate_upload_location)
 
     def __str__(self):
-        return self.studentgroup.title + ' ' + str(self.upload_time)
+        return self.file[-14:] + ' ' + str(self.upload_time)
 
 
 # Signals

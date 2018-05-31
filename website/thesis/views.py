@@ -57,7 +57,9 @@ def group_join(request):
 @login_required
 @is_student
 def group_home(request):
-    return render(request, 'thesis/group_home.html')
+    studentgroup = request.user.studentgroup
+    return render(
+        request, 'thesis/group_home.html', {'studentgroup': studentgroup})
 
 
 @login_required
