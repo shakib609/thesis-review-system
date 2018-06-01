@@ -10,19 +10,22 @@
 <div class="columns">
     <div class="column is-5">
     {% if studentgroup.documents.all %}
-        <div class="hero is-medium">
     {% else %}
+        <div class="hero is-medium">
             <div class="hero-body has-text-centered">
                 <h4 class="subtitle">No Documents Submitted Yet!</h4>
+                {% if not user.is_teacher %}
                 <p>
-                    <a href="" class="button is-large is-link">Submit Now!</a>
+                    <a href="" class="button is-large is-link is-outlined">
+                    <i class="fas fa-upload"></i>&nbsp;
+                    Submit Now!</a>
                 </p>
+                {% endif %}
             </div>
-    {% endif %}
         </div>
+    {% endif %}
     </div>
     <div class="column is-5"></div>
 </div>
-
 
 {% endblock dashboard_content %}
