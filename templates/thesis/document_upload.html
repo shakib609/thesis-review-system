@@ -1,0 +1,49 @@
+{% extends 'thesis/thesis_dashboard_base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ block.super }} | Upload Document
+{% endblock title %}
+
+
+{% block dashboard_content %}
+
+<div class="column">
+    <br>
+    <h4 class="subtitle has-text-centered">Upload Your Document</h4>
+    <div class="is-centered column is-4 is-offset-4 has-text-centered">
+        <form method="POST" enctype="multipart/form-data" id="document-form">
+            {% csrf_token %}
+            <div class="file has-name is-fullwidth {% if form.errors %}is-danger{% endif %}" id="file-container">
+                <label class="file-label">
+                    <input class="file-input" accept=".pdf" type="file" name="file" id="file">
+                    <span class="file-cta">
+                        <span class="file-icon">
+                            <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                            Choose a file…
+                        </span>
+                    </span>
+                    <span class="file-name" id="file-name">
+                    </span>
+                </label>
+            </div>
+            <p class="help {% if form.errors %}is-danger{% endif %}" id="help">
+                Only PDF files are allowed.
+            </p>
+            <br>
+            <div class="has-text-centered">
+                <button type="submit" class="button is-medium is-link has-text-centered">
+                    Upload</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock dashboard_content %}
+
+
+{% block extra_js %}
+    <script src="{% static 'js/upload.js' %}"></script>
+{% endblock extra_js %}
