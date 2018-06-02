@@ -27,6 +27,10 @@ urlpatterns = [
         views.group_join,
         name='group_join'),
     path(
+        'group/upload/',
+        views.document_upload,
+        name='document_upload'),
+    path(
         'groups/',
         views.groups_home,
         name='groups_home'),

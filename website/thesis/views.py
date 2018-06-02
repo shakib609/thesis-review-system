@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from .forms import StudentGroupForm, StudentGroupJoinForm
-from .models import StudentGroup
+from .forms import (
+    StudentGroupForm, StudentGroupJoinForm, DocumentUploadForm)
+from .models import StudentGroup, Document
 from .decorators import is_student, is_teacher
 
 
@@ -60,6 +61,25 @@ def group_home(request):
     studentgroup = request.user.studentgroup
     return render(
         request, 'thesis/group_home.html', {'studentgroup': studentgroup})
+
+
+@login_required
+@is_student
+def document_upload(request):
+    if request.method == 'POST':
+        form = DocumentUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            document = Document(file=request.FILES['file'])
+            document.studentgroup = request.user.studentgroup
+            document.save()
+            return redirect('thesis:group_home')
+    else:
+        form = DocumentUploadForm()
+    studentgroup = request.user.studentgroup
+    return render(request, 'thesis/document_upload.html', {
+        'form': form,
+        'studentgroup': studentgroup
+    })
 
 
 @login_required
