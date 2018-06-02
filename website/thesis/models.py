@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save
 
+import os
 from hashlib import md5
 from datetime import datetime
 
@@ -44,8 +45,15 @@ class Document(models.Model):
     upload_time = models.DateTimeField(auto_now_add=True)
     file = models.FileField(upload_to=generate_upload_location)
 
+    class Meta:
+        ordering = ['-upload_time', ]
+
     def __str__(self):
-        return self.file.name[-14:]
+        return self.filename
+
+    @property
+    def filename(self):
+        return os.path.basename(self.file.name)
 
 
 # Signals

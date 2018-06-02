@@ -6,11 +6,43 @@
 
 
 {% block dashboard_content %}
+{% with documents=studentgroup.documents.all %}
 
 <div class="columns">
     <div class="column is-5">
-    {% if studentgroup.documents.all %}
-    {% else %}
+        {% if documents %}
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">Documents</p>
+                {% if not user.is_teacher %}
+                <a href="{% url 'thesis:document_upload' %}" class="card-header-icon">
+                    <span class="icon"><i class="fas fa-upload"></i></span>
+                </a>
+                {% endif %}
+            </header>
+            <div class="card-content">
+                {% for d in documents %}
+                    <div class="columns">
+                        <div class="column is-9 has-text-small">
+                            {{ d.filename }}
+                            <br>
+                            <p class="is-size-7">
+                                Uploaded at:
+                                <time datetime="{{ d.upload_time }}">
+                                    {{ d.upload_time|date:"d M Y" }} - {{ d.upload_time|date:"H:i" }}
+                                </time>
+                            </p>
+                        </div>
+                        <div class="column is-3">
+                            <a href="" class="button is-small is-fullwidth is-primary">
+                                View
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
         <div class="hero is-medium">
             <div class="hero-body has-text-centered">
                 <h4 class="subtitle">No Documents Submitted Yet!</h4>
@@ -25,9 +57,24 @@
                 {% endif %}
             </div>
         </div>
-    {% endif %}
+            {% endif %}
     </div>
-    <div class="column"></div>
+    <div class="column">
+        <div class="card is-invisible"></div>
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">
+                    Recent Comments
+                </p>
+                <a href="#" class="card-header-icon">
+                    <span class="icon">
+                        <i class="fas fa-plus"></i>
+                    </span>
+                </a>
+            </header>
+        </div>
+    </div>
 </div>
 
+{% endwith %}
 {% endblock dashboard_content %}
