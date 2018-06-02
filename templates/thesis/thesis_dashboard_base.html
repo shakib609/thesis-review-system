@@ -10,6 +10,7 @@
 
 {% block content %}
 {% url 'thesis:group_home' as group_home %}
+{% url 'thesis:document_upload' as document_upload %}
 <div class="container is-fluid">
     <div class="columns">
         <div class="column is-2">
@@ -20,7 +21,7 @@
                         <li><a href="{{ group_home }}"
                         class="{% if request.path == group_home %}is-active{% endif %}">
                             <i class="fas fa-align-justify"></i>&nbsp; Documents</a></li>
-                        <li><a href="">
+                        <li><a href="{{ document_upload }}">
                             <i class="fas fa-upload"></i>&nbsp; Upload</a></li>
                         <li><a href="">
                             <i class="fas fa-wrench"></i>&nbsp; Group Settings</a></li>
