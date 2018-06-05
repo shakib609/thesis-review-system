@@ -69,7 +69,7 @@ class Comment(models.Model):
         related_name='comments'
     )
 
-    class  Meta:
+    class Meta:
         ordering = ['-created_at']
 
     def __str__(self):

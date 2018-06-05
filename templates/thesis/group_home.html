@@ -6,7 +6,7 @@
 
 
 {% block dashboard_content %}
-{% with documents=studentgroup.documents.all %}
+{% with documents=studentgroup.documents.all comments=studentgroup.comments.all%}
 
 <div class="columns">
     <div class="column is-4">
@@ -87,9 +87,19 @@
                 </a>
             </header>
             <div class="card-content">
+                {% if comments %}
+                <div class="content">
+                    {% for comment in comments %}
+                    <p class="is-size-7">{{ comment.user.username }}
+                        - {{ comment.created_at|date:"d M Y" }} at {{ comment.created_at|date:"H:i" }}</p>
+                    <p>{{ comment.content }}</p>
+                    {% endfor %}
+                </div>
+                {% else %}
                 <div class="content has-text-centered">
                     No Comments yet!
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
