@@ -64,7 +64,7 @@ class Comment(models.Model):
         on_delete=models.CASCADE
     )
     studentgroup = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        StudentGroup,
         on_delete=models.CASCADE,
         related_name='comments'
     )
