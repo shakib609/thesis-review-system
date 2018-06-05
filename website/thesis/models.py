@@ -69,6 +69,9 @@ class Comment(models.Model):
         related_name='comments'
     )
 
+    class  Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
         return self.content[:10] + '...'
 
