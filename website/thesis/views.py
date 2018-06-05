@@ -9,7 +9,7 @@ import json
 from .forms import (
     StudentGroupForm, StudentGroupJoinForm, DocumentUploadForm)
 from .models import StudentGroup, Document, Comment
-from .decorators import is_student, is_teacher
+from .decorators import is_student, is_teacher, has_group
 
 
 def return_json(data):
@@ -66,6 +66,7 @@ def group_join(request):
 
 @login_required
 @is_student
+@has_group
 def group_home(request):
     studentgroup = request.user.studentgroup
     return render(

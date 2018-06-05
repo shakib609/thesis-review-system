@@ -6,7 +6,7 @@ def is_student(function):
         if not request.user.is_teacher:
             return function(request, *args, **kwargs)
         else:
-            return redirect('/')
+            return redirect('thesis:groups_home')
 
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__
@@ -18,7 +18,19 @@ def is_teacher(function):
         if request.user.is_teacher:
             return function(request, *args, **kwargs)
         else:
-            return redirect('/')
+            return redirect('thesis:group_home')
+
+    wrap.__doc__ = function.__doc__
+    wrap.__name__ = function.__name__
+    return wrap
+
+
+def has_group(function):
+    def wrap(request, *args, **kwargs):
+        if request.user.studentgroup:
+            return function(request, *args, **kwargs)
+        else:
+            return redirect('thesis:group_create_join')
 
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__
