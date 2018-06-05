@@ -56,5 +56,22 @@ class Document(models.Model):
         return os.path.basename(self.file.name)
 
 
+class Comment(models.Model):
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    studentgroup = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+
+    def __str__(self):
+        return self.content[:10] + '...'
+
+
 # Signals
 post_save.connect(generate_and_save_hash, sender=StudentGroup)
