@@ -9,7 +9,7 @@
 {% with documents=studentgroup.documents.all %}
 
 <div class="columns">
-    <div class="column is-5">
+    <div class="column is-4">
         {% if documents %}
         <div class="card">
             <header class="card-header">
@@ -60,7 +60,21 @@
             {% endif %}
     </div>
     <div class="column">
-        <div class="card is-invisible"></div>
+        <div class="card is-hidden">
+            <header class="card-header">
+                <p class="card-header-title">
+                    Document Viewer
+                </p>
+                <a href="#" class="card-header-icon">
+                    <span class="icon">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </a>
+            </header>
+            <div class="card-content">
+                <div class="content"></div>
+            </div>
+        </div>
         <div class="card">
             <header class="card-header">
                 <p class="card-header-title">
@@ -72,6 +86,11 @@
                     </span>
                 </a>
             </header>
+            <div class="card-content">
+                <div class="content has-text-centered">
+                    No Comments yet!
+                </div>
+            </div>
         </div>
     </div>
 </div>
