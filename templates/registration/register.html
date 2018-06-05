@@ -24,7 +24,8 @@
                             type="text"
                             name="first_name"
                             placeholder="First Name" autofocus=""
-                            required="">
+                            required=""
+                            value="{{ form.first_name.value|default_if_none:'' }}">
                         <span class="icon is-small is-left">
                             <i class="fas fa-id-card"></i>
                         </span>
@@ -49,7 +50,8 @@
                             type="text"
                             name="last_name"
                             placeholder="Last Name"
-                            required="">
+                            required=""
+                            value="{{ form.last_name.value|default_if_none:'' }}">
                         <span class="icon is-small is-left">
                             <i class="fas fa-id-card"></i>
                         </span>
@@ -73,7 +75,8 @@
                             type="email"
                             name="email"
                             placeholder="E-mail"
-                            required="">
+                            required=""
+                            value="{{ form.email.value|default_if_none:'' }}">
                         <span class="icon is-small is-left">
                             <i class="fas fa-at"></i>
                         </span>
@@ -97,7 +100,8 @@
                             type="tel"
                             name="phone_number"
                             placeholder="Phone Number"
-                            required="">
+                            required=""
+                            value="{{ form.phone_number.value|default_if_none:'' }}">
                         <span class="icon is-small is-left">
                             <i class="fas fa-phone" data-fa-transform="flip-h"></i>
                         </span>
@@ -121,7 +125,8 @@
                             type="text"
                             name="username"
                             placeholder="Varsity ID"
-                            required="">
+                            required=""
+                            value="{{ form.username.value|default_if_none:'' }}">
                         <span class="icon is-small is-left">
                             <i class="fas fa-hashtag"></i>
                         </span>
