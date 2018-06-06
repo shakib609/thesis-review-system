@@ -20,7 +20,7 @@ urlpatterns = [
         name='group_create_join'),
     path(
         'group/create/',
-        views.group_create,
+        views.GroupCreateView.as_view(),
         name='group_create'),
     path(
         'group/join/',

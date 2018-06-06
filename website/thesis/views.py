@@ -32,25 +32,26 @@ class AccountRedirectView(LoginRequiredMixin, View):
         return redirect('thesis:group_create_join')
 
 
-class GroupCreateJoinView(LoginRequiredMixin, UserIsStudentMixin, TemplateView):
+class GroupCreateJoinView(LoginRequiredMixin, UserIsStudentMixin,
+                          TemplateView):
     http_method_names = ['get']
     template_name = 'thesis/group_create_join.html'
 
 
-@login_required
-@is_student
-def group_create(request):
-    if request.method == 'POST':
-        form = StudentGroupForm(data=request.POST)
-        if form.is_valid():
-            s = form.save()
-            u = request.user
-            u.studentgroup = s
-            u.save()
-            return redirect('/')
-    else:
-        form = StudentGroupForm()
-    return render(request, 'thesis/group_create.html', {'form': form})
+class GroupCreateView(LoginRequiredMixin, UserIsStudentMixin,
+                      CreateView):
+    model = StudentGroup
+    form_class = StudentGroupForm
+    success_url = reverse_lazy('thesis:group_home')
+    template_name = 'thesis/group_create.html'
+    http_method_names = ['get', 'post']
+
+    def form_valid(self, form):
+        self.object = studentgroup = form.save()
+        user = self.request.user
+        user.studentgroup = studentgroup
+        user.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 @login_required
