@@ -18,3 +18,8 @@ class UserIsTeacherMixin(UserStatusTestMixin):
 class UserIsStudentMixin(UserStatusTestMixin):
     def test_func(self):
         return not self.request.user.is_teacher
+
+
+class UserHasGroupMixin(UserStatusTestMixin):
+    def test_func(self):
+        return bool(self.request.user.studentgroup)

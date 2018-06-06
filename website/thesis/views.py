@@ -99,7 +99,7 @@ def create_comment(request, group_code):
         return return_json({'created': False})
 
 
-class DocumentUploadView(UserIsStudentMixin, LoginRequiredMixin, CreateView):
+class DocumentUploadView(LoginRequiredMixin, UserIsStudentMixin, CreateView):
     model = Document
     template_name = 'thesis/document_upload.html'
     form_class = DocumentUploadForm
