@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import (
+    CreateView, TemplateView, FormView)
 from django.views import View
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
@@ -54,21 +55,21 @@ class GroupCreateView(LoginRequiredMixin, UserIsStudentMixin,
         return HttpResponseRedirect(self.get_success_url())
 
 
-@login_required
-@is_student
-def group_join(request):
-    if request.method == 'POST':
-        form = StudentGroupJoinForm(data=request.POST)
-        if form.is_valid():
-            md5hash = form.cleaned_data.get('md5hash')
-            u = request.user
-            s = StudentGroup.objects.get(md5hash=md5hash)
-            u.studentgroup = s
-            u.save()
-            return redirect('/')
-    else:
-        form = StudentGroupJoinForm()
-    return render(request, 'thesis/group_join.html', {'form': form})
+class GroupJoinView(LoginRequiredMixin, UserIsStudentMixin,
+                    FormView):
+    model = StudentGroup
+    form_class = StudentGroupJoinForm
+    success_url = reverse_lazy('thesis:group_home')
+    template_name = 'thesis/group_join.html'
+    http_method_names = ['get', 'post']
+
+    def form_valid(self, form):
+        md5hash = form.cleaned_data.get('md5hash')
+        studentgroup = get_object_or_404(StudentGroup, md5hash=md5hash)
+        user = self.request.user
+        user.studentgroup = studentgroup
+        user.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 @login_required

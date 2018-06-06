@@ -24,7 +24,7 @@ urlpatterns = [
         name='group_create'),
     path(
         'group/join/',
-        views.group_join,
+        views.GroupJoinView.as_view(),
         name='group_join'),
     path(
         'group/upload/',
