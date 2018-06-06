@@ -1,4 +1,3 @@
-from django.shortcuts import redirect
 from django.contrib.auth import login
 from django.views.generic import TemplateView, CreateView
 from django.http import HttpResponseRedirect
@@ -20,7 +19,7 @@ class UserCreateView(CreateView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('registration:login')
+            return HttpResponseRedirect(self.get_success_url())
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):

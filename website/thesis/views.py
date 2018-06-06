@@ -1,11 +1,15 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView
+from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template.defaultfilters import date
 
 import json
 
+from .mixins import UserIsStudentMixin, UserIsTeacherMixin
 from .forms import (
     StudentGroupForm, StudentGroupJoinForm, DocumentUploadForm)
 from .models import StudentGroup, Document, Comment
@@ -95,23 +99,22 @@ def create_comment(request, group_code):
         return return_json({'created': False})
 
 
-@login_required
-@is_student
-def document_upload(request):
-    if request.method == 'POST':
-        form = DocumentUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            document = Document(file=request.FILES['file'])
-            document.studentgroup = request.user.studentgroup
-            document.save()
-            return redirect('thesis:group_home')
-    else:
-        form = DocumentUploadForm()
-    studentgroup = request.user.studentgroup
-    return render(request, 'thesis/document_upload.html', {
-        'form': form,
-        'studentgroup': studentgroup
-    })
+class DocumentUploadView(UserIsStudentMixin, LoginRequiredMixin, CreateView):
+    model = Document
+    template_name = 'thesis/document_upload.html'
+    form_class = DocumentUploadForm
+    success_url = reverse_lazy('thesis:group_home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['studentgroup'] = self.request.user.studentgroup
+        return context
+
+    def form_valid(self, form):
+        self.object = document = form.save(commit=False)
+        document.studentgroup = self.request.user.studentgroup
+        document.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 @login_required
