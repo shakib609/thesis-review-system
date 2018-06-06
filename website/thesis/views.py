@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import (
-    CreateView, TemplateView, FormView)
+    CreateView, TemplateView, FormView, ListView)
 from django.views import View
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
@@ -11,7 +11,8 @@ from django.template.defaultfilters import date
 
 import json
 
-from .mixins import UserIsStudentMixin, UserIsTeacherMixin
+from .mixins import (
+    UserIsStudentMixin, UserIsTeacherMixin, UserHasGroupMixin)
 from .forms import (
     StudentGroupForm, StudentGroupJoinForm, DocumentUploadForm)
 from .models import StudentGroup, Document, Comment
@@ -72,13 +73,23 @@ class GroupJoinView(LoginRequiredMixin, UserIsStudentMixin,
         return HttpResponseRedirect(self.get_success_url())
 
 
-@login_required
-@is_student
-@has_group
-def group_home(request):
-    studentgroup = request.user.studentgroup
-    return render(
-        request, 'thesis/group_home.html', {'studentgroup': studentgroup})
+class GroupHomeView(LoginRequiredMixin, UserIsStudentMixin,
+                    UserHasGroupMixin, ListView):
+    template_name = 'thesis/group_home.html'
+    http_method_names = ['get']
+    context_object_name = 'documents'
+
+    def get_queryset(self):
+        self.studentgroup = self.request.user.studentgroup
+        queryset = self.studentgroup.documents.all()
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comments'] = self.studentgroup.comments.order_by(
+            '-created_at')
+        context['studentgroup'] = self.studentgroup
+        return context
 
 
 @login_required
@@ -120,6 +131,12 @@ class DocumentUploadView(LoginRequiredMixin, UserIsStudentMixin, CreateView):
         document.studentgroup = self.request.user.studentgroup
         document.save()
         return HttpResponseRedirect(self.get_success_url())
+
+
+class GroupsHomeView(LoginRequiredMixin, UserIsTeacherMixin,
+                     TemplateView):
+    template_name = "thesis/groups_home.html"
+    http_method_names = ['get']
 
 
 @login_required

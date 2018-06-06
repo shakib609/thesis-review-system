@@ -12,7 +12,7 @@ urlpatterns = [
         name='account_redirect'),
     path(
         'group/',
-        views.group_home,
+        views.GroupHomeView.as_view(),
         name='group_home'),
     path(
         'group/create_join/',
@@ -32,6 +32,6 @@ urlpatterns = [
         name='document_upload'),
     path(
         'groups/',
-        views.groups_home,
+        views.GroupsHomeView.as_view(),
         name='groups_home'),
 ]
