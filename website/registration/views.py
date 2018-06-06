@@ -8,6 +8,7 @@ from .models import User
 
 
 class AboutView(TemplateView):
+    http_method_names = ['get']
     template_name = 'registration/about.html'
 
 
@@ -16,6 +17,7 @@ class UserCreateView(CreateView):
     template_name = 'registration/register.html'
     form_class = StudentSignUpForm
     success_url = reverse_lazy('thesis:account_redirect')
+    http_method_names = ['get', 'post']
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:

@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView
+from django.views.generic import CreateView, TemplateView
+from django.views import View
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -20,19 +21,20 @@ def return_json(data):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-@login_required
-def account_redirect(request):
-    if request.user.is_teacher:
-        return redirect('thesis:groups_home')
-    if request.user.studentgroup:
-        return redirect('thesis:group_home')
-    return redirect('thesis:group_create_join')
+class AccountRedirectView(LoginRequiredMixin, View):
+    http_method_names = ['get']
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_teacher:
+            return redirect('thesis:groups_home')
+        if request.user.studentgroup:
+            return redirect('thesis:group_home')
+        return redirect('thesis:group_create_join')
 
 
-@login_required
-@is_student
-def group_create_join(request):
-    return render(request, 'thesis/group_create_join.html')
+class GroupCreateJoinView(LoginRequiredMixin, UserIsStudentMixin, TemplateView):
+    http_method_names = ['get']
+    template_name = 'thesis/group_create_join.html'
 
 
 @login_required
@@ -104,6 +106,7 @@ class DocumentUploadView(LoginRequiredMixin, UserIsStudentMixin, CreateView):
     template_name = 'thesis/document_upload.html'
     form_class = DocumentUploadForm
     success_url = reverse_lazy('thesis:group_home')
+    http_method_names = ['get', 'post']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
