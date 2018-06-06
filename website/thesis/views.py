@@ -137,9 +137,3 @@ class GroupsHomeView(LoginRequiredMixin, UserIsTeacherMixin,
                      TemplateView):
     template_name = "thesis/groups_home.html"
     http_method_names = ['get']
-
-
-@login_required
-@is_teacher
-def groups_home(request):
-    return render(request, 'thesis/groups_home.html')
