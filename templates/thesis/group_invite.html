@@ -18,33 +18,16 @@
                 <p class="is-size-6" style="margin-bottom: 1rem;">
                     Share this code with your friends!
                 </p>
-
-                {% comment %} <div class="field">
-                    <div class="control has-icons-left">
-                        <input class="input is-large" type="text" value="{{ studentgroup.md5hash }}" style="font-family:monospace;">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-hashtag"></i>
-                        </span>
-                        <p class="help is-dark has-text-centered">
-                            The code is case-sensitive.
-                        </p>
-                    </div>
-                </div> {% endcomment %}
-                <p class="is-size-3" style="font-family:monospace;">
-                    {{ studentgroup.md5hash }}
-                </p>
+                <div class="box is-centered is-fullwidth">
+                    <p class="is-size-2"
+                       style="font-family:monospace;">{{ studentgroup.md5hash }}</p>
+                </div>
                 <p class="is-size-6 is-text-dark">
                     P.S. The code is case-sensitive.
                 </p>
             </div>
         </div>
-        <div class="hero-body">
-        </div>
     </div>
 </div>
 
 {% endblock dashboard_content %}
-
-{% block extra_js %}
-    <script src="{% static 'js/upload.js' %}"></script>
-{% endblock extra_js %}

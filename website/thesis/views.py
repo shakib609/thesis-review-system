@@ -7,7 +7,8 @@ from django.views.generic import (
     CreateView,
     TemplateView,
     FormView,
-    ListView
+    ListView,
+    UpdateView,
 )
 
 from .mixins import (
@@ -115,3 +116,20 @@ class GroupListView(LoginRequiredMixin, UserIsTeacherMixin,
         user = self.request.user
         queryset = user.studentgroups.order_by('title')
         return queryset
+
+
+class GroupUpdateView(LoginRequiredMixin, UserIsStudentMixin,
+                      UserHasGroupAccessMixin, UpdateView):
+    model = StudentGroup
+    template_name = "thesis/group_update.html"
+    http_method_names = ['get', 'post']
+    form_class = StudentGroupForm
+    success_url = reverse_lazy('thesis:document_list')
+
+    def get_object(self, *args, **kwargs):
+        return self.request.user.studentgroup
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Group Updated Successfully!')
+        return response

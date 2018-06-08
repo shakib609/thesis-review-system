@@ -31,6 +31,10 @@ urlpatterns = [
         views.GroupInviteView.as_view(),
         name='group_invite'),
     path(
+        'update/',
+        views.GroupUpdateView.as_view(),
+        name='group_update'),
+    path(
         'list/',
         views.GroupListView.as_view(),
         name='group_list'),

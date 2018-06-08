@@ -21,7 +21,8 @@
                             <div class="control has-icons-left">
                                 <input class="input is-large{% if 'md5hash' in form.errors %} is-danger{% endif %}"
                                         type="text" name="md5hash"
-                                        placeholder="Group Code" autofocus="" required="">
+                                        placeholder="Group Code" autofocus="" required=""
+                                        value="{{ form.md5hash.value|default_if_none:'' }}">
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-hashtag"></i>
                                 </span>

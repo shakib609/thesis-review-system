@@ -1,28 +1,29 @@
-{% extends 'base/base.html' %}
+{% extends 'thesis/thesis_dashboard_base.html' %}
+{% load static %}
 {% load my_tags %}
 
 
 {% block title %}
-    {{ block.super }} | Create Group
+    {{ block.super }} | Invite Friends
 {% endblock title %}
 
+{% block dashboard_content %}
 
-{% block content %}
-<div class="hero is-medium">
-    <div class="hero-body">
-        <div class="container has-text-centered">
-            <div class="column is-4 is-offset-4">
-                <h3 class="title">Create Group</h3>
-                <h4 class="subtitle">Create a group for your thesis</h4>
+<div class="column">
+    <div class="hero is-medium">
+        <div class="hero-head">
+            <h3 class="subtitle has-text-centered has-text-weight-bold" style="margin-bottom: 2rem;">
+                Update Group Info
+            </h3>
+            <div class="column is-6 is-offset-3 has-text-centered">
                 <div class="box">
                     <form method="POST" class="has-text-left">
                         {% csrf_token %}
                         <div class="field">
                             <div class="control has-icons-left">
-                                <input class="input is-large{% if 'title' in form.errors %} is-danger{% endif %}"
-                                        type="text" name="title"
-                                        placeholder="Title" autofocus="" required=""
-                                        value="{{ form.title.value|default_if_none:'' }}">
+                                <input class="input is-large{% if 'title' in form.errors %} is-danger{% endif %}" type="text" name="title" placeholder="Title"
+                                    autofocus="" required=""
+                                    value="{{ form.title.value|default_if_none:'' }}">
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-align-justify"></i>
                                 </span>
@@ -39,9 +40,15 @@
                             <p class="control has-icons-left">
                                 <span class="select is-large is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
                                     <select name="teacher">
-                                    {% for x,y in form.fields.teacher.choices %}
-                                        <option value="{{ x }}"{% if form.teacher.value == x %} selected{% endif %}>{{ y }}</option>
-                                    {% endfor %}
+                                        {% for x,y in form.fields.teacher.choices %}
+                                        <option value="{{ x }}"
+                                            {% if form.teacher.value == x %}
+                                                selected
+                                            {% endif %}
+                                            >
+                                            {{ y }}
+                                        </option>
+                                        {% endfor %}
                                     </select>
                                 </span>
                                 <span class="icon is-small is-left">
@@ -56,8 +63,7 @@
                                 {% endif %}
                             </p>
                         </div>
-                        <input type="submit" class="button is-large is-link is-fullwidth"
-                                value="Create">
+                        <input type="submit" class="button is-large is-link is-fullwidth" value="Create">
                     </form>
                 </div>
             </div>
@@ -65,4 +71,8 @@
     </div>
 </div>
 
-{% endblock content %}
+{% endblock dashboard_content %}
+
+{% block extra_js %}
+    <script src="{% static 'js/upload.js' %}"></script>
+{% endblock extra_js %}
