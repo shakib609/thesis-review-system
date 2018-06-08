@@ -9,7 +9,6 @@
 
 <div class="columns">
     <div class="column is-4">
-        {% if documents %}
         <div class="card">
             <header class="card-header">
                 <p class="card-header-title">Documents</p>
@@ -20,43 +19,46 @@
                 {% endif %}
             </header>
             <div class="card-content">
+                {% if documents %}
                 {% for d in documents %}
-                    <div class="columns is-mobile">
-                        <div class="column is-9 has-text-small">
-                            {{ d.filename }}
-                            <br>
-                            <p class="is-size-7">
-                                Uploaded at:
-                                <time datetime="{{ d.upload_time }}">
-                                    {{ d.upload_time|date:"d M Y" }} - {{ d.upload_time|date:"H:i" }}
-                                </time>
+                <div class="columns is-mobile">
+                    <div class="column is-9 has-text-small">
+                        {{ d.filename }}
+                        <br>
+                        <p class="is-size-7">
+                            Uploaded at:
+                            <time datetime="{{ d.upload_time }}">
+                                {{ d.upload_time|date:"d M Y" }} - {{ d.upload_time|date:"H:i" }}
+                            </time>
+                        </p>
+                    </div>
+                    <div class="column is-3 has-text-right">
+                        <a href="" class="button is-small is-primary">
+                            View
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="content has-text-centered">
+                    <div class="hero is-medium">
+                        <div class="hero-body">
+                            <p>
+                                No Documents Submitted Yet!
                             </p>
-                        </div>
-                        <div class="column is-3 has-text-right">
-                            <a href="" class="button is-small is-primary">
-                                View
-                            </a>
+                            {% if not user.is_teacher %}
+                            <p>
+                                <a href="{% url 'thesis:document_upload' %}" class="button is-large is-link is-outlined">
+                                    <i class="fas fa-upload"></i>&nbsp; Submit Now!
+                                </a>
+                            </p>
+                            {% endif %}
                         </div>
                     </div>
-                {% endfor %}
-            </div>
-        </div>
-        {% else %}
-        <div class="hero is-medium">
-            <div class="hero-body has-text-centered">
-                <h4 class="subtitle">No Documents Submitted Yet!</h4>
-                {% if not user.is_teacher %}
-                <p>
-                    <a href="{% url 'thesis:document_upload' %}"
-                        class="button is-large is-link is-outlined">
-                        <i class="fas fa-upload"></i>&nbsp;
-                        Submit Now!
-                    </a>
-                </p>
+                </div>
                 {% endif %}
             </div>
         </div>
-            {% endif %}
     </div>
     <div class="column">
         <div class="card is-hidden">
@@ -96,7 +98,9 @@
                 </div>
                 {% else %}
                 <div class="content has-text-centered">
-                    No Comments yet!
+                    <p>
+                        No Comments yet!
+                    </p>
                 </div>
                 {% endif %}
             </div>

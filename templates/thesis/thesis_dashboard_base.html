@@ -49,15 +49,14 @@
         </div>
         <div class="column">
 
-            {% if user.is_teacher %}
-            <h3 class="title">Groups</h3>
-            {% else %}
+            {% if studentgroup %}
             <h3 class="title">{{ studentgroup.title }}</h3>
             <h4 class="subtitle">Members:
                 {{ studentgroup.students.all|join:", " }}.
             </h4>
+            {% else %}
+            <h3 class="title">Groups</h3>
             {% endif %}
-
 
             {% block dashboard_content %}
             {% endblock dashboard_content %}
