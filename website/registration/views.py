@@ -1,9 +1,9 @@
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import RedirectView
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, RedirectView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
+from django.contrib import messages
 
 from .forms import StudentSignUpForm
 from .models import User
@@ -42,4 +42,5 @@ class UserCreateView(CreateView):
         self.object = user = form.save()
         request = self.request
         login(request, user)
+        messages.success(self.request, 'User Created Successfully!')
         return HttpResponseRedirect(self.get_success_url())

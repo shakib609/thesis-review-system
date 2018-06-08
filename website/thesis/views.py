@@ -42,6 +42,7 @@ class GroupCreateView(LoginRequiredMixin, UserIsStudentMixin,
         user = self.request.user
         user.studentgroup = studentgroup
         user.save()
+        messages.success(self.request, 'Created Group Successfully!')
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -59,6 +60,7 @@ class GroupJoinView(LoginRequiredMixin, UserIsStudentMixin,
         user = self.request.user
         user.studentgroup = studentgroup
         user.save()
+        messages.success(self.request, 'You joined the Group successfully!')
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -100,6 +102,7 @@ class DocumentUploadView(LoginRequiredMixin, UserIsStudentMixin, CreateView):
         self.object = document = form.save(commit=False)
         document.studentgroup = self.request.user.studentgroup
         document.save()
+        messages.success(self.request, 'Document Uploaded successfully!')
         return HttpResponseRedirect(self.get_success_url())
 
 
