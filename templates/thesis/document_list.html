@@ -91,9 +91,16 @@
                 {% if comments %}
                 <div class="content">
                     {% for comment in comments %}
-                    <p class="is-size-7">{{ comment.user.username }}
-                        - {{ comment.created_at|date:"d M Y" }} at {{ comment.created_at|date:"H:i" }}</p>
-                    <p>{{ comment.content }}</p>
+                    <div class="comment">
+                        <p class="is-size-7" style="margin-bottom:0em;">
+                            {{ comment.user.username }}
+                             -
+                            {{ comment.created_at|date:"d M Y" }}
+                            at
+                            {{ comment.created_at|date:"H:i" }}
+                        </p>
+                        <p>{{ comment.content }}</p>
+                    </div>
                     {% endfor %}
                 </div>
                 {% else %}
