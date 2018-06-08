@@ -31,7 +31,7 @@ urlpatterns = [
         views.GroupListView.as_view(),
         name='group_list'),
     path(
-        'list/<group_code>/',
+        '<group_code>/',
         views.DocumentListView.as_view(),
         name='group_detail'),
 ]
