@@ -9,7 +9,7 @@
 
 
 {% block content %}
-{% url 'thesis:group_home' as group_home %}
+{% url 'thesis:document_list' as document_list %}
 {% url 'thesis:document_upload' as document_upload %}
 <div class="container is-fluid">
     <div class="columns">
@@ -18,8 +18,8 @@
                 <aside class="menu">
                     <p class="menu-label">Group</p>
                     <ul class="menu-list">
-                        <li><a href="{{ group_home }}"
-                        class="{% if request.path == group_home %}is-active{% endif %}">
+                        <li><a href="{{ document_list }}"
+                        class="{% if request.path == document_list %}is-active{% endif %}">
                             <i class="fas fa-align-justify"></i>&nbsp; Documents</a></li>
                         <li><a href="{{ document_upload }}"
                         class="{% if request.path == document_upload %}is-active{% endif %}">

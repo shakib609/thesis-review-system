@@ -18,7 +18,7 @@ def is_teacher(function):
         if request.user.is_teacher:
             return function(request, *args, **kwargs)
         else:
-            return redirect('thesis:group_home')
+            return redirect('thesis:document_list')
 
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__

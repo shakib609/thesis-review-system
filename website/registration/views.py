@@ -17,7 +17,7 @@ class LoginRedirectView(LoginRequiredMixin, RedirectView):
         if request.user.is_teacher:
             return reverse_lazy('thesis:groups_home')
         if request.user.studentgroup:
-            return reverse_lazy('thesis:group_home')
+            return reverse_lazy('thesis:document_list')
         return reverse_lazy('thesis:group_create_join')
 
 

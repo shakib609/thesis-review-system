@@ -7,27 +7,27 @@ app_name = 'thesis'
 
 urlpatterns = [
     path(
-        'group/',
-        views.GroupHomeView.as_view(),
-        name='group_home'),
+        'documents/',
+        views.DocumentListView.as_view(),
+        name='document_list'),
     path(
-        'group/create_join/',
+        'create_join/',
         views.GroupCreateJoinView.as_view(),
         name='group_create_join'),
     path(
-        'group/create/',
+        'create/',
         views.GroupCreateView.as_view(),
         name='group_create'),
     path(
-        'group/join/',
+        'join/',
         views.GroupJoinView.as_view(),
         name='group_join'),
     path(
-        'group/upload/',
+        'upload/',
         views.DocumentUploadView.as_view(),
         name='document_upload'),
     path(
-        'groups/',
+        'list/',
         views.GroupsHomeView.as_view(),
         name='groups_home'),
 ]

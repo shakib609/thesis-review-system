@@ -1,8 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import View
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.views.generic import (
     CreateView,
@@ -14,15 +13,14 @@ from django.views.generic import (
 from .mixins import (
     UserIsStudentMixin,
     UserIsTeacherMixin,
-    UserHasGroupMixin
+    UserHasGroupAccessMixin
 )
 from .forms import (
     StudentGroupForm,
     StudentGroupJoinForm,
     DocumentUploadForm,
-    CommentCreateForm
 )
-from .models import StudentGroup, Document, Comment
+from .models import StudentGroup, Document
 
 
 class GroupCreateJoinView(LoginRequiredMixin, UserIsStudentMixin,
@@ -35,7 +33,7 @@ class GroupCreateView(LoginRequiredMixin, UserIsStudentMixin,
                       CreateView):
     model = StudentGroup
     form_class = StudentGroupForm
-    success_url = reverse_lazy('thesis:group_home')
+    success_url = reverse_lazy('thesis:document_list')
     template_name = 'thesis/group_create.html'
     http_method_names = ['get', 'post']
 
@@ -51,7 +49,7 @@ class GroupJoinView(LoginRequiredMixin, UserIsStudentMixin,
                     FormView):
     model = StudentGroup
     form_class = StudentGroupJoinForm
-    success_url = reverse_lazy('thesis:group_home')
+    success_url = reverse_lazy('thesis:document_list')
     template_name = 'thesis/group_join.html'
     http_method_names = ['get', 'post']
 
@@ -64,14 +62,17 @@ class GroupJoinView(LoginRequiredMixin, UserIsStudentMixin,
         return HttpResponseRedirect(self.get_success_url())
 
 
-class GroupHomeView(LoginRequiredMixin, UserIsStudentMixin,
-                    UserHasGroupMixin, ListView):
-    template_name = 'thesis/group_home.html'
+class DocumentListView(LoginRequiredMixin, UserHasGroupAccessMixin, ListView):
+    template_name = 'thesis/document_list.html'
     http_method_names = ['get']
     context_object_name = 'documents'
 
     def get_queryset(self):
         self.studentgroup = self.request.user.studentgroup
+        if self.request.user.is_teacher:
+            group_code = self.kwargs.get('group_code')
+            self.studentgroup = get_object_or_404(
+                StudentGroup, md5hash=group_code)
         queryset = self.studentgroup.documents.all()
         return queryset
 
@@ -87,7 +88,7 @@ class DocumentUploadView(LoginRequiredMixin, UserIsStudentMixin, CreateView):
     model = Document
     template_name = 'thesis/document_upload.html'
     form_class = DocumentUploadForm
-    success_url = reverse_lazy('thesis:group_home')
+    success_url = reverse_lazy('thesis:document_list')
     http_method_names = ['get', 'post']
 
     def get_context_data(self, **kwargs):

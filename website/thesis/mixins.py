@@ -28,10 +28,13 @@ class UserIsStudentMixin(UserStatusTestMixin):
         return not self.request.user.is_teacher
 
 
-class UserHasGroupMixin(UserStatusTestMixin):
+class UserHasGroupAccessMixin(UserStatusTestMixin):
     """
     Mixin to check whether the User has a group assigned or not.
     """
 
     def test_func(self):
-        return bool(self.request.user.studentgroup)
+        if self.request.user.is_teacher:
+            return True
+        else:
+            return bool(self.request.user.studentgroup)
