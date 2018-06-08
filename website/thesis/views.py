@@ -103,7 +103,13 @@ class DocumentUploadView(LoginRequiredMixin, UserIsStudentMixin, CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class GroupsHomeView(LoginRequiredMixin, UserIsTeacherMixin,
-                     TemplateView):
-    template_name = "thesis/groups_home.html"
+class GroupListView(LoginRequiredMixin, UserIsTeacherMixin,
+                    ListView):
+    template_name = "thesis/group_list.html"
     http_method_names = ['get']
+    context_object_name = 'groups'
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = user.studentgroups.order_by('title')
+        return queryset

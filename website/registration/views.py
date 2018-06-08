@@ -15,7 +15,7 @@ class LoginRedirectView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         request = self.request
         if request.user.is_teacher:
-            return reverse_lazy('thesis:groups_home')
+            return reverse_lazy('thesis:group_list')
         if request.user.studentgroup:
             return reverse_lazy('thesis:document_list')
         return reverse_lazy('thesis:group_create_join')

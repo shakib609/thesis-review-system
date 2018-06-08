@@ -28,6 +28,6 @@ urlpatterns = [
         name='document_upload'),
     path(
         'list/',
-        views.GroupsHomeView.as_view(),
-        name='groups_home'),
+        views.GroupListView.as_view(),
+        name='group_list'),
 ]

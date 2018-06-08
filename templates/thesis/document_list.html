@@ -1,7 +1,7 @@
 {% extends 'thesis/thesis_dashboard_base.html' %}
 
 {% block title %}
-    {{ block.super }} | Your Group
+    {{ block.super }} | {{ studentgroup.title }}
 {% endblock title %}
 
 
@@ -21,7 +21,7 @@
             </header>
             <div class="card-content">
                 {% for d in documents %}
-                    <div class="columns">
+                    <div class="columns is-mobile">
                         <div class="column is-9 has-text-small">
                             {{ d.filename }}
                             <br>
@@ -32,8 +32,8 @@
                                 </time>
                             </p>
                         </div>
-                        <div class="column is-3">
-                            <a href="" class="button is-small is-fullwidth is-primary">
+                        <div class="column is-3 has-text-right">
+                            <a href="" class="button is-small is-primary">
                                 View
                             </a>
                         </div>

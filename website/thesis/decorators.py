@@ -6,7 +6,7 @@ def is_student(function):
         if not request.user.is_teacher:
             return function(request, *args, **kwargs)
         else:
-            return redirect('thesis:groups_home')
+            return redirect('thesis:group_list')
 
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__
