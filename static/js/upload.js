@@ -33,10 +33,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         form.onsubmit = function (e) {
             e.preventDefault();
-            if (isPdf(file))
+            if (isPdf(file)) {
+                document.getElementById('upload-btn').classList.add('is-loading');
                 form.submit();
+            }
             else
-                indicate_error()
+                indicate_error();
         }
 });
 
