@@ -1,36 +1,28 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import (
-    CreateView, TemplateView, FormView, ListView)
 from django.views import View
+from django.contrib import messages
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template.defaultfilters import date
-
-import json
+from django.http import HttpResponseRedirect
+from django.views.generic import (
+    CreateView,
+    TemplateView,
+    FormView,
+    ListView
+)
 
 from .mixins import (
-    UserIsStudentMixin, UserIsTeacherMixin, UserHasGroupMixin)
+    UserIsStudentMixin,
+    UserIsTeacherMixin,
+    UserHasGroupMixin
+)
 from .forms import (
-    StudentGroupForm, StudentGroupJoinForm, DocumentUploadForm)
+    StudentGroupForm,
+    StudentGroupJoinForm,
+    DocumentUploadForm,
+    CommentCreateForm
+)
 from .models import StudentGroup, Document, Comment
-
-
-def return_json(data):
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
-
-class AccountRedirectView(LoginRequiredMixin, View):
-    http_method_names = ['get']
-
-    def get(self, request, *args, **kwargs):
-        if request.user.is_teacher:
-            return redirect('thesis:groups_home')
-        if request.user.studentgroup:
-            return redirect('thesis:group_home')
-        return redirect('thesis:group_create_join')
 
 
 class GroupCreateJoinView(LoginRequiredMixin, UserIsStudentMixin,
@@ -89,28 +81,6 @@ class GroupHomeView(LoginRequiredMixin, UserIsStudentMixin,
             '-created_at')
         context['studentgroup'] = self.studentgroup
         return context
-
-
-@login_required
-@require_POST
-def create_comment(request, group_code):
-    studentgroup = get_object_or_404(StudentGroup, md5hash=group_code)
-    user = request.user
-    if (user.studentgroup != studentgroup) or user.is_teacher is False:
-        return return_json({'created': False})
-    req = json.loads(request.body.decode('utf-8'))
-    content = req.get('content')
-    comment = Comment(content=content, user=user, studentgroup=studentgroup)
-    try:
-        comment.save()
-        d = comment.created_at
-        response = {
-            'created': True,
-            'created_at': date(d, 'd M Y') + ' at ' + date(d, 'H:i'),
-        }
-        return return_json(response)
-    except:
-        return return_json({'created': False})
 
 
 class DocumentUploadView(LoginRequiredMixin, UserIsStudentMixin, CreateView):

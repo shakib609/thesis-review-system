@@ -2,7 +2,7 @@ from django import forms
 import magic
 
 from ..registration.models import User
-from .models import StudentGroup, Document
+from .models import StudentGroup, Document, Comment
 
 
 class StudentGroupForm(forms.ModelForm):
@@ -53,3 +53,9 @@ class DocumentUploadForm(forms.ModelForm):
                 'Invalid Format!'
                 ' PDF Only!')
         return f
+
+
+class CommentCreateForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']

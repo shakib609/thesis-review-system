@@ -4,22 +4,34 @@ from django.shortcuts import redirect
 
 
 class UserStatusTestMixin(UserPassesTestMixin):
+
     def handle_no_permission(self):
         if self.raise_exception:
             raise PermissionDenied(self.get_permission_denied_message())
-        return redirect('thesis:account_redirect')
+        return redirect('registration:login_redirect')
 
 
 class UserIsTeacherMixin(UserStatusTestMixin):
+    """
+    Mixin to check whether the User is a Teacher or not.
+    """
     def test_func(self):
         return self.request.user.is_teacher
 
 
 class UserIsStudentMixin(UserStatusTestMixin):
+    """
+    Mixin to check whether the User is a student or not.
+    """
+
     def test_func(self):
         return not self.request.user.is_teacher
 
 
 class UserHasGroupMixin(UserStatusTestMixin):
+    """
+    Mixin to check whether the User has a group assigned or not.
+    """
+
     def test_func(self):
         return bool(self.request.user.studentgroup)

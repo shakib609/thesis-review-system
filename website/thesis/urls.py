@@ -7,10 +7,6 @@ app_name = 'thesis'
 
 urlpatterns = [
     path(
-        '',
-        views.AccountRedirectView.as_view(),
-        name='account_redirect'),
-    path(
         'group/',
         views.GroupHomeView.as_view(),
         name='group_home'),

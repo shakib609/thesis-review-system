@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import login, logout
 
-from .views import UserCreateView, AboutView
+from .views import UserCreateView, AboutView, LoginRedirectView
 
 app_name = 'registration'
 
@@ -10,4 +10,5 @@ urlpatterns = [
     path('register/', UserCreateView.as_view(), name='register'),
     path('logout/', logout, {'next_page': '/'}, name='logout'),
     path('about/', AboutView.as_view(), name='about'),
+    path('redirect/', LoginRedirectView.as_view(), name='login_redirect'),
 ]

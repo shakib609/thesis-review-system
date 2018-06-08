@@ -1,10 +1,24 @@
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import RedirectView
 from django.views.generic import TemplateView, CreateView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 
 from .forms import StudentSignUpForm
 from .models import User
+
+
+class LoginRedirectView(LoginRequiredMixin, RedirectView):
+    http_method_names = ['get']
+
+    def get_redirect_url(self, *args, **kwargs):
+        request = self.request
+        if request.user.is_teacher:
+            return reverse_lazy('thesis:groups_home')
+        if request.user.studentgroup:
+            return reverse_lazy('thesis:group_home')
+        return reverse_lazy('thesis:group_create_join')
 
 
 class AboutView(TemplateView):
@@ -16,7 +30,7 @@ class UserCreateView(CreateView):
     model = User
     template_name = 'registration/register.html'
     form_class = StudentSignUpForm
-    success_url = reverse_lazy('thesis:account_redirect')
+    success_url = reverse_lazy('registration:login_redirect')
     http_method_names = ['get', 'post']
 
     def get(self, request, *args, **kwargs):
