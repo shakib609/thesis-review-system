@@ -12,6 +12,7 @@
 {% url 'thesis:document_list' as document_list %}
 {% url 'thesis:document_upload' as document_upload %}
 {% url 'thesis:group_list' as group_list %}
+{% url 'thesis:group_invite' as group_invite %}
 
 <div class="container is-fluid">
     <div class="columns">
@@ -31,7 +32,8 @@
                         <li><a href="{{ document_upload }}"
                         class="{% if request.path == document_upload %}is-active{% endif %}">
                             <i class="fas fa-upload"></i>&nbsp; Upload</a></li>
-                        <li><a href="">
+                        <li><a href="{{ group_invite }}"
+                        class="{% if request.path == group_invite %}is-active{% endif %}">
                             <i class="fas fa-share"></i>&nbsp; Invite</a></li>
                         <li><a href="">
                             <i class="fas fa-wrench"></i>&nbsp; Group Settings</a></li>

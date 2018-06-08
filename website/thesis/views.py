@@ -98,6 +98,13 @@ class DocumentUploadView(LoginRequiredMixin, UserIsStudentMixin,
         return HttpResponseRedirect(self.get_success_url())
 
 
+class GroupInviteView(LoginRequiredMixin, UserIsStudentMixin,
+                      UserHasGroupAccessMixin, StudentGroupContextMixin,
+                      TemplateView):
+    http_method_names = ['get']
+    template_name = "thesis/group_invite.html"
+
+
 class GroupListView(LoginRequiredMixin, UserIsTeacherMixin,
                     ListView):
     template_name = "thesis/group_list.html"

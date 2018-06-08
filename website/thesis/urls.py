@@ -27,6 +27,10 @@ urlpatterns = [
         views.DocumentUploadView.as_view(),
         name='document_upload'),
     path(
+        'invite/',
+        views.GroupInviteView.as_view(),
+        name='group_invite'),
+    path(
         'list/',
         views.GroupListView.as_view(),
         name='group_list'),
