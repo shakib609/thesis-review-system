@@ -13,7 +13,8 @@ from django.views.generic import (
 from .mixins import (
     UserIsStudentMixin,
     UserIsTeacherMixin,
-    UserHasGroupAccessMixin
+    UserHasGroupAccessMixin,
+    StudentGroupContextMixin,
 )
 from .forms import (
     StudentGroupForm,
@@ -64,17 +65,13 @@ class GroupJoinView(LoginRequiredMixin, UserIsStudentMixin,
         return HttpResponseRedirect(self.get_success_url())
 
 
-class DocumentListView(LoginRequiredMixin, UserHasGroupAccessMixin, ListView):
+class DocumentListView(LoginRequiredMixin, UserHasGroupAccessMixin,
+                       StudentGroupContextMixin, ListView):
     template_name = 'thesis/document_list.html'
     http_method_names = ['get']
     context_object_name = 'documents'
 
     def get_queryset(self):
-        self.studentgroup = self.request.user.studentgroup
-        if self.request.user.is_teacher:
-            group_code = self.kwargs.get('group_code')
-            self.studentgroup = get_object_or_404(
-                StudentGroup, md5hash=group_code)
         queryset = self.studentgroup.documents.all()
         return queryset
 
@@ -82,21 +79,16 @@ class DocumentListView(LoginRequiredMixin, UserHasGroupAccessMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['comments'] = self.studentgroup.comments.order_by(
             '-created_at')
-        context['studentgroup'] = self.studentgroup
         return context
 
 
-class DocumentUploadView(LoginRequiredMixin, UserIsStudentMixin, CreateView):
+class DocumentUploadView(LoginRequiredMixin, UserIsStudentMixin,
+                         StudentGroupContextMixin, CreateView):
     model = Document
     template_name = 'thesis/document_upload.html'
     form_class = DocumentUploadForm
     success_url = reverse_lazy('thesis:document_list')
     http_method_names = ['get', 'post']
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['studentgroup'] = self.request.user.studentgroup
-        return context
 
     def form_valid(self, form):
         self.object = document = form.save(commit=False)

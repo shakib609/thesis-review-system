@@ -1,6 +1,9 @@
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
+from django.utils.functional import cached_property
+
+from .models import StudentGroup
 
 
 class UserStatusTestMixin(UserPassesTestMixin):
@@ -38,3 +41,24 @@ class UserHasGroupAccessMixin(UserStatusTestMixin):
             return True
         else:
             return bool(self.request.user.studentgroup)
+
+
+class StudentGroupContextMixin:
+    """
+    Mixin to add studentgroup to the context
+    Must be used with UserHasGroupAccessMixin
+    """
+
+    @cached_property
+    def studentgroup(self):
+        user = self.request.user
+        studentgroup = user.studentgroup
+        if user.is_teacher:
+            group_code = self.kwargs.get('group_code')
+            studentgroup = get_object_or_404(StudentGroup, md5hash=group_code)
+        return studentgroup
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['studentgroup'] = self.studentgroup
+        return context
