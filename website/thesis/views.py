@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.views.generic import (
     CreateView,
     TemplateView,
@@ -21,8 +21,9 @@ from .forms import (
     StudentGroupForm,
     StudentGroupJoinForm,
     DocumentUploadForm,
+    CommentCreateForm,
 )
-from .models import StudentGroup, Document
+from .models import StudentGroup, Document, Comment
 
 
 class GroupCreateJoinView(LoginRequiredMixin, UserIsStudentMixin,
@@ -134,3 +135,30 @@ class GroupUpdateView(LoginRequiredMixin, UserIsStudentMixin,
         response = super().form_valid(form)
         messages.success(self.request, 'Group Updated Successfully!')
         return response
+
+
+class CommentCreateView(LoginRequiredMixin, UserHasGroupAccessMixin,
+                        StudentGroupContextMixin, CreateView):
+    model = Comment
+    http_method_names = ['post']
+    form_class = CommentCreateForm
+    success_url = reverse_lazy('thesis:document_list')
+
+    def get_success_url(self, *args, **kwargs):
+        if self.request.user.is_teacher:
+            return reverse_lazy(
+                'thesis:group_detail',
+                kwargs={'group_code': self.studentgroup.md5hash})
+        return self.success_url
+
+    def form_valid(self, form):
+        self.object = comment = form.save(commit=False)
+        comment.user = self.request.user
+        comment.studentgroup = self.studentgroup
+        comment.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        return JsonResponse(
+            {'success': False, 'errors': form.errors}
+        )

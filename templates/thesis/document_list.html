@@ -96,13 +96,36 @@
                 </a>
             </header>
             <div class="card-content">
-                {% if comments %}
                 <div class="content">
+                    <form
+                    {% if user.is_teacher %}
+                        action="{% url 'thesis:comment_create_teacher' studentgroup.md5hash %}"
+                    {% else %}
+                        action="{% url 'thesis:comment_create' %}"
+                    {% endif %}
+                    method="post">
+                        <div class="field">
+                            <div class="control">
+                                <textarea name="content"
+                                    class="textarea"
+                                    placeholder="Write your comment here!" required=""></textarea>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <p class="control">
+                                <button type="submit" class="button is-link">Post</button></p>
+                        </div>
+
+                        {% csrf_token %}
+                    </form>
+                    {% if comments %}
                     {% for comment in comments %}
                     <div class="comment">
                         <p class="is-size-7" style="margin-bottom:0em;">
-                            {{ comment.user.username }}
-                             -
+                            <span class="{% if comment.user.is_teacher %}has-text-danger{% else %}has-text-info{% endif %}">
+                                {{ comment.user.username }}
+                            </span>
+                            -
                             {{ comment.created_at|date:"d M Y" }}
                             at
                             {{ comment.created_at|date:"H:i" }}
@@ -110,10 +133,8 @@
                         <p>{{ comment.content }}</p>
                     </div>
                     {% endfor %}
-                </div>
-                {% else %}
-                <div class="content has-text-centered">
-                    <p>
+                    {% else %}
+                    <p class="has-text-centered">
                         No Comments yet!
                     </p>
                 </div>

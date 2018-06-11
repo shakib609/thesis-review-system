@@ -42,4 +42,14 @@ urlpatterns = [
         '<group_code>/',
         views.DocumentListView.as_view(),
         name='group_detail'),
+    path(
+        'comment/create/',
+        views.CommentCreateView.as_view(),
+        name='comment_create'
+    ),
+    path(
+        '<group_code>/comment/create/',
+        views.CommentCreateView.as_view(),
+        name='comment_create_teacher'
+    ),
 ]
