@@ -27,6 +27,7 @@ class StudentGroup(models.Model):
         on_delete=models.SET_NULL)
     title = models.CharField(max_length=256)
     md5hash = models.CharField(max_length=10, null=True)
+    approved = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
