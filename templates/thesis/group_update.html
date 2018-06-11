@@ -1,4 +1,4 @@
-{% extends 'thesis/thesis_dashboard_base.html' %}
+{% extends 'base/thesis_dashboard_base.html' %}
 {% load static %}
 {% load my_tags %}
 
@@ -72,7 +72,3 @@
 </div>
 
 {% endblock dashboard_content %}
-
-{% block extra_js %}
-    <script src="{% static 'js/upload.js' %}"></script>
-{% endblock extra_js %}

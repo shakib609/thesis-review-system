@@ -1,12 +1,18 @@
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView, CreateView, RedirectView
+from django.views.generic import (
+    TemplateView,
+    CreateView,
+    RedirectView,
+    UpdateView,
+)
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.contrib import messages
 
 from .forms import StudentSignUpForm
 from .models import User
+from ..thesis.mixins import StudentGroupContextMixin
 
 
 class LoginRedirectView(LoginRequiredMixin, RedirectView):
@@ -28,7 +34,7 @@ class AboutView(TemplateView):
 
 class UserCreateView(CreateView):
     model = User
-    template_name = 'registration/register.html'
+    template_name = 'registration/user_create.html'
     form_class = StudentSignUpForm
     success_url = reverse_lazy('registration:login_redirect')
     http_method_names = ['get', 'post']
@@ -39,8 +45,24 @@ class UserCreateView(CreateView):
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
-        self.object = user = form.save()
-        request = self.request
-        login(request, user)
+        response = super().form_valid(form)
+        login(self.request, self.object)
         messages.success(self.request, 'User Created Successfully!')
-        return HttpResponseRedirect(self.get_success_url())
+        return response
+
+
+class UserUpdateView(LoginRequiredMixin, StudentGroupContextMixin,
+                     UpdateView):
+    model = User
+    template_name = "registration/user_update.html"
+    http_method_names = ['get', 'post']
+    form_class = StudentSignUpForm
+    success_url = reverse_lazy('registration:login_redirect')
+
+    def get_object(self, *args, **kwargs):
+        return self.request.user
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Update Successful!')
+        return response

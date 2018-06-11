@@ -84,7 +84,8 @@ class DocumentListView(LoginRequiredMixin, UserHasGroupAccessMixin,
 
 
 class DocumentUploadView(LoginRequiredMixin, UserIsStudentMixin,
-                         StudentGroupContextMixin, CreateView):
+                         UserHasGroupAccessMixin, StudentGroupContextMixin,
+                         CreateView):
     model = Document
     template_name = 'thesis/document_upload.html'
     form_class = DocumentUploadForm
@@ -93,7 +94,7 @@ class DocumentUploadView(LoginRequiredMixin, UserIsStudentMixin,
 
     def form_valid(self, form):
         self.object = document = form.save(commit=False)
-        document.studentgroup = self.request.user.studentgroup
+        document.studentgroup = self.studentgroup
         document.save()
         messages.success(self.request, 'Document Uploaded successfully!')
         return HttpResponseRedirect(self.get_success_url())
