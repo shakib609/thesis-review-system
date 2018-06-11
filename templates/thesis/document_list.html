@@ -35,7 +35,7 @@
                     </div>
                     <div class="column is-3 has-text-right">
                         <a
-                        href="#"
+                        href="{% get_media_prefix %}/sg_{{ studentgroup.md5hash }}/{{ d.filename }}"
                         data-sg-code="{{ studentgroup.md5hash }}"
                         data-file-name="{{ d.filename }}"
                         class="button is-small is-primary view-button">
