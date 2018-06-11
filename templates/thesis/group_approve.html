@@ -20,7 +20,7 @@
         {% csrf_token %}
         <div class="field">
             <p class="control">
-                <button class="button is-link">
+                <button class="button is-primary">
                     {% if studentgroup.approved %}DISAPPROVE{% else %}APPROVE{% endif %}
                 </button>
             </p>

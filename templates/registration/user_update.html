@@ -6,137 +6,115 @@
     {{ block.super }} | Invite Friends
 {% endblock title %}
 
+
+{% block page_title %}
+
+{% endblock page_title %}
+
+
 {% block dashboard_content %}
 
-<div class="column">
-    <div class="hero is-medium">
-        <div class="hero-head">
-            <h3 class="subtitle has-text-centered has-text-weight-bold" style="margin-bottom: 2rem;">
-                Update Account Info
-            </h3>
-            <div class="column is-6 is-offset-3 has-text-centered">
-                <div class="box">
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="field">
-                            <div class="control has-icons-left">
-                                <input {% if 'first_name' in form.errors %} class="input is-danger" {% else %} <input class="input" {% endif %} type="text"
-                                    name="first_name" placeholder="First Name" autofocus="" required="" value="{{ form.first_name.value|default_if_none:'' }}">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-id-card"></i>
-                                </span>
-                                {% if 'first_name' in form.errors %}
-                                <ul class="help is-danger">
-                                    {% for error in form.errors|get_item:'first_name' %}
-                                    <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="control has-icons-left">
-                                <input {% if 'last_name' in form.errors %} class="input is-danger" {% else %} <input class="input" {% endif %} type="text"
-                                    name="last_name" placeholder="Last Name" required="" value="{{ form.last_name.value|default_if_none:'' }}">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-id-card"></i>
-                                </span>
-                                {% if 'last_name' in form.errors %}
-                                <ul class="help is-danger">
-                                    {% for error in form.errors|get_item:'last_name' %}
-                                    <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control has-icons-left">
-                                <input {% if 'email' in form.errors %} class="input is-danger" {% else %} <input class="input" {% endif %} type="email" name="email"
-                                    placeholder="E-mail" required="" value="{{ form.email.value|default_if_none:'' }}">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-at"></i>
-                                </span>
-                                {% if 'email' in form.errors %}
-                                <ul class="help is-danger">
-                                    {% for error in form.errors|get_item:'email' %}
-                                    <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control has-icons-left">
-                                <input {% if 'phone_number' in form.errors %} class="input is-danger" {% else %} <input class="input" {% endif %} type="tel"
-                                    name="phone_number" placeholder="Phone Number" required="" value="{{ form.phone_number.value|default_if_none:'' }}">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-phone" data-fa-transform="flip-h"></i>
-                                </span>
-                                {% if 'phone_number' in form.errors %}
-                                <ul class="help is-danger">
-                                    {% for error in form.errors|get_item:'phone_number' %}
-                                    <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control has-icons-left">
-                                <input {% if 'username' in form.errors %} class="input is-danger" {% else %} <input class="input is-capitalized" {% endif %} type="text" name="username" placeholder="Varsity ID" required="" value="{{ form.username.value|default_if_none:'' }}">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-hashtag"></i>
-                                </span>
-                                {% if 'username' in form.errors %}
-                                <ul class="help is-danger">
-                                    {% for error in form.errors|get_item:'username' %}
-                                    <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control has-icons-left">
-                                <input {% if 'password1' in form.errors %} class="input is-danger" {% else %} <input class="input" {% endif %} type="password"
-                                    name="password1" placeholder="Password" required="">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-key"></i>
-                                </span>
-
-                                {% if 'password1' in form.errors %}
-                                <ul class="help is-danger">
-                                    {% for error in form.errors|get_item:'password1' %}
-                                    <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control has-icons-left">
-                                <input {% if 'password2' in form.errors %} class="input is-danger" {% else %} <input class="input" {% endif %} type="password"
-                                    name="password2" placeholder="Confirm Password" required="">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-key"></i>
-                                </span>
-                                {% if 'password2' in form.errors %}
-                                <ul class="help is-danger">
-                                    {% for error in form.errors|get_item:'password2' %}
-                                    <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <input type="submit" value="Update" class="button is-block is-link is-fullwidth">
-                    </form>
-                </div>
+<div class="column is-5">
+    <h1 class="title">Account Settings</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="field">
+            <label for="first_name" class="label">First Name</label>
+            <div class="control has-icons-left">
+                <input {% if 'first_name' in form.errors %} class="input is-danger" {% else %} <input class="input" {% endif %} type="text"
+                    name="first_name" placeholder="First Name" autofocus="" required="" value="{{ form.first_name.value|default_if_none:'' }}" id="first_name">
+                <span class="icon is-small is-left">
+                    <i class="fas fa-id-card"></i>
+                </span>
+                {% if 'first_name' in form.errors %}
+                <ul class="help is-danger">
+                    {% for error in form.errors|get_item:'first_name' %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
             </div>
         </div>
-    </div>
+
+        <div class="field">
+            <label for="last_name" class="label">Last Name</label>
+            <div class="control has-icons-left">
+                <input {% if 'last_name' in form.errors %} class="input is-danger" {% else %} <input class="input" {% endif %} type="text"
+                    name="last_name" placeholder="Last Name" required="" value="{{ form.last_name.value|default_if_none:'' }}" id="last_name">
+                <span class="icon is-small is-left">
+                    <i class="fas fa-id-card"></i>
+                </span>
+                {% if 'last_name' in form.errors %}
+                <ul class="help is-danger">
+                    {% for error in form.errors|get_item:'last_name' %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="email" class="label">Email</label>
+            <div class="control has-icons-left">
+                <input {% if 'email' in form.errors %} class="input is-danger" {% else %} <input class="input" {% endif %} type="email" name="email"
+                    placeholder="E-mail" required="" value="{{ form.email.value|default_if_none:'' }}" id="email">
+                <span class="icon is-small is-left">
+                    <i class="fas fa-at"></i>
+                </span>
+                {% if 'email' in form.errors %}
+                <ul class="help is-danger">
+                    {% for error in form.errors|get_item:'email' %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="phone_number" class="label">Phone Number</label>
+            <div class="control has-icons-left">
+                <input {% if 'phone_number' in form.errors %} class="input is-danger" {% else %} <input class="input" {% endif %} type="tel"
+                    name="phone_number" placeholder="Phone Number" required="" value="{{ form.phone_number.value|default_if_none:'' }}" id="phone_number">
+                <span class="icon is-small is-left">
+                    <i class="fas fa-phone" data-fa-transform="flip-h"></i>
+                </span>
+                {% if 'phone_number' in form.errors %}
+                <ul class="help is-danger">
+                    {% for error in form.errors|get_item:'phone_number' %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="username" class="label">Varsity ID:</label>
+            <div class="control has-icons-left">
+                <input {% if 'username' in form.errors %} class="input is-danger" {% else %} <input class="input is-capitalized" {% endif %} type="text" name="username" placeholder="Varsity ID" required="" value="{{ form.username.value|default_if_none:'' }}" id="username">
+                <span class="icon is-small is-left">
+                    <i class="fas fa-hashtag"></i>
+                </span>
+                {% if 'username' in form.errors %}
+                <ul class="help is-danger">
+                    {% for error in form.errors|get_item:'username' %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <button type="submit"class="button is-link">
+                    Update
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 
 {% endblock dashboard_content %}

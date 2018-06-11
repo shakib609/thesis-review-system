@@ -66,3 +66,15 @@ class StudentSignUpForm(UserCreationForm):
     def clean_username(self):
         username = self.cleaned_data.get("username").upper()
         return username
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = (
+            'first_name',
+            'last_name',
+            'email',
+            'phone_number',
+            'username',
+        )

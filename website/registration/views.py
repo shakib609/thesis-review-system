@@ -10,9 +10,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.contrib import messages
 
-from .forms import StudentSignUpForm
+from .forms import StudentSignUpForm, UserUpdateForm
 from .models import User
-from ..thesis.mixins import StudentGroupContextMixin
 
 
 class LoginRedirectView(LoginRequiredMixin, RedirectView):
@@ -51,12 +50,11 @@ class UserCreateView(CreateView):
         return response
 
 
-class UserUpdateView(LoginRequiredMixin, StudentGroupContextMixin,
-                     UpdateView):
+class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     template_name = "registration/user_update.html"
     http_method_names = ['get', 'post']
-    form_class = StudentSignUpForm
+    form_class = UserUpdateForm
     success_url = reverse_lazy('registration:login_redirect')
 
     def get_object(self, *args, **kwargs):

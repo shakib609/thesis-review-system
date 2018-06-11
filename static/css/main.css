@@ -5,3 +5,7 @@
 .comment {
     margin-top: 0.75rem;
 }
+
+.menu-list a.is-active {
+    background-color: #00d1b2;
+}

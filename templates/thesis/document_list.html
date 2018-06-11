@@ -37,7 +37,7 @@
                         href="{% get_media_prefix %}/sg_{{ studentgroup.md5hash }}/{{ d.filename }}"
                         data-sg-code="{{ studentgroup.md5hash }}"
                         data-file-name="{{ d.filename }}"
-                        class="button is-small is-primary view-button">
+                        class="button is-small is-link view-button">
                             View
                         </a>
                     </div>
@@ -52,7 +52,7 @@
                             </p>
                             {% if not user.is_teacher %}
                             <p>
-                                <a href="{% url 'thesis:document_upload' %}" class="button is-medium is-link is-outlined">
+                                <a href="{% url 'thesis:document_upload' %}" class="button is-medium is-primary is-outlined">
                                     <i class="fas fa-upload"></i>&nbsp; Submit Now!
                                 </a>
                             </p>
@@ -113,7 +113,7 @@
                         </div>
                         <div class="field">
                             <p class="control">
-                                <button type="submit" class="button is-link">Post</button></p>
+                                <button type="submit" class="button is-primary">Post</button></p>
                         </div>
 
                         {% csrf_token %}
