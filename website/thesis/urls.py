@@ -52,4 +52,9 @@ urlpatterns = [
         views.CommentCreateView.as_view(),
         name='comment_create_teacher'
     ),
+    path(
+        '<group_code>/approve/',
+        views.StudentGroupApproveView.as_view(),
+        name='group_approve'
+    ),
 ]

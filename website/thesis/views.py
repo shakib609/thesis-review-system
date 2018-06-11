@@ -1,29 +1,16 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse
-from django.views.generic import (
-    CreateView,
-    TemplateView,
-    FormView,
-    ListView,
-    UpdateView,
-)
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import (CreateView, FormView, ListView, RedirectView,
+                                  TemplateView, UpdateView, View)
 
-from .mixins import (
-    UserIsStudentMixin,
-    UserIsTeacherMixin,
-    UserHasGroupAccessMixin,
-    StudentGroupContextMixin,
-)
-from .forms import (
-    StudentGroupForm,
-    StudentGroupJoinForm,
-    DocumentUploadForm,
-    CommentCreateForm,
-)
-from .models import StudentGroup, Document, Comment
+from .forms import (CommentCreateForm, DocumentUploadForm, StudentGroupForm,
+                    StudentGroupJoinForm)
+from .mixins import (StudentGroupContextMixin, UserHasGroupAccessMixin,
+                     UserIsStudentMixin, UserIsTeacherMixin)
+from .models import Comment, Document, StudentGroup
 
 
 class GroupCreateJoinView(LoginRequiredMixin, UserIsStudentMixin,
@@ -161,4 +148,27 @@ class CommentCreateView(LoginRequiredMixin, UserHasGroupAccessMixin,
     def form_invalid(self, form):
         return JsonResponse(
             {'success': False, 'errors': form.errors}
+        )
+
+
+class StudentGroupApproveView(LoginRequiredMixin, UserIsTeacherMixin,
+                              StudentGroupContextMixin, TemplateView):
+    http_method_names = ['get', 'post']
+    template_name = 'thesis/group_approve.html'
+
+    def post(self, request, *args, **kwargs):
+        if self.studentgroup.approved:
+            self.studentgroup.approved = False
+            messages.success(
+                request, 'The StudentGroups Proposal has been disapproved!')
+        else:
+            self.studentgroup.approved = True
+            messages.success(
+                request, 'The StudentGroups Proposal has been approved!')
+        self.studentgroup.save()
+        return HttpResponseRedirect(
+            reverse_lazy(
+                'thesis:group_detail',
+                kwargs={'group_code': self.studentgroup.md5hash}
+            )
         )

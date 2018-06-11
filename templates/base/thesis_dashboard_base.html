@@ -60,7 +60,7 @@
                 {{ studentgroup.title }}&nbsp;
 
                 {% if user.is_teacher %}
-                    <a href="">
+                    <a href="{% url 'thesis:group_approve' studentgroup.md5hash %}">
                 {% endif %}
                     {% if studentgroup.approved %}
                     <span class="has-text-success">

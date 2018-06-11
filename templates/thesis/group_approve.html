@@ -1,0 +1,31 @@
+{% extends 'base/thesis_dashboard_base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ block.super }} | Approve Group: {{ studentgroup.title }}
+{% endblock title %}
+
+
+{% block dashboard_content %}
+
+<div class="column">
+    <h3 class="subtitle">
+        Are you sure you want to
+        <span class="has-text-weight-bold">
+            {% if studentgroup.approved %}DISAPPROVE{% else %}APPROVE{% endif %}
+        </span>
+        this group?
+    </h3>
+    <form method="post">
+        {% csrf_token %}
+        <div class="field">
+            <p class="control">
+                <button class="button is-link">
+                    {% if studentgroup.approved %}DISAPPROVE{% else %}APPROVE{% endif %}
+                </button>
+            </p>
+        </div>
+    </form>
+</div>
+
+{% endblock dashboard_content %}
