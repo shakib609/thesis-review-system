@@ -3,7 +3,9 @@
 
 {% block extra_css %}
 <style>
-    nav.navbar {margin-bottom: 1rem;}
+    nav.navbar {
+        border-bottom: 2px #276cda solid;
+    }
 </style>
 {% endblock extra_css %}
 
@@ -16,42 +18,40 @@
 {% url 'thesis:group_update' as group_update %}
 {% url 'registration:user_update' as user_update %}
 
-<div class="container is-fluid">
+<div class="container is-fluid" id="main-container">
     <div class="columns">
         <div class="column is-2">
-            <div class="hero">
-                <aside class="menu">
-                    <p class="menu-label">Group</p>
-                    <ul class="menu-list">
-                        {% if user.is_teacher %}
-                        <li><a href="{{ group_list }}"
-                        class="{% if request.path == group_list %}is-active{% endif %}">
-                            <i class="fas fa-align-justify"></i>&nbsp; Groups</a></li>
-                        {% else %}
-                        <li><a href="{{ document_list }}"
-                        class="{% if request.path == document_list %}is-active{% endif %}">
-                            <i class="fas fa-align-justify"></i>&nbsp; Documents</a></li>
-                        <li><a href="{{ document_upload }}"
-                        class="{% if request.path == document_upload %}is-active{% endif %}">
-                            <i class="fas fa-upload"></i>&nbsp; Upload</a></li>
-                        <li><a href="{{ group_invite }}"
-                        class="{% if request.path == group_invite %}is-active{% endif %}">
-                            <i class="fas fa-share"></i>&nbsp; Invite</a></li>
-                        <li><a href="{{ group_update }}"
-                        class="{% if request.path == group_update %}is-active{% endif %}">
-                            <i class="fas fa-wrench"></i>&nbsp; Group Settings</a></li>
-                        {% endif %}
-                    </ul>
-                    <p class="menu-label">Account</p>
-                    <ul class="menu-list">
-                        <li><a href="{{ user_update }}"
-                            class="{% if request.path == user_update %}is-active{% endif %}">
-                            <i class="fas fa-cog"></i>&nbsp; Account Settings</a></li>
-                        <li><a href="">
-                            <i class="fas fa-trash"></i>&nbsp; Account Removal</a></li>
-                    </ul>
-                </aside>
-            </div>
+            <aside class="menu has-text-weight-bold">
+                <p class="menu-label">Group</p>
+                <ul class="menu-list">
+                    {% if user.is_teacher %}
+                    <li><a href="{{ group_list }}"
+                    class="{% if request.path == group_list %}is-active{% endif %}">
+                        <i class="fas fa-align-justify"></i>&nbsp; Groups</a></li>
+                    {% else %}
+                    <li><a href="{{ document_list }}"
+                    class="{% if request.path == document_list %}is-active{% endif %}">
+                        <i class="fas fa-align-justify"></i>&nbsp; Documents</a></li>
+                    <li><a href="{{ document_upload }}"
+                    class="{% if request.path == document_upload %}is-active{% endif %}">
+                        <i class="fas fa-upload"></i>&nbsp; Upload</a></li>
+                    <li><a href="{{ group_invite }}"
+                    class="{% if request.path == group_invite %}is-active{% endif %}">
+                        <i class="fas fa-share"></i>&nbsp; Invite</a></li>
+                    <li><a href="{{ group_update }}"
+                    class="{% if request.path == group_update %}is-active{% endif %}">
+                        <i class="fas fa-wrench"></i>&nbsp; Group Settings</a></li>
+                    {% endif %}
+                </ul>
+                <p class="menu-label">Account</p>
+                <ul class="menu-list">
+                    <li><a href="{{ user_update }}"
+                        class="{% if request.path == user_update %}is-active{% endif %}">
+                        <i class="fas fa-cog"></i>&nbsp; Account Settings</a></li>
+                    <li><a href="">
+                        <i class="fas fa-trash"></i>&nbsp; Account Removal</a></li>
+                </ul>
+            </aside>
         </div>
         <div class="column">
             {% block page_title %}

@@ -5,29 +5,22 @@
     {{ block.super }} | Invite Friends
 {% endblock title %}
 
+
+{% block page_title %}
+    <h1 class="title">Invite Friends</h1>
+    <h2 class="subtitle">Share this code with your friends!</h2>
+{% endblock page_title %}
+
+
 {% block dashboard_content %}
 
 <div class="column">
-    <div class="hero is-medium">
-        <div class="hero-head">
-            <h3 class="subtitle has-text-centered has-text-weight-bold"
-                style="margin-bottom: 2rem;">
-                Invite your Friends
-            </h3>
-            <div class="column is-4 is-offset-4 has-text-centered">
-                <p class="is-size-6" style="margin-bottom: 1rem;">
-                    Share this code with your friends!
-                </p>
-                <div class="box is-centered is-fullwidth">
-                    <p class="is-size-2"
-                       style="font-family:monospace;">{{ studentgroup.md5hash }}</p>
-                </div>
-                <p class="is-size-6 is-text-dark">
-                    P.S. The code is case-sensitive.
-                </p>
-            </div>
-        </div>
-    </div>
+    <p class="is-size-2"
+        style="font-family:monospace;">
+        {{ studentgroup.md5hash }}</p><br>
+    <p class="is-size-6 is-text-dark">
+        P.S. The code is case-sensitive.
+    </p>
 </div>
 
 {% endblock dashboard_content %}

@@ -1,3 +1,11 @@
+nav.navbar {
+    margin-bottom: 1.5rem;
+}
+
+#main-container {
+    min-height: 510px;
+}
+
 .card {
     margin-bottom: 2rem;
 }
@@ -7,5 +15,14 @@
 }
 
 .menu-list a.is-active {
-    background-color: #00d1b2;
+    background-color: transparent;
+    color: #276cda;
+}
+
+.menu-list a:hover {
+    color: #276cda;
+}
+
+.footer {
+    padding: 15px 0;
 }

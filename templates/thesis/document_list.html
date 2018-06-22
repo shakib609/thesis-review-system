@@ -130,7 +130,7 @@
                             at
                             {{ comment.created_at|date:"H:i" }}
                         </p>
-                        <p>{{ comment.content }}</p>
+                        <p>{{ comment.content|linebreaksbr }}</p>
                     </div>
                     {% endfor %}
                     {% else %}
