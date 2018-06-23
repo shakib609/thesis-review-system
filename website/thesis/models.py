@@ -1,12 +1,12 @@
 from django.db import models
 from django.conf import settings
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 
 import os
 from hashlib import md5
 from datetime import datetime
 
-from .signals import generate_and_save_hash
+from .signals import generate_and_save_hash, auto_delete_file_on_delete
 
 
 def generate_upload_location(instance, filename):
@@ -79,3 +79,4 @@ class Comment(models.Model):
 
 # Signals
 post_save.connect(generate_and_save_hash, sender=StudentGroup)
+post_delete.connect(auto_delete_file_on_delete, sender=Document)
