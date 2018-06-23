@@ -64,3 +64,14 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         response = super().form_valid(form)
         messages.success(self.request, 'Update Successful!')
         return response
+
+
+class UserDeleteView(LoginRequiredMixin, TemplateView):
+    template_name = "registration/user_delete.html"
+    http_method_names = ['get', 'post']
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        user.delete()
+        messages.success(request, 'Account deleted successfully!')
+        return HttpResponseRedirect(reverse_lazy('registration:login'))

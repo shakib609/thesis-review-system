@@ -1,0 +1,29 @@
+{% extends 'base/thesis_dashboard_base.html' %}
+{% load static %}
+{% load my_tags %}
+
+{% block title %}
+    {{ block.super }} | Invite Friends
+{% endblock title %}
+
+{% block page_title %}
+<h1 class="title">Delete Account</h1>
+<h3 class="subtitle">Delete your account permanently</h3>
+{% endblock page_title %} {% block dashboard_content %}
+
+<div class="column is-5">
+    <form method="post">
+        {% csrf_token %}
+        <h2 class="has-text-danger">
+            Are you sure you want to DELETE your Account?
+        </h2>
+        <p class="is-size-6" style="margin-bottom:5px;">
+            This action is irreversible!
+        </p>
+        <button class="button is-danger" type="submit">
+            Delete
+        </button>
+    </form>
+</div>
+
+{% endblock dashboard_content %}

@@ -17,6 +17,7 @@
 {% url 'thesis:group_invite' as group_invite %}
 {% url 'thesis:group_update' as group_update %}
 {% url 'registration:user_update' as user_update %}
+{% url 'registration:user_delete' as user_delete %}
 
 <div class="container is-fluid" id="main-container">
     <div class="columns">
@@ -48,7 +49,8 @@
                     <li><a href="{{ user_update }}"
                         class="{% if request.path == user_update %}is-active{% endif %}">
                         <i class="fas fa-cog"></i>&nbsp; Account Settings</a></li>
-                    <li><a href="">
+                    <li><a href="{{ user_delete }}"
+                        class="{% if request.path == user_delete %}is-active{% endif %}">
                         <i class="fas fa-trash"></i>&nbsp; Account Removal</a></li>
                 </ul>
             </aside>

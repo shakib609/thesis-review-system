@@ -7,34 +7,35 @@
 
 
 {% block dashboard_content %}
-
-<div class="card is-fullwidth">
-    <header class="card-header">
-        <p class="card-header-title">Groups</p>
-    </header>
-    <div class="card-content">
-    {% if groups %}
-    {% for group in groups %}
-        <div class="columns is-mobile">
-            <div class="column is-10">
-                <p class="has-text-weight-bold">
-                    {{ group.title }}
-                </p>
-                <p class="is-size-7">
-                    Members: {{ group.students.all|join:', ' }}
-                </p>
+<div class="column">
+    <div class="card is-fullwidth">
+        <header class="card-header">
+            <p class="card-header-title">Groups</p>
+        </header>
+        <div class="card-content">
+        {% if groups %}
+        {% for group in groups %}
+            <div class="columns is-mobile">
+                <div class="column is-10">
+                    <p class="has-text-weight-bold">
+                        {{ group.title }}
+                    </p>
+                    <p class="is-size-7">
+                        Members: {{ group.students.all|join:', ' }}
+                    </p>
+                </div>
+                <div class="column is-2 has-text-right">
+                    <a href="{% url 'thesis:group_detail' group.md5hash %}"
+                        class="button is-small is-link">
+                        View
+                    </a>
+                </div>
             </div>
-            <div class="column is-2 has-text-right">
-                <a href="{% url 'thesis:group_detail' group.md5hash %}"
-                    class="button is-small is-link">
-                    View
-                </a>
-            </div>
+        {% endfor %}
+        {% else %}
+            <p class="has-text-centered">No Groups registered under your supervision yet!</p>
+        {% endif %}
         </div>
-    {% endfor %}
-    {% else %}
-        <p class="has-text-centered">No Groups registered under your supervision yet!</p>
-    {% endif %}
     </div>
 </div>
 
