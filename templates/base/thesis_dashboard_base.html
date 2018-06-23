@@ -54,38 +54,43 @@
             </aside>
         </div>
         <div class="column">
-            {% block page_title %}
-                {% if studentgroup %}
-                <h3 class="title">
-                    {{ studentgroup.title }}&nbsp;
+            <div class="columns">
+                <div class="column">
+                    {% block page_title %}
+                        {% if studentgroup %}
+                        <h3 class="title">
+                            {{ studentgroup.title }}&nbsp;
 
-                    {% if user.is_teacher %}
-                        <a href="{% url 'thesis:group_approve' studentgroup.md5hash %}">
-                    {% endif %}
-                        {% if studentgroup.approved %}
-                        <span class="has-text-success">
-                            <i class="fas fa-check-circle"></i>
-                        </span>
+                            {% if user.is_teacher %}
+                                <a href="{% url 'thesis:group_approve' studentgroup.md5hash %}">
+                            {% endif %}
+                                {% if studentgroup.approved %}
+                                <span class="has-text-success">
+                                    <i class="fas fa-check-circle"></i>
+                                </span>
+                                {% else %}
+                                <span class="has-text-danger">
+                                    <i class="fas fa-times-circle"></i>
+                                </span>
+                                {% endif %}
+                            {% if user.is_teacher %}
+                                </a>
+                            {% endif %}
+
+                        </h3>
+                        <h4 class="subtitle">Members:
+                            {{ studentgroup.students.all|join:", " }}.
+                        </h4>
                         {% else %}
-                        <span class="has-text-danger">
-                            <i class="fas fa-times-circle"></i>
-                        </span>
+                        <h3 class="title">Groups</h3>
                         {% endif %}
-                    {% if user.is_teacher %}
-                        </a>
-                    {% endif %}
-
-                </h3>
-                <h4 class="subtitle">Members:
-                    {{ studentgroup.students.all|join:", " }}.
-                </h4>
-                {% else %}
-                <h3 class="title">Groups</h3>
-                {% endif %}
-            {% endblock page_title %}
-
-            {% block dashboard_content %}
-            {% endblock dashboard_content %}
+                    {% endblock page_title %}
+                </div>
+            </div>
+            <div class="columns">
+                {% block dashboard_content %}
+                {% endblock dashboard_content %}
+            </div>
         </div>
     </div>
 </div>

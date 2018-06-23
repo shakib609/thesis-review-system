@@ -12,7 +12,6 @@
 
 
 {% block dashboard_content %}
-
 <div class="column">
     <form method="POST" enctype="multipart/form-data" id="document-form">
         {% csrf_token %}
@@ -28,7 +27,7 @@
                     </span>
                 </span>
                 <span class="file-name" id="file-name">
-                    Thesis.pdf
+                    Choose your PDF document
                 </span>
             </label>
         </div>
@@ -41,7 +40,6 @@
         </div>
     </form>
 </div>
-
 {% endblock dashboard_content %}
 
 
