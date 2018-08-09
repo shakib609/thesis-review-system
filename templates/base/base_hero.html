@@ -12,8 +12,15 @@
 
   <!-- Hero content: will be in the middle -->
   <div class="hero-body">
-    {% block content %}
-    {% endblock content %}
+    <div class="container has-text-centered">
+      <div class="columns">
+        <div class="column is-4 is-offset-4">
+          {% include "include/messages.html" %}
+        </div>
+      </div>
+      {% block content %}
+      {% endblock content %}
+    </div>
   </div>
 
   <!-- Hero footer: will stick at the bottom -->
