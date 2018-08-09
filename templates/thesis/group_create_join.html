@@ -11,6 +11,19 @@
 <div class="hero is-medium">
     <div class="hero-body">
         <div class="container">
+
+            {% if user.studentgroup %}
+                <div class="columns">
+                    <div class="column is-6 is-offset-3">
+                        <div class="message is-danger">
+                            <div class="message-body">
+                                You are already in a group! You will leave the current group when you Create/Join another group.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
             <div class="column is-4 is-offset-4 has-text-centered">
                 <h2 class="title">Student Group</h2>
                 <h3 class="subtitle">Create or Join a Student Group for your thesis!</h3>

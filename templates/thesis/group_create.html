@@ -10,10 +10,24 @@
 {% block content %}
 <div class="hero is-medium">
     <div class="hero-body">
-        <div class="container has-text-centered">
-            <div class="column is-4 is-offset-4">
+        <div class="container">
+
+            {% if user.studentgroup %}
+            <div class="columns">
+                <div class="column is-6 is-offset-3">
+                    <div class="message is-danger">
+                        <div class="message-body">
+                            You are already in a group! You will leave the current group when you Create/Join another group.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="column is-4 is-offset-4  has-text-centered">
                 <h3 class="title">Create Group</h3>
                 <h4 class="subtitle">Create a group for your thesis</h4>
+                {% include "include/messages.html" %}
                 <div class="box">
                     <form method="POST" class="has-text-left">
                         {% csrf_token %}
