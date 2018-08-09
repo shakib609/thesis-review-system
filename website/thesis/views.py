@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -160,7 +160,12 @@ class CommentCreateView(
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
-        return JsonResponse({'success': False, 'errors': form.errors})
+        messages.error(
+            self.request,
+            'Comment can not be empty.',
+            extra_tags='is-danger'
+        )
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class StudentGroupApproveView(
