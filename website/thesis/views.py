@@ -3,24 +3,25 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import (CreateView, FormView, ListView,
-                                  TemplateView, UpdateView)
+from django.views.generic import (
+    CreateView, FormView, ListView, TemplateView, UpdateView)
 
-from .forms import (CommentCreateForm, DocumentUploadForm, StudentGroupForm,
-                    StudentGroupJoinForm)
-from .mixins import (StudentGroupContextMixin, UserHasGroupAccessMixin,
-                     UserIsStudentMixin, UserIsTeacherMixin)
+from .forms import (
+    CommentCreateForm, DocumentUploadForm, StudentGroupForm,
+    StudentGroupJoinForm)
+from .mixins import (
+    StudentGroupContextMixin, UserHasGroupAccessMixin, UserIsStudentMixin,
+    UserIsTeacherMixin)
 from .models import Comment, Document, StudentGroup
 
 
-class GroupCreateJoinView(LoginRequiredMixin, UserIsStudentMixin,
-                          TemplateView):
+class GroupCreateJoinView(
+        LoginRequiredMixin, UserIsStudentMixin, TemplateView):
     http_method_names = ['get']
     template_name = 'thesis/group_create_join.html'
 
 
-class GroupCreateView(LoginRequiredMixin, UserIsStudentMixin,
-                      CreateView):
+class GroupCreateView(LoginRequiredMixin, UserIsStudentMixin, CreateView):
     model = StudentGroup
     form_class = StudentGroupForm
     success_url = reverse_lazy('thesis:document_list')
@@ -32,12 +33,14 @@ class GroupCreateView(LoginRequiredMixin, UserIsStudentMixin,
         user = self.request.user
         user.studentgroup = studentgroup
         user.save()
-        messages.success(self.request, 'Created Group Successfully!')
+        messages.success(
+            self.request,
+            'Created Group Successfully!',
+            extra_tags='is-success')
         return HttpResponseRedirect(self.get_success_url())
 
 
-class GroupJoinView(LoginRequiredMixin, UserIsStudentMixin,
-                    FormView):
+class GroupJoinView(LoginRequiredMixin, UserIsStudentMixin, FormView):
     model = StudentGroup
     form_class = StudentGroupJoinForm
     success_url = reverse_lazy('thesis:document_list')
@@ -50,12 +53,16 @@ class GroupJoinView(LoginRequiredMixin, UserIsStudentMixin,
         user = self.request.user
         user.studentgroup = studentgroup
         user.save()
-        messages.success(self.request, 'You joined the Group successfully!')
+        messages.success(
+            self.request,
+            'You joined the Group successfully!',
+            extra_tags='is-success')
         return HttpResponseRedirect(self.get_success_url())
 
 
-class DocumentListView(LoginRequiredMixin, UserHasGroupAccessMixin,
-                       StudentGroupContextMixin, ListView):
+class DocumentListView(
+        LoginRequiredMixin, UserHasGroupAccessMixin,
+        StudentGroupContextMixin, ListView):
     template_name = 'thesis/document_list.html'
     http_method_names = ['get']
     context_object_name = 'documents'
@@ -71,9 +78,9 @@ class DocumentListView(LoginRequiredMixin, UserHasGroupAccessMixin,
         return context
 
 
-class DocumentUploadView(LoginRequiredMixin, UserIsStudentMixin,
-                         UserHasGroupAccessMixin, StudentGroupContextMixin,
-                         CreateView):
+class DocumentUploadView(
+        LoginRequiredMixin, UserIsStudentMixin, UserHasGroupAccessMixin,
+        StudentGroupContextMixin, CreateView):
     model = Document
     template_name = 'thesis/document_upload.html'
     form_class = DocumentUploadForm
@@ -84,19 +91,21 @@ class DocumentUploadView(LoginRequiredMixin, UserIsStudentMixin,
         self.object = document = form.save(commit=False)
         document.studentgroup = self.studentgroup
         document.save()
-        messages.success(self.request, 'Document Uploaded successfully!')
+        messages.success(
+            self.request,
+            'Document Uploaded successfully!',
+            extra_tags='is-success')
         return HttpResponseRedirect(self.get_success_url())
 
 
-class GroupInviteView(LoginRequiredMixin, UserIsStudentMixin,
-                      UserHasGroupAccessMixin, StudentGroupContextMixin,
-                      TemplateView):
+class GroupInviteView(
+        LoginRequiredMixin, UserIsStudentMixin, UserHasGroupAccessMixin,
+        StudentGroupContextMixin, TemplateView):
     http_method_names = ['get']
     template_name = "thesis/group_invite.html"
 
 
-class GroupListView(LoginRequiredMixin, UserIsTeacherMixin,
-                    ListView):
+class GroupListView(LoginRequiredMixin, UserIsTeacherMixin, ListView):
     template_name = "thesis/group_list.html"
     http_method_names = ['get']
     context_object_name = 'groups'
@@ -107,8 +116,9 @@ class GroupListView(LoginRequiredMixin, UserIsTeacherMixin,
         return queryset
 
 
-class GroupUpdateView(LoginRequiredMixin, UserIsStudentMixin,
-                      UserHasGroupAccessMixin, UpdateView):
+class GroupUpdateView(
+        LoginRequiredMixin, UserIsStudentMixin, UserHasGroupAccessMixin,
+        UpdateView):
     model = StudentGroup
     template_name = "thesis/group_update.html"
     http_method_names = ['get', 'post']
@@ -120,12 +130,16 @@ class GroupUpdateView(LoginRequiredMixin, UserIsStudentMixin,
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'Group Updated Successfully!')
+        messages.success(
+            self.request,
+            'Group Updated Successfully!',
+            extra_tags='is-success')
         return response
 
 
-class CommentCreateView(LoginRequiredMixin, UserHasGroupAccessMixin,
-                        StudentGroupContextMixin, CreateView):
+class CommentCreateView(
+        LoginRequiredMixin, UserHasGroupAccessMixin, StudentGroupContextMixin,
+        CreateView):
     model = Comment
     http_method_names = ['post']
     form_class = CommentCreateForm
@@ -146,13 +160,12 @@ class CommentCreateView(LoginRequiredMixin, UserHasGroupAccessMixin,
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
-        return JsonResponse(
-            {'success': False, 'errors': form.errors}
-        )
+        return JsonResponse({'success': False, 'errors': form.errors})
 
 
-class StudentGroupApproveView(LoginRequiredMixin, UserIsTeacherMixin,
-                              StudentGroupContextMixin, TemplateView):
+class StudentGroupApproveView(
+        LoginRequiredMixin, UserIsTeacherMixin, StudentGroupContextMixin,
+        TemplateView):
     http_method_names = ['get', 'post']
     template_name = 'thesis/group_approve.html'
 
@@ -160,15 +173,17 @@ class StudentGroupApproveView(LoginRequiredMixin, UserIsTeacherMixin,
         if self.studentgroup.approved:
             self.studentgroup.approved = False
             messages.success(
-                request, 'The StudentGroups Proposal has been disapproved!')
+                request,
+                'The StudentGroups Proposal has been disapproved!',
+                extra_tags='is-success')
         else:
             self.studentgroup.approved = True
             messages.success(
-                request, 'The StudentGroups Proposal has been approved!')
+                request,
+                'The StudentGroups Proposal has been approved!',
+                extra_tags='is-success')
         self.studentgroup.save()
         return HttpResponseRedirect(
             reverse_lazy(
                 'thesis:group_detail',
-                kwargs={'group_code': self.studentgroup.md5hash}
-            )
-        )
+                kwargs={'group_code': self.studentgroup.md5hash}))

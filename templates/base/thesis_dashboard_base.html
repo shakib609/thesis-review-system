@@ -56,7 +56,10 @@
             </aside>
         </div>
         <div class="column">
-            <div class="columns">
+            <div class="columns is-multiline">
+
+                {% include "include/messages.html" %}
+
                 <div class="column">
                     {% block page_title %}
                         {% if studentgroup %}
