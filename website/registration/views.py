@@ -46,7 +46,10 @@ class UserCreateView(CreateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         login(self.request, self.object)
-        messages.success(self.request, 'User Created Successfully!')
+        messages.success(
+            self.request, 
+            'User Created Successfully!',
+            extra_tags='is-success')
         return response
 
 
@@ -62,7 +65,10 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'Update Successful!')
+        messages.success(
+            self.request, 
+            'Update Successful!',
+            extra_tags='is-success')
         return response
 
 
@@ -73,5 +79,8 @@ class UserDeleteView(LoginRequiredMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         user = self.request.user
         user.delete()
-        messages.success(request, 'Account deleted successfully!')
+        messages.success(
+            request, 
+            'Account deleted successfully!',
+            extra_tags='is-success')
         return HttpResponseRedirect(reverse_lazy('registration:login'))
