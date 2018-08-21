@@ -1,5 +1,5 @@
 from django.urls import path
-from django.contrib.auth.views import login, logout
+from django.contrib.auth.views import LoginView, LogoutView
 
 from .views import (
     UserCreateView,
@@ -12,9 +12,9 @@ from .views import (
 app_name = 'registration'
 
 urlpatterns = [
-    path('', login, {'redirect_authenticated_user': True}, name='login'),
+    path('', LoginView.as_view(redirect_authenticated_user=True), name='login'),
+    path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
     path('register/', UserCreateView.as_view(), name='register'),
-    path('logout/', logout, {'next_page': '/'}, name='logout'),
     path('about/', AboutView.as_view(), name='about'),
     path('redirect/', LoginRedirectView.as_view(), name='login_redirect'),
     path('account/', UserUpdateView.as_view(), name='user_update'),
