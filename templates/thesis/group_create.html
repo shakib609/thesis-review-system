@@ -12,28 +12,34 @@
     <div class="hero-body">
         <div class="container">
 
-            {% if user.studentgroup %}
+            {% if user.studentgroup or messages %}
             <div class="columns">
                 <div class="column is-6 is-offset-3">
-                    <div class="message is-danger">
-                        <div class="message-body">
-                            You are already in a group! You will leave the current group when you Create/Join another group.
+                    <div class="columns is-multiline">
+                        {% if user.studentgroup %}
+                        <div class="column is-12">
+                            <div class="message is-danger">
+                                <div class="message-body">
+                                    You are already in a group! You will leave the current group when you Create/Join another group.
+                                </div>
+                            </div>
                         </div>
+                        {% endif %}
+                        {% include "include/messages.html" %}
                     </div>
                 </div>
             </div>
             {% endif %}
 
-            <div class="column is-4 is-offset-4  has-text-centered">
+            <div class="column is-6 is-offset-3  has-text-centered">
                 <h3 class="title">Create Group</h3>
                 <h4 class="subtitle">Create a group for your thesis</h4>
-                {% include "include/messages.html" %}
                 <div class="box">
                     <form method="POST" class="has-text-left">
                         {% csrf_token %}
                         <div class="field">
                             <div class="control has-icons-left">
-                                <input class="input is-large{% if 'title' in form.errors %} is-danger{% endif %}"
+                                <input class="input is-medium{% if 'title' in form.errors %} is-danger{% endif %}"
                                         type="text" name="title"
                                         placeholder="Title" autofocus="" required=""
                                         value="{{ form.title.value|default_if_none:'' }}">
@@ -51,7 +57,7 @@
                         </div>
                         <div class="field is-fullwidth">
                             <p class="control has-icons-left">
-                                <span class="select is-large is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
+                                <span class="select is-medium is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
                                     <select name="teacher">
                                     {% for x,y in form.fields.teacher.choices %}
                                         <option value="{{ x }}"{% if form.teacher.value == x %} selected{% endif %}>{{ y }}</option>
@@ -70,7 +76,7 @@
                                 {% endif %}
                             </p>
                         </div>
-                        <input type="submit" class="button is-large is-primary is-fullwidth"
+                        <input type="submit" class="button is-medium is-primary is-fullwidth"
                                 value="Create">
                     </form>
                 </div>
