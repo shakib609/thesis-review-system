@@ -88,7 +88,8 @@ class ResearchField(models.Model):
     name = models.CharField(max_length=256)
     teachers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        related_name='fields'
+        related_name='fields',
+        limit_choices_to={'is_teacher': True}
     )
 
     class Meta:
