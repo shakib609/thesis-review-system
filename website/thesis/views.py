@@ -1,10 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView, FormView, ListView, TemplateView, UpdateView)
+from django.conf import settings
+from django.db.models import Count
+from django.core import serializers
 
 from .forms import (
     CommentCreateForm, DocumentUploadForm, StudentGroupForm,
@@ -12,7 +15,8 @@ from .forms import (
 from .mixins import (
     StudentGroupContextMixin, UserHasGroupAccessMixin, UserIsStudentMixin,
     UserIsTeacherMixin)
-from .models import Comment, Document, StudentGroup
+from .models import Comment, Document, StudentGroup, ResearchField
+from ..registration.models import User
 
 
 class GroupCreateJoinView(
@@ -192,3 +196,19 @@ class StudentGroupApproveView(
             reverse_lazy(
                 'thesis:group_detail',
                 kwargs={'group_code': self.studentgroup.md5hash}))
+
+
+def get_teachers_list_by_field_json(request, field_id):
+    available_teachers = User.objects.annotate(
+        group_count=Count('studentgroups')).filter(
+        fields__id=field_id,
+        group_count__lt=settings.MAXIMUM_GROUPS_UNDER_TEACHER
+    )
+    data = serializers.serialize(
+        'json',
+        available_teachers,
+        fields=('username')
+    )
+    return JsonResponse(
+        data,
+        safe=False)

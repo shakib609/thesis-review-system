@@ -19,6 +19,11 @@ urlpatterns = [
         views.GroupCreateView.as_view(),
         name='group_create'),
     path(
+        'create/field/<field_id>/teachers/',
+        views.get_teachers_list_by_field_json,
+        name='get_teachers'
+    ),
+    path(
         'join/',
         views.GroupJoinView.as_view(),
         name='group_join'),

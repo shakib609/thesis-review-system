@@ -130,3 +130,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 LOGIN_URL = 'registration:login'
 LOGIN_REDIRECT_URL = 'registration:login_redirect'
+
+MAXIMUM_GROUPS_UNDER_TEACHER = 5
