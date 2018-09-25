@@ -2,10 +2,20 @@ from django import forms
 import magic
 
 from ..registration.models import User
-from .models import StudentGroup, Document, Comment
+from .models import (
+    StudentGroup,
+    Document,
+    Comment,
+    ResearchField
+)
 
 
 class StudentGroupForm(forms.ModelForm):
+    field = forms.ModelChoiceField(
+        queryset=ResearchField.objects.all(),
+        required=True,
+        empty_label='Select Research Field'
+    )
     teacher = forms.ModelChoiceField(
         queryset=User.objects.filter(is_teacher=True),
         required=False,
@@ -14,7 +24,7 @@ class StudentGroupForm(forms.ModelForm):
 
     class Meta:
         model = StudentGroup
-        fields = 'title', 'teacher'
+        fields = 'title', 'field', 'teacher'
 
 
 class StudentGroupJoinForm(forms.ModelForm):

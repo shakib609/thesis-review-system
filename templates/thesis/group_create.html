@@ -56,11 +56,32 @@
                             </div>
                         </div>
                         <div class="field is-fullwidth">
+                          <p class="control has-icons-left">
+                            <span class="select is-medium is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
+                              <select name="field">
+                              {% for x,y in form.fields.field.choices %}
+                                <option value="{{ x }}"{% if form.field.value == x %} selected{% endif %}>{{ y }}</option>
+                              {% endfor %}
+                              </select>
+                            </span>
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-globe"></i>
+                            </span>
+                            {% if 'field' in form.errors %}
+                            <ul class="help is-danger">
+                                {% for error in form.errors|get_item:'field' %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                          </p>
+                        </div>
+                        <div class="field is-fullwidth">
                             <p class="control has-icons-left">
                                 <span class="select is-medium is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
                                     <select name="teacher">
                                     {% for x,y in form.fields.teacher.choices %}
-                                        <option value="{{ x }}"{% if form.teacher.value == x %} selected{% endif %}>{{ y }}</option>
+                                      <option value="{{ x }}"{% if form.teacher.value == x %} selected{% endif %}>{{ y }}</option>
                                     {% endfor %}
                                     </select>
                                 </span>
