@@ -28,6 +28,13 @@ class StudentGroup(models.Model):
     title = models.CharField(max_length=256)
     md5hash = models.CharField(max_length=10, null=True)
     approved = models.BooleanField(default=False)
+    field = models.ForeignKey(
+        'ResearchField',
+        null=True,
+        default=None,
+        related_name='studentgroups',
+        on_delete=models.SET_NULL,
+    )
 
     def __str__(self):
         return self.title
@@ -75,6 +82,20 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content[:10] + '...'
+
+
+class ResearchField(models.Model):
+    name = models.CharField(max_length=256)
+    teachers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='fields'
+    )
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
 
 
 # Signals
