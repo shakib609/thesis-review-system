@@ -27,6 +27,7 @@ class StudentGroup(models.Model):
         on_delete=models.SET_NULL)
     title = models.CharField(max_length=256)
     md5hash = models.CharField(max_length=10, null=True)
+    progress = models.IntegerField(default=0)
     approved = models.BooleanField(default=False)
     field = models.ForeignKey(
         'ResearchField',
