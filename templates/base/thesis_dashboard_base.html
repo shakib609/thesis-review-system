@@ -48,7 +48,7 @@
                 <ul class="menu-list">
                     <li><a href="{{ user_update }}"
                         class="{% if request.path == user_update %}is-active{% endif %}">
-                        <i class="fas fa-cog"></i>&nbsp; Account Settings</a></li>
+                        <i class="fas fa-cog"></i>&nbsp; Profile Settings</a></li>
                     <li><a href="{{ user_delete }}"
                         class="{% if request.path == user_delete %}is-active{% endif %}">
                         <i class="fas fa-trash"></i>&nbsp; Account Removal</a></li>
@@ -83,8 +83,21 @@
                             {% endif %}
 
                         </h3>
-                        <h4 class="subtitle">Members:
-                            {{ studentgroup.students.all|join:", " }}.
+                        <h4 class="subtitle">
+                          <b>Superviser: </b>
+                            {% if studentgroup.teacher %}
+                              {{ studentgroup.teacher.username }}
+                            {% else %}
+                              Not assigned yet!
+                            {% endif %} &nbsp;-&nbsp;
+                          <b>Research Field: </b>
+                            {% if studentgroup.field %}
+                              {{ studentgroup.field.name }}
+                            {% else %}
+                              Not assigned yet
+                            {% endif %}
+                          <br>
+                          <b>Members: </b>{{ studentgroup.students.all|join:", " }}
                         </h4>
                         {% else %}
                         <h3 class="title">Groups</h3>
