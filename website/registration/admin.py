@@ -38,7 +38,7 @@ UserAdmin.fieldsets = fieldsets = (
     }),
 )
 
-UserAdmin.list_display = ('username', 'first_name', 'last_name', 'is_teacher')
+UserAdmin.list_display = ('username', 'is_teacher', 'first_name', 'last_name',)
 
 UserAdmin.list_filter = ('is_teacher', 'is_superuser', 'is_active')
 

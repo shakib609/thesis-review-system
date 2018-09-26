@@ -89,7 +89,8 @@ class ResearchField(models.Model):
     teachers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         related_name='fields',
-        limit_choices_to={'is_teacher': True}
+        limit_choices_to={'is_teacher': True},
+        blank=True
     )
 
     class Meta:

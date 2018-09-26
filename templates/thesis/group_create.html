@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load static %}
 {% load my_tags %}
 
 
@@ -35,7 +36,7 @@
                 <h3 class="title">Create Group</h3>
                 <h4 class="subtitle">Create a group for your thesis</h4>
                 <div class="box">
-                    <form method="POST" class="has-text-left">
+                    <form method="POST" class="has-text-left" id="v-app">
                         {% csrf_token %}
                         <div class="field">
                             <div class="control has-icons-left">
@@ -58,7 +59,7 @@
                         <div class="field is-fullwidth">
                           <p class="control has-icons-left">
                             <span class="select is-medium is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
-                              <select name="field">
+                              <select name="field" v-model="field">
                               {% for x,y in form.fields.field.choices %}
                                 <option value="{{ x }}"{% if form.field.value == x %} selected{% endif %}>{{ y }}</option>
                               {% endfor %}
@@ -79,15 +80,19 @@
                         <div class="field is-fullwidth">
                             <p class="control has-icons-left">
                                 <span class="select is-medium is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
-                                    <select name="teacher">
-                                    {% for x,y in form.fields.teacher.choices %}
-                                      <option value="{{ x }}"{% if form.teacher.value == x %} selected{% endif %}>{{ y }}</option>
-                                    {% endfor %}
+                                    <select name="teacher" v-model="selected_teacher">
+                                      <option value="">Select Teacher</option>
+                                      <option
+                                        v-for="option in options"
+                                        :value="option.id">
+                                        [[ option.username ]] ([[ option.group_count ]])
+                                      </option>
                                     </select>
                                 </span>
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-chalkboard-teacher"></i>
                                 </span>
+                                <p class="help">A teacher can supervise at most 5 Student Groups. Teachers with minimum 5 Student Groups will not be listed.</p>
                                 {% if 'teacher' in form.errors %}
                                 <ul class="help is-danger">
                                     {% for error in form.errors|get_item:'teacher' %}
@@ -107,3 +112,34 @@
 </div>
 
 {% endblock content %}
+
+
+{% block extra_js %}
+<script src="{% static 'js/vue.js' %}"></script>
+<script>
+new Vue({
+  el: '#v-app',
+  delimiters: ['[[', ']]'],
+  data: {
+    options: [],
+    field: '',
+    selected_teacher: {% if form.teacher.value %}{{ form.teacher.value }}{% else %}''{% endif %}
+  },
+  methods: {
+
+  },
+  watch: {
+    field(newF, oldF) {
+      if (newF != null) {
+        options = []
+        fetch('field/'+newF+'/teachers/').then(
+          response => response.json()
+        ).then(
+          data => {this.options = JSON.parse(data)}
+        ).catch(e => console.log(e))
+      }
+    }
+  }
+})
+</script>
+{% endblock extra_js %}
