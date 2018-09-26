@@ -7,7 +7,9 @@ from django.views.generic import (
     CreateView, FormView, ListView, TemplateView, UpdateView)
 from django.conf import settings
 from django.db.models import Count
-from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
+from django.contrib.auth.decorators import login_required
+import json
 
 from .forms import (
     CommentCreateForm, DocumentUploadForm, StudentGroupForm,
@@ -198,17 +200,16 @@ class StudentGroupApproveView(
                 kwargs={'group_code': self.studentgroup.md5hash}))
 
 
+@login_required
 def get_teachers_list_by_field_json(request, field_id):
-    available_teachers = User.objects.annotate(
+    available_teachers = User.objects.values(
+        'id', 'username',
         group_count=Count('studentgroups')).filter(
         fields__id=field_id,
         group_count__lt=settings.MAXIMUM_GROUPS_UNDER_TEACHER
     )
-    data = serializers.serialize(
-        'json',
-        available_teachers,
-        fields=('username')
-    )
+
+    data = json.dumps(list(available_teachers), cls=DjangoJSONEncoder)
     return JsonResponse(
         data,
         safe=False)
