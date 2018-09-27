@@ -18,11 +18,16 @@
     </h3>
     <form method="post">
         {% csrf_token %}
-        <div class="field">
+        <div class="field is-grouped">
             <p class="control">
                 <button class="button is-primary">
                     {% if studentgroup.approved %}DISAPPROVE{% else %}APPROVE{% endif %}
                 </button>
+            </p>
+            <p class="control">
+              <a href="{% url 'thesis:group_detail' studentgroup.md5hash %}" class="button is-danger">
+                Cancel
+              </a>
             </p>
         </div>
     </form>

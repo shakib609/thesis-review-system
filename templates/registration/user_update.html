@@ -8,7 +8,7 @@
 
 
 {% block page_title %}
-    <h1 class="title">Account Settings</h1>
+    <h1 class="title">Profile Settings</h1>
     <h3 class="subtitle">Update your account details</h3>
 {% endblock page_title %}
 
@@ -21,8 +21,16 @@
         <div class="field">
             <label for="first_name" class="label">First Name</label>
             <div class="control has-icons-left">
-                <input {% if 'first_name' in form.errors %} class="input is-danger" {% else %} <input class="input" {% endif %} type="text"
-                    name="first_name" placeholder="First Name" autofocus="" required="" value="{{ form.first_name.value|default_if_none:'' }}" id="first_name">
+                <input
+                  {% if 'first_name' in form.errors %} class="input is-danger" {% else %} class="input" {% endif %}
+                  type="text"
+                  name="first_name"
+                  placeholder="First Name"
+                  autofocus=""
+                  required=""
+                  value="{{ form.first_name.value|default_if_none:'' }}"
+                  id="first_name"
+                  spellcheck="false">
                 <span class="icon is-small is-left">
                     <i class="fas fa-id-card"></i>
                 </span>
@@ -39,8 +47,15 @@
         <div class="field">
             <label for="last_name" class="label">Last Name</label>
             <div class="control has-icons-left">
-                <input {% if 'last_name' in form.errors %} class="input is-danger" {% else %} <input class="input" {% endif %} type="text"
-                    name="last_name" placeholder="Last Name" required="" value="{{ form.last_name.value|default_if_none:'' }}" id="last_name">
+                <input
+                  {% if 'last_name' in form.errors %}class="input is-danger"{% else %}class="input"{% endif %}
+                  type="text"
+                  name="last_name"
+                  placeholder="Last Name"
+                  required=""
+                  value="{{ form.last_name.value|default_if_none:'' }}"
+                  id="last_name"
+                  spellcheck="false">
                 <span class="icon is-small is-left">
                     <i class="fas fa-id-card"></i>
                 </span>

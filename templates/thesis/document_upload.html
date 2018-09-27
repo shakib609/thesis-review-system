@@ -44,5 +44,6 @@
 
 
 {% block extra_js %}
-    <script src="{% static 'js/upload.js' %}"></script>
+  {{ block.super }}
+  <script src="{% static 'js/upload.js' %}"></script>
 {% endblock extra_js %}

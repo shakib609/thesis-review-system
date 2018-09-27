@@ -115,7 +115,7 @@
 
 
 {% block extra_js %}
-<script src="{% static 'js/vue.js' %}"></script>
+{{ block.super }}
 <script>
 new Vue({
   el: '#v-app',
@@ -124,9 +124,6 @@ new Vue({
     options: [],
     field: '',
     selected_teacher: {% if form.teacher.value %}{{ form.teacher.value }}{% else %}''{% endif %}
-  },
-  methods: {
-
   },
   watch: {
     field(newF, oldF) {

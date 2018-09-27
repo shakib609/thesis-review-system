@@ -9,6 +9,7 @@ from django.conf import settings
 from django.db.models import Count
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth.decorators import login_required
+
 import json
 
 from .forms import (
@@ -17,7 +18,7 @@ from .forms import (
 from .mixins import (
     StudentGroupContextMixin, UserHasGroupAccessMixin, UserIsStudentMixin,
     UserIsTeacherMixin)
-from .models import Comment, Document, StudentGroup, ResearchField
+from .models import Comment, Document, StudentGroup
 from ..registration.models import User
 
 
@@ -183,12 +184,15 @@ class StudentGroupApproveView(
     def post(self, request, *args, **kwargs):
         if self.studentgroup.approved:
             self.studentgroup.approved = False
+            if self.studentgroup.progress == 100:
+                self.studentgroup.progress = 90
             messages.success(
                 request,
                 'The StudentGroups Proposal has been disapproved!',
                 extra_tags='is-success')
         else:
             self.studentgroup.approved = True
+            self.studentgroup.progress = 100
             messages.success(
                 request,
                 'The StudentGroups Proposal has been approved!',
@@ -198,6 +202,23 @@ class StudentGroupApproveView(
             reverse_lazy(
                 'thesis:group_detail',
                 kwargs={'group_code': self.studentgroup.md5hash}))
+
+
+class StudentGroupProgressUpdateView(
+        LoginRequiredMixin, UserIsTeacherMixin, StudentGroupContextMixin,
+        TemplateView):
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        data = json.loads(str(request.body.decode('utf-8')))
+        progress_value = int(data.get('progress_value'))
+        if progress_value > 100:
+            progress_value = 100
+        elif progress_value < 0:
+            progress_value = 0
+        self.studentgroup.progress = progress_value
+        self.studentgroup.save()
+        return JsonResponse({'progress_value': progress_value})
 
 
 @login_required

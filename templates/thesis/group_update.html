@@ -96,7 +96,7 @@
 {% endblock dashboard_content %}
 
 {% block extra_js %}
-<script src="{% static 'js/vue.dev.js' %}"></script>
+{{ block.super }}
 <script>
 new Vue({
   el: '#v-app',

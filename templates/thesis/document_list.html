@@ -102,6 +102,7 @@
                             <div class="control">
                                 <textarea name="content"
                                     class="textarea"
+                                    rows="2"
                                     placeholder="Write your comment here!" required=""></textarea>
                             </div>
                         </div>
@@ -127,12 +128,9 @@
                         <p>{{ comment.content|linebreaksbr }}</p>
                     </div>
                     {% endfor %}
-                    {% else %}
-                    <p class="has-text-centered">
-                        No Comments yet!
-                    </p>
-                </div>
+
                 {% endif %}
+                </div>
             </div>
         </div>
     </div>
@@ -140,6 +138,7 @@
 {% endblock dashboard_content %}
 
 {% block extra_js %}
+  {{ block.super }}
     <script>
         var baseURL = "{% static 'pdfjs/web/viewer.html' %}?file=/media/sg_{{ studentgroup.md5hash }}/",
             view_buttons = document.getElementsByClassName('view-button'),

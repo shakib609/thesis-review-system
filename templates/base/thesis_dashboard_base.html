@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
 
 {% block extra_css %}
@@ -70,12 +71,12 @@
                                 <a href="{% url 'thesis:group_approve' studentgroup.md5hash %}">
                             {% endif %}
                                 {% if studentgroup.approved %}
-                                <span class="has-text-success">
-                                    <i class="fas fa-check-circle"></i>
+                                <span class="button is-static is-outlined is-success">
+                                    Approved
                                 </span>
                                 {% else %}
-                                <span class="has-text-danger">
-                                    <i class="fas fa-times-circle"></i>
+                                <span class="button is-static is-outlined is-danger">
+                                    Pending
                                 </span>
                                 {% endif %}
                             {% if user.is_teacher %}
@@ -83,13 +84,7 @@
                             {% endif %}
 
                         </h3>
-                        <h4 class="subtitle">
-                          <b>Superviser: </b>
-                            {% if studentgroup.teacher %}
-                              {{ studentgroup.teacher.username }}
-                            {% else %}
-                              Not assigned yet!
-                            {% endif %} &nbsp;-&nbsp;
+                        <h4 class="subtitle is-size-6">
                           <b>Research Field: </b>
                             {% if studentgroup.field %}
                               {{ studentgroup.field.name }}
@@ -97,8 +92,56 @@
                               Not assigned yet
                             {% endif %}
                           <br>
+                          <b>Superviser: </b>
+                            {% if studentgroup.teacher %}
+                              {{ studentgroup.teacher.username }}
+                            {% else %}
+                              Not assigned yet!
+                            {% endif %}
+                          <br>
                           <b>Members: </b>{{ studentgroup.students.all|join:", " }}
                         </h4>
+                        <div class="box" id="progress-app" style="margin-bottom:-0.4rem;border-radius:0;">
+                          <div class="columns">
+                            <div class="column is-2"><b>Progress: </b><small>[[ progress ]]%</small></div>
+                            <div class="column">
+                              <progress
+                                class="progress is-success"
+                                style="margin-top:5px;"
+                                :value="progress"
+                                max="100">
+                                [[ progress ]]
+                              </progress>
+                            </div>
+                            {% if user.is_teacher %}
+                            <div class="column is-3">
+                              <form action="" method="post" id="progress-form">
+                                <input type="hidden" name="progress" v-model="progress">
+                                {% csrf_token %}
+                              </form>
+                              <div class="field is-grouped">
+                                <p class="control">
+                                  <a class="button is-danger is-small"
+                                    style="font-family:monospace;"
+                                    @click="progress -= 10">
+                                    <b>-</b>
+                                  </a>
+                                </p>
+                                <p class="control">
+                                  [[ progress ]] %
+                                </p>
+                                <p class="control">
+                                  <a class="button is-primary is-small"
+                                    style="font-family:monospace;"
+                                    @click="progress += 10">
+                                    <b>+</b>
+                                  </a>
+                                </p>
+                              </div>
+                            </div>
+                            {% endif %}
+                          </div>
+                        </div>
                         {% else %}
                         <h3 class="title">Groups</h3>
                         {% endif %}
@@ -113,3 +156,57 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block extra_js %}
+  {{ block.super }}
+  {% if studentgroup %}
+  <script>
+  new Vue({
+    el: '#progress-app',
+    delimiters: ['[[', ']]'],
+    data: {
+      progress: {{ studentgroup.progress }},
+    },
+    watch: {
+      progress(newV, oldV) {
+        if (newV == 100) {
+          window.location = window.location.href + "approve/";
+        }
+        else if (newV < oldV && oldV == 100) {
+          window.location = window.location.href + "approve/";
+        }
+        else if (newV > 100)
+          this.progress = 100;
+        else if (newV < 0)
+          this.progress = 0
+        else {
+          url = "{% url 'thesis:progress_update' studentgroup.md5hash %}"
+          csrf_token = "{{ csrf_token }}";
+          fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(
+              {
+                progress_value: this.progress
+              }),
+            headers:{
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrf_token
+            }
+          })
+            .then(res => res.json())
+            .then(
+              response => {
+                data = response
+                console.log("SUCCESS!", data)
+              }
+            ).catch(e => {
+              console.log("ERROR!", e)
+              alert("ERROR handling request! Data not updated on server!")
+            })
+        }
+      }
+    }
+  })
+  </script>
+  {% endif %}
+{% endblock extra_js %}
