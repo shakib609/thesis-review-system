@@ -28,13 +28,12 @@
               <figure class="media-left">
                 <p class="image is-64x64">
                   <a href="{% url 'registration:teacher_detail' teacher.username %}">
-                    <img
+                    <img class="is-rounded"
                       {% if teacher.profile_picture %}
                         src="/media/{{ teacher.profile_picture }}"
                       {% else %}
                         src="{% static 'assets/default_profile_picture.png' %}"
-                      {% endif %}
-                    >
+                      {% endif %}>
                   </a>
                 </p>
               </figure>
