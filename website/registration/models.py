@@ -34,14 +34,14 @@ class User(AbstractUser):
     phone_number = models.CharField(_('phone number'), max_length=16)
     profile_picture = models.ImageField(
         upload_to=generate_propic_upload_location,
-        null=True)
+        null=True, blank=True)
     cv_document = models.FileField(
         upload_to=generate_cv_upload_location,
-        null=True)
+        null=True, blank=True)
     is_teacher = models.BooleanField(
         _('teacher status'),
         help_text=_(
-            'Designates whether this user should be treated as teacher. '),
+            'Designates whether this user should be treated as teacher.'),
         default=False)
     studentgroup = models.ForeignKey(
         StudentGroup,
