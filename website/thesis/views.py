@@ -224,7 +224,7 @@ class StudentGroupProgressUpdateView(
 @login_required
 def get_teachers_list_by_field_json(request, field_id):
     available_teachers = User.objects.values(
-        'id', 'username',
+        'id', 'username', 'full_name',
         group_count=Count('studentgroups')).filter(
         fields__id=field_id,
         group_count__lt=settings.MAXIMUM_GROUPS_UNDER_TEACHER
