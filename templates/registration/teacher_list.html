@@ -9,7 +9,7 @@
 
 
 {% block page_title %}
-    <h3 class="title">Teachers List</h3>
+    <h3 class="title">Teachers List (Department of CSE, IIUC)</h3>
     <h4 class="subtitle">List of all the teachers supervising thesis groups.</h4>
 {% endblock page_title %}
 
@@ -42,12 +42,12 @@
                 <div class="content">
                   <p class="is-size-7">
                     <strong class="is-size-6">{{ teacher.full_name }} ({{ teacher.username }})</strong><br>
+                      {% if teacher.designation %}
+                      <b>Designation:</b> {{ teacher.designation }} &nbsp;-&nbsp;{% endif %}
                       <b>Research Fields:</b> {{ teacher.fields.all|join:', '}} <br>
-                      <b>Email Address:</b> <a href="mailto:{{ teacher.email }}">{{ teacher.email }}</a>
+                      <b>Email Address:</b> <a href="mailto:{{ teacher.email }}" class="has-text-grey-darker">{{ teacher.email }}</a>
                       &nbsp;-&nbsp;
-                      <b>Phone Number:</b> <a href="tel:{{ teacher.phone_number }}">{{ teacher.phone_number }}</a>
-                      &nbsp;-&nbsp;
-                      <b>Groups:</b> {{ teacher.studentgroups.count }}
+                      <b>Phone Number:</b> <a href="tel:{{ teacher.phone_number }}" class="has-text-grey-darker">{{ teacher.phone_number }}</a>
                   </p>
                 </div>
               </div>

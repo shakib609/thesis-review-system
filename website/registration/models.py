@@ -32,6 +32,14 @@ class User(AbstractUser):
     full_name = models.CharField(_('full name'), max_length=180)
     email = models.EmailField(_('email address'))
     phone_number = models.CharField(_('phone number'), max_length=16)
+    objects = CutomUserManager()
+
+    # Only for teachers
+    designation = models.CharField(
+        _('designation'), max_length=256,
+        null=True, blank=True)
+    qualification = models.CharField(
+        _('qualification'), max_length=512, null=True, blank=True)
     profile_picture = models.ImageField(
         upload_to=generate_propic_upload_location,
         null=True, blank=True)
@@ -48,10 +56,6 @@ class User(AbstractUser):
         related_name='students',
         on_delete=models.SET_NULL,
         null=True)
-    objects = CutomUserManager()
-
-    def get_full_name(self):
-        return self.full_name
 
 
 # Signals
