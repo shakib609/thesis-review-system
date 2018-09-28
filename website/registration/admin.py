@@ -28,7 +28,12 @@ UserAdmin.fieldsets = fieldsets = (
         'fields': ('username', 'password')
     }),
     (_('Personal info'), {
-        'fields': ('full_name', 'email', 'phone_number')
+        'fields': (
+            'full_name',
+            'email',
+            'profile_picture',
+            'phone_number',
+            'cv_document')
     }),
     (_('Permissions'), {
         'fields': ('is_staff', 'is_teacher')

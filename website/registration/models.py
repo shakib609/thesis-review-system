@@ -3,8 +3,22 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import pre_save
 
+import os
+
 from ..thesis.models import StudentGroup
 from .signals import remove_studentgroup_if_empty
+
+
+def generate_propic_upload_location(instance, filename):
+    _, extension = os.path.splitext(filename)
+    return 'profile_pictures/{}/propic{}'.format(
+        instance.username, extension)
+
+
+def generate_cv_upload_location(instance, filename):
+    _, extension = os.path.splitext(filename)
+    return 'cvs/{}/cv{}'.format(
+        instance.username, extension)
 
 
 class CutomUserManager(UserManager):
@@ -18,6 +32,12 @@ class User(AbstractUser):
     full_name = models.CharField(_('full name'), max_length=180)
     email = models.EmailField(_('email address'))
     phone_number = models.CharField(_('phone number'), max_length=16)
+    profile_picture = models.ImageField(
+        upload_to=generate_propic_upload_location,
+        null=True)
+    cv_document = models.FileField(
+        upload_to=generate_cv_upload_location,
+        null=True)
     is_teacher = models.BooleanField(
         _('teacher status'),
         help_text=_(
