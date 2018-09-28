@@ -14,7 +14,8 @@ from django.contrib import messages
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 
-from .forms import StudentSignUpForm, UserUpdateForm
+from .forms import (
+    StudentSignUpForm, UserUpdateForm, TeacherUpdateForm)
 from .models import User
 
 
@@ -61,8 +62,13 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     template_name = "registration/user_update.html"
     http_method_names = ['get', 'post']
-    form_class = UserUpdateForm
     success_url = reverse_lazy('registration:login_redirect')
+
+    def get_form_class(self):
+        if self.request.user.is_teacher:
+            return TeacherUpdateForm
+        else:
+            return UserUpdateForm
 
     def get_object(self, *args, **kwargs):
         return self.request.user

@@ -81,3 +81,18 @@ class UserUpdateForm(forms.ModelForm):
             'phone_number',
             'username',
         )
+
+
+class TeacherUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = (
+            'full_name',
+            'profile_picture',
+            'email',
+            'phone_number',
+            'username',
+            'designation',
+            'qualification',
+            'cv_document'
+        )
