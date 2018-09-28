@@ -27,7 +27,7 @@
             <div class="columns is-mobile">
                 <div class="column is-10">
                     <p class="has-text-weight-bold">
-                        {{ teacher.get_full_name }}
+                        {{ teacher.full_name }}
                         <small>({{ teacher.username}})</small>
                     </p>
                     <p class="is-size-7">
@@ -43,7 +43,7 @@
                     </p>
                 </div>
                 <div class="column is-2 has-text-right">
-                    <a href=""
+                    <a href="{% url 'registration:teacher_detail' teacher.username %}"
                         class="button is-small is-link">
                         View
                     </a>

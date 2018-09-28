@@ -1,0 +1,32 @@
+{% extends 'base/thesis_dashboard_base.html' %}
+{% load static %}
+
+{% block page_title %}
+<article class="media">
+  <figure class="media-left">
+    <p class="image is-128x128">
+      <img src="{% static 'assets/default_profile_picture.png' %}">
+    </p>
+  </figure>
+  <div class="media-content">
+    <div class="content">
+      <h1 class="title">{{ teacher.full_name }} ({{ teacher.username }})</h1>
+      <h4 class="subtitle is-size-6 has-text-weight-normal">
+        <b>Research Fields:</b> {{ teacher.fields.all|join:', '}} <br>
+        <b>Email Address:</b> <a href="mailto:{{ teacher.email }}">{{ teacher.email }}</a> <br>
+        <b>Phone Number:</b> <a href="tel:{{ teacher.phone_number }}">{{ teacher.phone_number }}</a>
+        <br>
+        <br>
+        Currently Supervising {{ teacher.studentgroups.count }} group{{ teacher.studentgroups.count|pluralize }}.
+      </h4>
+    </div>
+  </div>
+  <div class="media-right">
+    <a class="button is-info">View CV</a>
+  </div>
+</article>
+{% endblock page_title %}
+
+{% block dashboard_content %}
+
+{% endblock dashboard_content %}

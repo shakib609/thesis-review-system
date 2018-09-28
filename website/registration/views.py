@@ -5,12 +5,14 @@ from django.views.generic import (
     CreateView,
     RedirectView,
     UpdateView,
-    ListView
+    ListView,
+    DetailView
 )
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.db.models import Count
+from django.shortcuts import get_object_or_404
 
 from .forms import StudentSignUpForm, UserUpdateForm
 from .models import User
@@ -89,7 +91,7 @@ class UserDeleteView(LoginRequiredMixin, TemplateView):
 
 
 class TeachersListView(LoginRequiredMixin, ListView):
-    template_name = 'thesis/teacher_list.html'
+    template_name = 'registration/teacher_list.html'
     context_object_name = 'teachers'
 
     def get_queryset(self):
@@ -97,3 +99,16 @@ class TeachersListView(LoginRequiredMixin, ListView):
             group_count=Count('studentgroups')).filter(
                 is_teacher=True).order_by('-group_count', 'full_name')
         return queryset
+
+
+class TeacherDetailView(LoginRequiredMixin, DetailView):
+    context_object_name = 'teacher'
+    template_name = 'registration/teacher_detail.html'
+
+    def get_object(self, queryset=None):
+        username = self.kwargs.get('username')
+        if username is not None:
+            obj = get_object_or_404(User, username=username, is_teacher=True)
+            return obj
+        else:
+            raise Http404("No Teachers found matching the query")
