@@ -3,6 +3,9 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.safestring import mark_safe
 from django.contrib.auth import password_validation
+from django.core.exceptions import ValidationError
+
+import re
 
 from .models import User
 
@@ -24,9 +27,11 @@ class UserCreationFormExtended(UserCreationForm):
 
 class StudentSignUpForm(UserCreationForm):
     username = forms.CharField(
-        max_length=8,
+        max_length=16,
         label=_('Matric Number'),
-        help_text=_('Required. Enter your Matric Number or ID.'))
+        help_text=_('Required. Enter your Matric Number or ID.'),
+        error_messages={'invalid': _(
+            "This value may contain only letters, numbers.")})
     full_name = forms.CharField(
         max_length=180,
         label=_('Full Name'),
@@ -59,7 +64,11 @@ class StudentSignUpForm(UserCreationForm):
         )
 
     def clean_username(self):
+        regex = re.compile(r'\w+[0-9]{6}')
         username = self.cleaned_data.get("username").upper()
+        m = regex.match(username)
+        if not m:
+            raise ValidationError('Invalid ID')
         return username
 
 
