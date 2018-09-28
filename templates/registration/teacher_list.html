@@ -23,33 +23,40 @@
         </header>
         <div class="card-content">
         {% if teachers %}
-        {% for teacher in teachers %}
-            <div class="columns is-mobile">
-                <div class="column is-10">
-                    <p class="has-text-weight-bold">
-                        {{ teacher.full_name }}
-                        <small>({{ teacher.username}})</small>
-                    </p>
-                    <p class="is-size-7">
-                        <b>Research Fields:</b> {{ teacher.fields.all|join:', '}}
-                    </p>
-                    <p class="is-size-7">
-                        <b>Phone Number:</b> {{ teacher.phone_number }}
-                        &nbsp;-&nbsp;
-                        <b>Email:</b>
-                        <a href="mailto:{{ teacher.email }}">{{ teacher.email }}</a>
-                        &nbsp;-&nbsp;
-                        <b>Groups:</b> {{ teacher.group_count }}
-                    </p>
+          {% for teacher in teachers %}
+            <article class="media">
+              <figure class="media-left">
+                <p class="image is-64x64">
+                  <a href="{% url 'registration:teacher_detail' teacher.username %}">
+                    <img
+                      {% if teacher.profile_picture %}
+                        src="/media/{{ teacher.profile_picture }}"
+                      {% else %}
+                        src="{% static 'assets/default_profile_picture.png' %}"
+                      {% endif %}
+                    >
+                  </a>
+                </p>
+              </figure>
+              <div class="media-content">
+                <div class="content">
+                  <p class="is-size-7">
+                    <strong class="is-size-6">{{ teacher.full_name }} ({{ teacher.username }})</strong><br>
+                      <b>Research Fields:</b> {{ teacher.fields.all|join:', '}} <br>
+                      <b>Email Address:</b> <a href="mailto:{{ teacher.email }}">{{ teacher.email }}</a>
+                      &nbsp;-&nbsp;
+                      <b>Phone Number:</b> <a href="tel:{{ teacher.phone_number }}">{{ teacher.phone_number }}</a>
+                      &nbsp;-&nbsp;
+                      <b>Groups:</b> {{ teacher.studentgroups.count }}
+                  </p>
                 </div>
-                <div class="column is-2 has-text-right">
-                    <a href="{% url 'registration:teacher_detail' teacher.username %}"
-                        class="button is-small is-link">
-                        View
-                    </a>
-                </div>
-            </div>
-        {% endfor %}
+              </div>
+              <div class="media-right">
+                <a href="{% url 'registration:teacher_detail' teacher.username %}"
+                class="button is-small is-info">View</a>
+              </div>
+            </article>
+          {% endfor %}
         {% else %}
             <p class="has-text-centered">No Teachers have registered in the system yet!</p>
         {% endif %}
