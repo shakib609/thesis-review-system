@@ -28,7 +28,7 @@ UserAdmin.fieldsets = fieldsets = (
         'fields': ('username', 'password')
     }),
     (_('Personal info'), {
-        'fields': ('first_name', 'last_name', 'email', 'phone_number')
+        'fields': ('full_name', 'email', 'phone_number')
     }),
     (_('Permissions'), {
         'fields': ('is_staff', 'is_teacher')
@@ -38,7 +38,7 @@ UserAdmin.fieldsets = fieldsets = (
     }),
 )
 
-UserAdmin.list_display = ('username', 'is_teacher', 'first_name', 'last_name',)
+UserAdmin.list_display = ('username', 'is_teacher', 'full_name',)
 
 UserAdmin.list_filter = ('is_teacher', 'is_superuser', 'is_active')
 

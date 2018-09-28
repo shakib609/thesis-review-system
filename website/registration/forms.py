@@ -27,14 +27,10 @@ class StudentSignUpForm(UserCreationForm):
         max_length=8,
         label=_('Matric Number'),
         help_text=_('Required. Enter your Matric Number or ID.'))
-    first_name = forms.CharField(
-        max_length=30,
-        label=_('First Name'),
-        help_text=_('Required. Enter your first name.'))
-    last_name = forms.CharField(
-        max_length=30,
-        label=_('Last Name'),
-        help_text=_('Required. Enter your last name.'))
+    full_name = forms.CharField(
+        max_length=180,
+        label=_('Full Name'),
+        help_text=_('Required. Enter your full name.'))
     email = forms.EmailField(
         max_length=254,
         label=_('E-mail'),
@@ -54,8 +50,7 @@ class StudentSignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = (
-            'first_name',
-            'last_name',
+            'full_name',
             'email',
             'phone_number',
             'username',
@@ -72,8 +67,7 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = (
-            'first_name',
-            'last_name',
+            'full_name',
             'email',
             'phone_number',
             'username',

@@ -5,10 +5,12 @@ from django.views.generic import (
     CreateView,
     RedirectView,
     UpdateView,
+    ListView
 )
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.db.models import Count
 
 from .forms import StudentSignUpForm, UserUpdateForm
 from .models import User
@@ -47,7 +49,7 @@ class UserCreateView(CreateView):
         response = super().form_valid(form)
         login(self.request, self.object)
         messages.success(
-            self.request, 
+            self.request,
             'User Created Successfully!',
             extra_tags='is-success')
         return response
@@ -66,7 +68,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(
-            self.request, 
+            self.request,
             'Update Successful!',
             extra_tags='is-success')
         return response
@@ -80,7 +82,18 @@ class UserDeleteView(LoginRequiredMixin, TemplateView):
         user = self.request.user
         user.delete()
         messages.success(
-            request, 
+            request,
             'Account deleted successfully!',
             extra_tags='is-success')
         return HttpResponseRedirect(reverse_lazy('registration:login'))
+
+
+class TeachersListView(LoginRequiredMixin, ListView):
+    template_name = 'thesis/teacher_list.html'
+    context_object_name = 'teachers'
+
+    def get_queryset(self):
+        queryset = User.objects.annotate(
+            group_count=Count('studentgroups')).filter(
+                is_teacher=True).order_by('-group_count', 'full_name')
+        return queryset

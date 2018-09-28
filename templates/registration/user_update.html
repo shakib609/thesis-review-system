@@ -19,57 +19,28 @@
     <form method="post">
         {% csrf_token %}
         <div class="field">
-            <label for="first_name" class="label">First Name</label>
+            <label for="full_name" class="label">Full Name</label>
             <div class="control has-icons-left">
                 <input
-                  {% if 'first_name' in form.errors %}
+                  {% if 'full_name' in form.errors %}
                     class="input is-danger"
                   {% else %}
                     class="input"
                   {% endif %}
                   type="text"
-                  name="first_name"
-                  placeholder="First Name"
+                  name="full_name"
+                  placeholder="Full Name"
                   autofocus=""
                   required=""
-                  value="{{ form.first_name.value|default_if_none:'' }}"
-                  id="first_name"
+                  value="{{ form.full_name.value|default_if_none:'' }}"
+                  id="full_name"
                   spellcheck="false">
                 <span class="icon is-small is-left">
                     <i class="fas fa-id-card"></i>
                 </span>
-                {% if 'first_name' in form.errors %}
+                {% if 'full_name' in form.errors %}
                 <ul class="help is-danger">
-                    {% for error in form.errors|get_item:'first_name' %}
-                    <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="field">
-            <label for="last_name" class="label">Last Name</label>
-            <div class="control has-icons-left">
-                <input
-                  {% if 'last_name' in form.errors %}
-                    class="input is-danger"
-                  {% else %}
-                    class="input"
-                  {% endif %}
-                  type="text"
-                  name="last_name"
-                  placeholder="Last Name"
-                  required=""
-                  value="{{ form.last_name.value|default_if_none:'' }}"
-                  id="last_name"
-                  spellcheck="false">
-                <span class="icon is-small is-left">
-                    <i class="fas fa-id-card"></i>
-                </span>
-                {% if 'last_name' in form.errors %}
-                <ul class="help is-danger">
-                    {% for error in form.errors|get_item:'last_name' %}
+                    {% for error in form.errors|get_item:'full_name' %}
                     <li>{{ error }}</li>
                     {% endfor %}
                 </ul>

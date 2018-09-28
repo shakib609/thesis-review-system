@@ -13,6 +13,7 @@
 
 {% block content %}
 {% url 'thesis:document_list' as document_list %}
+{% url 'registration:teacher_list' as teacher_list %}
 {% url 'thesis:document_upload' as document_upload %}
 {% url 'thesis:group_list' as group_list %}
 {% url 'thesis:group_invite' as group_invite %}
@@ -24,6 +25,15 @@
     <div class="columns">
         <div class="column is-2">
             <aside class="menu has-text-weight-bold">
+                <p class="menu-label">Department</p>
+                <ul class="menu-list">
+                  <li>
+                    <a href="{{ teacher_list }}"
+                      {% if request.path == teacher_list %}class="is-active"{% endif %}>
+                      <i class="fas fa-chalkboard-teacher"></i>&nbsp; Teachers
+                    </a>
+                  </li>
+                </ul>
                 <p class="menu-label">Group</p>
                 <ul class="menu-list">
                     {% if user.is_teacher %}

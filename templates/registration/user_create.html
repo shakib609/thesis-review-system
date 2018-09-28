@@ -15,23 +15,23 @@
             <div class="field">
                 <div class="control has-icons-left">
                     <input
-                      {% if 'first_name' in form.errors %}
+                      {% if 'full_name' in form.errors %}
                         class="input is-danger"
                       {% else %}
                         class="input"
                       {% endif %}
                       type="text"
-                      name="first_name"
-                      placeholder="First Name" autofocus=""
+                      name="full_name"
+                      placeholder="Full Name" autofocus=""
                       required=""
-                      value="{{ form.first_name.value|default_if_none:'' }}"
+                      value="{{ form.full_name.value|default_if_none:'' }}"
                       spellcheck="false">
                     <span class="icon is-small is-left">
                         <i class="fas fa-id-card"></i>
                     </span>
-                    {% if 'first_name' in form.errors %}
+                    {% if 'full_name' in form.errors %}
                     <ul class="help is-danger">
-                        {% for error in form.errors|get_item:'first_name' %}
+                        {% for error in form.errors|get_item:'full_name' %}
                         <li>{{ error }}</li>
                         {% endfor %}
                     </ul>
@@ -39,32 +39,6 @@
                 </div>
             </div>
 
-            <div class="field">
-                <div class="control has-icons-left">
-                    <input
-                      {% if 'last_name' in form.errors %}
-                        class="input is-danger"
-                      {% else %}
-                        class="input"
-                      {% endif %}
-                      type="text"
-                      name="last_name"
-                      placeholder="Last Name"
-                      required=""
-                      value="{{ form.last_name.value|default_if_none:'' }}"
-                      spellcheck="false">
-                    <span class="icon is-small is-left">
-                        <i class="fas fa-id-card"></i>
-                    </span>
-                    {% if 'last_name' in form.errors %}
-                    <ul class="help is-danger">
-                        {% for error in form.errors|get_item:'last_name' %}
-                        <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                </div>
-            </div>
             <div class="field">
                 <div class="control has-icons-left">
                     <input

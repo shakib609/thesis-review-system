@@ -7,6 +7,7 @@ from .views import (
     LoginRedirectView,
     UserUpdateView,
     UserDeleteView,
+    TeachersListView
 )
 
 app_name = 'registration'
@@ -19,4 +20,5 @@ urlpatterns = [
     path('redirect/', LoginRedirectView.as_view(), name='login_redirect'),
     path('account/', UserUpdateView.as_view(), name='user_update'),
     path('delete/', UserDeleteView.as_view(), name='user_delete'),
+    path('teachers/', TeachersListView.as_view(), name='teacher_list'),
 ]

@@ -15,8 +15,7 @@ class CutomUserManager(UserManager):
 
 
 class User(AbstractUser):
-    first_name = models.CharField(_('first name'), max_length=30)
-    last_name = models.CharField(_('last name'), max_length=150)
+    full_name = models.CharField(_('full name'), max_length=180)
     email = models.EmailField(_('email address'))
     phone_number = models.CharField(_('phone number'), max_length=16)
     is_teacher = models.BooleanField(
@@ -30,6 +29,9 @@ class User(AbstractUser):
         on_delete=models.SET_NULL,
         null=True)
     objects = CutomUserManager()
+
+    def get_full_name(self):
+        return self.full_name
 
 
 # Signals
