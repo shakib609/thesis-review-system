@@ -15,16 +15,17 @@
             <div class="field">
                 <div class="control has-icons-left">
                     <input
-                    {% if 'first_name' in form.errors %}
+                      {% if 'first_name' in form.errors %}
                         class="input is-danger"
-                    {% else %}
-                        <input class="input"
-                    {% endif %}
-                        type="text"
-                        name="first_name"
-                        placeholder="First Name" autofocus=""
-                        required=""
-                        value="{{ form.first_name.value|default_if_none:'' }}">
+                      {% else %}
+                        class="input"
+                      {% endif %}
+                      type="text"
+                      name="first_name"
+                      placeholder="First Name" autofocus=""
+                      required=""
+                      value="{{ form.first_name.value|default_if_none:'' }}"
+                      spellcheck="false">
                     <span class="icon is-small is-left">
                         <i class="fas fa-id-card"></i>
                     </span>
@@ -41,16 +42,17 @@
             <div class="field">
                 <div class="control has-icons-left">
                     <input
-                    {% if 'last_name' in form.errors %}
+                      {% if 'last_name' in form.errors %}
                         class="input is-danger"
-                    {% else %}
-                        <input class="input"
-                    {% endif %}
-                        type="text"
-                        name="last_name"
-                        placeholder="Last Name"
-                        required=""
-                        value="{{ form.last_name.value|default_if_none:'' }}">
+                      {% else %}
+                        class="input"
+                      {% endif %}
+                      type="text"
+                      name="last_name"
+                      placeholder="Last Name"
+                      required=""
+                      value="{{ form.last_name.value|default_if_none:'' }}"
+                      spellcheck="false">
                     <span class="icon is-small is-left">
                         <i class="fas fa-id-card"></i>
                     </span>
@@ -66,16 +68,16 @@
             <div class="field">
                 <div class="control has-icons-left">
                     <input
-                    {% if 'email' in form.errors %}
+                      {% if 'email' in form.errors %}
                         class="input is-danger"
-                    {% else %}
-                        <input class="input"
-                    {% endif %}
-                        type="email"
-                        name="email"
-                        placeholder="E-mail"
-                        required=""
-                        value="{{ form.email.value|default_if_none:'' }}">
+                      {% else %}
+                        class="input"
+                      {% endif %}
+                      type="email"
+                      name="email"
+                      placeholder="E-mail"
+                      required=""
+                      value="{{ form.email.value|default_if_none:'' }}">
                     <span class="icon is-small is-left">
                         <i class="fas fa-at"></i>
                     </span>
@@ -91,16 +93,16 @@
             <div class="field">
                 <div class="control has-icons-left">
                     <input
-                    {% if 'phone_number' in form.errors %}
+                      {% if 'phone_number' in form.errors %}
                         class="input is-danger"
-                    {% else %}
-                        <input class="input"
-                    {% endif %}
-                        type="tel"
-                        name="phone_number"
-                        placeholder="Phone Number"
-                        required=""
-                        value="{{ form.phone_number.value|default_if_none:'' }}">
+                      {% else %}
+                        class="input"
+                      {% endif %}
+                      type="tel"
+                      name="phone_number"
+                      placeholder="Phone Number"
+                      required=""
+                      value="{{ form.phone_number.value|default_if_none:'' }}">
                     <span class="icon is-small is-left">
                         <i class="fas fa-phone" data-fa-transform="flip-h"></i>
                     </span>
@@ -116,16 +118,17 @@
             <div class="field">
                 <div class="control has-icons-left">
                     <input
-                    {% if 'username' in form.errors %}
-                        class="input is-danger"
-                    {% else %}
-                        <input class="input is-capitalized"
-                    {% endif %}
+                      {% if 'username' in form.errors %}
+                        class="input is-danger is-uppercase"
+                      {% else %}
+                        class="input is-uppercase"
+                      {% endif %}
                         type="text"
                         name="username"
                         placeholder="Varsity ID"
                         required=""
-                        value="{{ form.username.value|default_if_none:'' }}">
+                        value="{{ form.username.value|default_if_none:'' }}"
+                        spellcheck="false">
                     <span class="icon is-small is-left">
                         <i class="fas fa-hashtag"></i>
                     </span>
@@ -141,15 +144,15 @@
             <div class="field">
                 <div class="control has-icons-left">
                     <input
-                    {% if 'password1' in form.errors %}
+                      {% if 'password1' in form.errors %}
                         class="input is-danger"
-                    {% else %}
-                        <input class="input"
-                    {% endif %}
-                        type="password"
-                        name="password1"
-                        placeholder="Password"
-                        required="">
+                      {% else %}
+                        class="input"
+                      {% endif %}
+                      type="password"
+                      name="password1"
+                      placeholder="Password"
+                      required="">
                     <span class="icon is-small is-left">
                         <i class="fas fa-key"></i>
                     </span>
@@ -166,15 +169,15 @@
             <div class="field">
                 <div class="control has-icons-left">
                     <input
-                    {% if 'password2' in form.errors %}
+                      {% if 'password2' in form.errors %}
                         class="input is-danger"
-                    {% else %}
-                        <input class="input"
-                    {% endif %}
-                        type="password"
-                        name="password2"
-                        placeholder="Confirm Password"
-                        required="">
+                      {% else %}
+                        class="input"
+                      {% endif %}
+                      type="password"
+                      name="password2"
+                      placeholder="Confirm Password"
+                      required="">
                     <span class="icon is-small is-left">
                         <i class="fas fa-key"></i>
                     </span>

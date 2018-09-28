@@ -10,15 +10,15 @@
             <div class="field">
                 <div class="control has-icons-left">
                     <input
-                    {% if form.errors %}
-                        class="input is-medium is-danger"
-                    {% else %}
-                        <input class="input is-medium"
-                    {% endif %}
-                        type="text"
-                        name="username"
-                        placeholder="Varsity ID" autofocus=""
-                        required="">
+                      {% if form.errors %}
+                        class="input is-medium is-danger is-uppercase"
+                      {% else %}
+                        class="input is-medium is-uppercase"
+                      {% endif %}
+                      type="text"
+                      name="username"
+                      placeholder="Varsity ID" autofocus=""
+                      required="">
                     <span class="icon is-small is-left">
                         <i class="fas fa-hashtag"></i>
                     </span>
@@ -27,15 +27,15 @@
             <div class="field">
                 <div class="control has-icons-left">
                     <input
-                    {% if form.errors %}
+                      {% if form.errors %}
                         class="input is-medium is-danger"
-                    {% else %}
-                        <input class="input is-medium"
-                    {% endif %}
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        required="">
+                      {% else %}
+                        class="input is-medium"
+                      {% endif %}
+                      type="password"
+                      name="password"
+                      placeholder="Password"
+                      required="">
                     <span class="icon is-small is-left">
                         <i class="fas fa-key"></i>
                     </span>
