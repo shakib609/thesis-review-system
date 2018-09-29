@@ -1,117 +1,113 @@
-{% extends 'base/base.html' %}
+{% extends 'base/thesis_dashboard_base.html' %}
 {% load static %}
 {% load my_tags %}
 
 
 {% block title %}
-    {{ block.super }} | Create Group
+    Create Group | {{ block.super }}
 {% endblock title %}
 
+{% block page_title %}
+  <h3 class="title">Create Group</h3>
+  <h4 class="subtitle">Create a group for your thesis</h4>
+  {% if user.studentgroup or messages %}
+  <div class="columns">
+      <div class="column is-12">
+          <div class="columns is-multiline">
+              {% if user.studentgroup %}
+              <div class="column is-12">
+                  <div class="message is-danger">
+                      <div class="message-body">
+                          You are already in a group! You will leave the current group when you Create/Join another group.
+                      </div>
+                  </div>
+              </div>
+              {% endif %}
+              {% include "include/messages.html" %}
+          </div>
+      </div>
+  </div>
+  {% endif %}
+{% endblock page_title %}
 
-{% block content %}
-<div class="hero is-medium">
-    <div class="hero-body">
-        <div class="container">
+{% block dashboard_content %}
 
-            {% if user.studentgroup or messages %}
-            <div class="columns">
-                <div class="column is-6 is-offset-3">
-                    <div class="columns is-multiline">
-                        {% if user.studentgroup %}
-                        <div class="column is-12">
-                            <div class="message is-danger">
-                                <div class="message-body">
-                                    You are already in a group! You will leave the current group when you Create/Join another group.
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %}
-                        {% include "include/messages.html" %}
-                    </div>
-                </div>
-            </div>
-            {% endif %}
+<div class="column is-6">
 
-            <div class="column is-6 is-offset-3  has-text-centered">
-                <h3 class="title">Create Group</h3>
-                <h4 class="subtitle">Create a group for your thesis</h4>
-                <div class="box">
-                    <form method="POST" class="has-text-left" id="v-app">
-                        {% csrf_token %}
-                        <div class="field">
-                            <div class="control has-icons-left">
-                                <input class="input is-medium{% if 'title' in form.errors %} is-danger{% endif %}"
-                                        type="text" name="title"
-                                        placeholder="Title" autofocus="" required=""
-                                        value="{{ form.title.value|default_if_none:'' }}">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-align-justify"></i>
-                                </span>
-                                {% if 'title' in form.errors %}
-                                <ul class="help is-danger">
-                                    {% for error in form.errors|get_item:'title' %}
-                                    <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="field is-fullwidth">
-                          <p class="control has-icons-left">
-                            <span class="select is-medium is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
-                              <select name="field" v-model="field">
-                              {% for x,y in form.fields.field.choices %}
-                                <option value="{{ x }}"{% if form.field.value == x %} selected{% endif %}>{{ y }}</option>
-                              {% endfor %}
-                              </select>
-                            </span>
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-globe"></i>
-                            </span>
-                            {% if 'field' in form.errors %}
-                            <ul class="help is-danger">
-                                {% for error in form.errors|get_item:'field' %}
-                                <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                            {% endif %}
-                          </p>
-                        </div>
-                        <div class="field is-fullwidth">
-                            <p class="control has-icons-left">
-                                <span class="select is-medium is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
-                                    <select name="teacher" v-model="selected_teacher">
-                                      <option value="">Select Teacher</option>
-                                      <option
-                                        v-for="option in options"
-                                        :value="option.id">
-                                        [[ option.full_name ]] ([[ option.username ]])
-                                      </option>
-                                    </select>
-                                </span>
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-chalkboard-teacher"></i>
-                                </span>
-                                <p class="help">A teacher can supervise at most 5 Student Groups. Teachers with minimum 5 Student Groups will not be listed.</p>
-                                {% if 'teacher' in form.errors %}
-                                <ul class="help is-danger">
-                                    {% for error in form.errors|get_item:'teacher' %}
-                                    <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                                {% endif %}
-                            </p>
-                        </div>
-                        <input type="submit" class="button is-medium is-primary is-fullwidth"
-                                value="Create">
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+  <form method="POST" class="has-text-left" id="v-app">
+      {% csrf_token %}
+      <div class="field">
+          <label for="title" class="label">Title</label>
+          <div class="control has-icons-left">
+              <input class="input {% if 'title' in form.errors %} is-danger{% endif %}"
+                      type="text" name="title" id="title"
+                      placeholder="Title" autofocus="" required=""
+                      value="{{ form.title.value|default_if_none:'' }}">
+              <span class="icon is-small is-left">
+                  <i class="fas fa-align-justify"></i>
+              </span>
+              {% if 'title' in form.errors %}
+              <ul class="help is-danger">
+                  {% for error in form.errors|get_item:'title' %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+              </ul>
+              {% endif %}
+          </div>
+      </div>
+      <div class="field is-fullwidth">
+        <label for="field" class="label">Research Field</label>
+        <p class="control has-icons-left">
+          <span class="select is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
+            <select name="field" v-model="field" id="field">
+            {% for x,y in form.fields.field.choices %}
+              <option value="{{ x }}"{% if form.field.value == x %} selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+            </select>
+          </span>
+          <span class="icon is-small is-left">
+              <i class="fas fa-globe"></i>
+          </span>
+          {% if 'field' in form.errors %}
+          <ul class="help is-danger">
+              {% for error in form.errors|get_item:'field' %}
+              <li>{{ error }}</li>
+              {% endfor %}
+          </ul>
+          {% endif %}
+        </p>
+      </div>
+      <div class="field is-fullwidth">
+          <label for="teacher" class="label">Teacher</label>
+          <p class="control has-icons-left">
+              <span class="select is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
+                  <select name="teacher" v-model="selected_teacher" id="teacher">
+                    <option value="">Select Teacher</option>
+                    <option
+                      v-for="option in options"
+                      :value="option.id">
+                      [[ option.full_name ]] ([[ option.username ]])
+                    </option>
+                  </select>
+              </span>
+              <span class="icon is-small is-left">
+                  <i class="fas fa-chalkboard-teacher"></i>
+              </span>
+              <p class="help">A teacher can supervise at most 5 Student Groups. Teachers with minimum 5 Student Groups will not be listed.</p>
+              {% if 'teacher' in form.errors %}
+              <ul class="help is-danger">
+                  {% for error in form.errors|get_item:'teacher' %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+              </ul>
+              {% endif %}
+          </p>
+      </div>
+      <input type="submit" class="button is-primary"
+              value="Create">
+  </form>
 </div>
-
-{% endblock content %}
+{% endblock dashboard_content %}
 
 
 {% block extra_js %}

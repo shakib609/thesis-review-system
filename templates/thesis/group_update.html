@@ -19,9 +19,10 @@
   <form method="POST" class="has-text-left" id="v-app">
     {% csrf_token %}
     <div class="field">
+        <label for="title" class="label">Title</label>
         <div class="control has-icons-left">
             <input class="input{% if 'title' in form.errors %} is-danger{% endif %}"
-                    type="text" name="title"
+                    type="text" name="title" id="title"
                     placeholder="Title" autofocus="" required=""
                     value="{{ form.title.value|default_if_none:'' }}">
             <span class="icon is-small is-left">
@@ -37,10 +38,11 @@
         </div>
     </div>
     <div class="field is-fullwidth">
+      <label for="research_field" class="label">Research Field</label>
       <p class="control has-icons-left">
         <span class="select is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
           {% if form.teacher.value %}
-          <input type="hidden" name="field" value="{{ form.field.value }}">
+          <input type="hidden" name="field" value="{{ form.field.value }}" id="research_field">
           {% endif %}
           <select name="field" v-model="field" {% if form.field.value %}disabled{% endif %}>
           {% for x,y in form.fields.field.choices %}
@@ -61,10 +63,11 @@
       </p>
     </div>
     <div class="field is-fullwidth">
+        <label for="teacher" class="label">Teacher</label>
         <p class="control has-icons-left">
             <span class="select is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
                 {% if form.teacher.value %}
-                <input type="hidden" name="teacher" value="{{ form.teacher.value }}">
+                <input type="hidden" name="teacher" value="{{ form.teacher.value }}" id="teacher">
                 {% endif %}
                 <select name="teacher" v-model="selected_teacher" {% if form.teacher.value %}disabled{% endif %}>
                   <option value="">Select Teacher</option>
@@ -88,7 +91,7 @@
             {% endif %}
         </p>
     </div>
-    <input type="submit" class="button is-medium is-primary is-fullwidth"
+    <input type="submit" class="button is-primary"
             value="Update">
   </form>
 </div>

@@ -28,7 +28,7 @@ class LoginRedirectView(LoginRequiredMixin, RedirectView):
             return reverse_lazy('thesis:group_list')
         if request.user.studentgroup:
             return reverse_lazy('thesis:document_list')
-        return reverse_lazy('thesis:group_create_join')
+        return reverse_lazy('registration:teacher_list')
 
 
 class AboutView(TemplateView):
@@ -40,7 +40,7 @@ class UserCreateView(CreateView):
     model = User
     template_name = 'registration/user_create.html'
     form_class = StudentSignUpForm
-    success_url = reverse_lazy('registration:login_redirect')
+    success_url = reverse_lazy('registration:teacher_list')
     http_method_names = ['get', 'post']
 
     def get(self, request, *args, **kwargs):

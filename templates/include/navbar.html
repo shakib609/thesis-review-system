@@ -16,8 +16,13 @@
                 {% url 'registration:register' as register %}
                 {% url 'registration:about' as about %}
                 {% url 'registration:user_update' as user_update %}
+                {% url 'registration:teacher_list' as teacher_list %}
                 {% url 'thesis:group_list' as group_list %}
                 {% if user.is_authenticated %}
+                    <a href="{{ teacher_list }}"
+                        class="navbar-item {% if request.path == teacher_list %}is-active{% endif %}">
+                        Teachers
+                    </a>
                     <a href="{{ user_update }}"
                         class="navbar-item {% if request.path == user_update %}is-active{% endif %}">
                         Profile
@@ -29,7 +34,7 @@
                     </a>
                     {% else %}
                     <div class="navbar-item  has-dropdown is-hoverable">
-                        <a class="navbar-link" href="{% url 'thesis:group_create_join' %}">
+                        <a class="navbar-link" href="#">
                             Group
                         </a>
                         <div class="navbar-dropdown">

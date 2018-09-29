@@ -18,6 +18,8 @@
 {% url 'thesis:group_list' as group_list %}
 {% url 'thesis:group_invite' as group_invite %}
 {% url 'thesis:group_update' as group_update %}
+{% url 'thesis:group_create' as group_create %}
+{% url 'thesis:group_join' as group_join %}
 {% url 'registration:user_update' as user_update %}
 {% url 'registration:user_delete' as user_delete %}
 
@@ -40,7 +42,7 @@
                     <li><a href="{{ group_list }}"
                     class="{% if request.path == group_list %}is-active{% endif %}">
                         <i class="fas fa-align-justify"></i>&nbsp; Groups</a></li>
-                    {% else %}
+                    {% elif user.studentgroup %}
                     <li><a href="{{ document_list }}"
                     class="{% if request.path == document_list %}is-active{% endif %}">
                         <i class="fas fa-align-justify"></i>&nbsp; Documents</a></li>
@@ -53,6 +55,13 @@
                     <li><a href="{{ group_update }}"
                     class="{% if request.path == group_update %}is-active{% endif %}">
                         <i class="fas fa-wrench"></i>&nbsp; Group Settings</a></li>
+                    {% else %}
+                    <li><a href="{{ group_create }}"
+                    class="{% if request.path == group_create %}is-active{% endif %}">
+                        <i class="fas fa-plus"></i>&nbsp; Create Group</a></li>
+                    <li><a href="{{ group_join }}"
+                    class="{% if request.path == group_join %}is-active{% endif %}">
+                        <i class="fas fa-sign-in-alt"></i>&nbsp; Join Group</a></li>
                     {% endif %}
                 </ul>
                 <p class="menu-label">Account</p>

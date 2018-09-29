@@ -1,68 +1,62 @@
-{% extends 'base/base.html' %}
+{% extends 'base/thesis_dashboard_base.html' %}
 {% load my_tags %}
 
 
 {% block title %}
-    {{ block.super }} | Join Group
+    Join Group | {{ block.super }}
 {% endblock title %}
 
 
-{% block content %}
-<div class="hero is-medium">
-    <div class="hero-body">
-        <div class="container">
-
-            {% if user.studentgroup or messages %}
-            <div class="columns">
-                <div class="column is-6 is-offset-3">
-                    <div class="columns is-multiline">
-                        {% if user.studentgroup %}
-                        <div class="column is-12">
-                            <div class="message is-danger">
-                                <div class="message-body">
-                                    You are already in a group! You will leave the current group when you Create/Join another group.
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %}
-                        {% include 'include/messages.html' %}
+{% block page_title %}
+<h3 class="title">Join Group</h3>
+<h4 class="subtitle">Join a group your friend created!</h3>
+{% if user.studentgroup or messages %}
+<div class="columns">
+    <div class="column is-12">
+        <div class="columns is-multiline">
+            {% if user.studentgroup %}
+            <div class="column is-12">
+                <div class="message is-danger">
+                    <div class="message-body">
+                        You are already in a group! You will leave the current group when you Create/Join another group.
                     </div>
                 </div>
             </div>
             {% endif %}
-
-            <div class="column is-6 is-offset-3  has-text-centered">
-                <h3 class="title">Join Group</h3>
-                <h4 class="subtitle">Join a group your friend created!</h3>
-                <div class="box">
-                    <form method="POST" class="has-text-left">
-                        {% csrf_token %}
-                        <div class="field">
-                            <div class="control has-icons-left">
-                                <input class="input is-medium{% if 'md5hash' in form.errors %} is-danger{% endif %}"
-                                        type="text" name="md5hash"
-                                        placeholder="Group Code" autofocus="" required=""
-                                        value="{{ form.md5hash.value|default_if_none:'' }}"
-                                        spellcheck="false">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-hashtag"></i>
-                                </span>
-                                {% if 'md5hash' in form.errors %}
-                                <ul class="help is-danger">
-                                    {% for error in form.errors|get_item:'md5hash' %}
-                                    <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <input type="submit" class="button is-medium is-primary is-fullwidth"
-                                value="Join">
-                    </form>
-                </div>
-            </div>
+            {% include 'include/messages.html' %}
         </div>
     </div>
 </div>
+{% endif %}
+{% endblock page_title %}
 
-{% endblock content %}
+{% block dashboard_content %}
+
+<div class="column is-6">
+  <form method="POST" class="has-text-left">
+      {% csrf_token %}
+      <div class="field">
+          <label for="code" class="label">Group Code</label>
+          <div class="control has-icons-left">
+              <input class="input{% if 'md5hash' in form.errors %} is-danger{% endif %}"
+                      type="text" name="md5hash" id="code"
+                      placeholder="Group Code" autofocus="" required=""
+                      value="{{ form.md5hash.value|default_if_none:'' }}"
+                      spellcheck="false">
+              <span class="icon is-small is-left">
+                  <i class="fas fa-hashtag"></i>
+              </span>
+              {% if 'md5hash' in form.errors %}
+              <ul class="help is-danger">
+                  {% for error in form.errors|get_item:'md5hash' %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+              </ul>
+              {% endif %}
+          </div>
+      </div>
+      <input type="submit" class="button is-primary"
+              value="Join">
+  </form>
+</div>
+{% endblock dashboard_content %}
