@@ -30,7 +30,7 @@
                   type="text"
                   name="full_name"
                   placeholder="Full Name"
-                  autofocus=""
+                  {% comment %} autofocus="" {% endcomment %}
                   required=""
                   value="{{ form.full_name.value|default_if_none:'' }}"
                   id="full_name"
@@ -243,6 +243,13 @@
               {% endfor %}
           </ul>
           {% endif %}
+        </div>
+        <div class="field">
+          <label class="label">Research Fields</label>
+          {% for check in form.research_fields %}
+            {{ check }}
+          <br>
+          {% endfor %}
         </div>
         {% endif %}
 

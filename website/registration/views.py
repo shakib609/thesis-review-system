@@ -62,7 +62,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     template_name = "registration/user_update.html"
     http_method_names = ['get', 'post']
-    success_url = reverse_lazy('registration:login_redirect')
+    success_url = reverse_lazy('registration:user_update')
 
     def get_form_class(self):
         if self.request.user.is_teacher:

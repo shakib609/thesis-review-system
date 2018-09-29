@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 import re
 
 from .models import User
+from ..thesis.models import ResearchField
 
 
 class UserCreationFormExtended(UserCreationForm):
@@ -84,6 +85,12 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class TeacherUpdateForm(forms.ModelForm):
+    research_fields = forms.ModelMultipleChoiceField(
+        queryset=ResearchField.objects.all(),
+        widget=forms.widgets.CheckboxSelectMultiple,
+        required=False,
+    )
+
     class Meta:
         model = User
         fields = (
@@ -94,5 +101,22 @@ class TeacherUpdateForm(forms.ModelForm):
             'username',
             'designation',
             'qualification',
-            'cv_document'
+            'cv_document',
         )
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance')
+        if instance:
+            kwargs.update(initial={
+                'research_fields': [field.id for field in instance.fields.all()]
+            })
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        research_fields = self.cleaned_data.get('research_fields')
+        instance.fields.clear()
+        instance.fields.add(*research_fields)
+        if commit:
+            instance.save()
+        return instance
