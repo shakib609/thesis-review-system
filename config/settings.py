@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '=aq!6dh_h%b6ld*8&1*&15&c9zxw99sxnoro4^5cl^!f1!0yj3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG', '1')))
 
 ALLOWED_HOSTS = ['*']
 
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Custom apps
     'website.registration',
     'website.thesis',
 ]
@@ -82,8 +84,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': 'db.sqlite3',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': os.environ.get('DB_NAME', 'thesisReviewSystem'),
+    #     'USER': os.environ.get('DB_USER', 'root'),
+    #     'PASSWORD': os.environ.get('DB_PASSWORD', 'foobar'),
+    #     'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
+    #     'PORT': os.environ.get('DB_PORT', '3306'),
+    # }
 }
 
 
