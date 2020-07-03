@@ -3,7 +3,7 @@ from django.conf import settings
 
 import os
 
-from thesis.utils import generate_upload_location
+from groups.utils import generate_upload_location
 
 
 class ResearchField(models.Model):
@@ -16,6 +16,7 @@ class ResearchField(models.Model):
     )
 
     class Meta:
+        db_table = "tbl_research_field"
         default_related_name = 'research_fields'
         ordering = ['name']
 
@@ -28,40 +29,49 @@ class Batch(models.Model):
     max_groups_limit = models.PositiveSmallIntegerField(default=5)
     min_groups_limit = models.PositiveSmallIntegerField(default=0)
 
+    class Meta:
+        db_table = "tbl_batch"
+        ordering = ['-number']
+
     def __str__(self):
         return self.number
 
 
-class ThesisGroup(models.Model):
+class Group(models.Model):
     title = models.CharField(max_length=512, blank=True)
     unique_id = models.CharField(max_length=10, blank=True)
     progress = models.IntegerField(default=0)
     approved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
     batch = models.ForeignKey(
         Batch,
         on_delete=models.CASCADE,
     )
     supervisor = models.ForeignKey(
         'users.Teacher',
+        on_delete=models.SET_NULL,
+        related_name='supervisor_groups',
         null=True,
         blank=True,
-        on_delete=models.SET_NULL,
     )
     reviewer = models.ForeignKey(
         'users.Teacher',
         on_delete=models.SET_NULL,
+        related_name='review_groups',
         null=True,
         blank=True,
     )
     internal = models.ForeignKey(
         'users.Teacher',
         on_delete=models.SET_NULL,
+        related_name='internal_groups',
         null=True,
         blank=True,
     )
     external = models.ForeignKey(
         'users.Teacher',
         on_delete=models.SET_NULL,
+        related_name='external_groups',
         null=True,
         blank=True,
     )
@@ -73,7 +83,9 @@ class ThesisGroup(models.Model):
     )
 
     class Meta:
-        default_related_name = 'thesis_groups'
+        db_table = "tbl_group"
+        default_related_name = 'groups'
+        ordering = ['created_at']
 
     def save(self, **kwargs):
         if not self.unique_id:
@@ -101,8 +113,8 @@ class Document(models.Model):
         PRE_DEFENSE_REPORT = 'Pre-Defense Report'
         DEFENSE_REPORT = 'Defense Report'
 
-    thesis_group = models.ForeignKey(
-        ThesisGroup,
+    group = models.ForeignKey(
+        Group,
         on_delete=models.CASCADE,
     )
     upload_time = models.DateTimeField(auto_now_add=True)
@@ -113,6 +125,7 @@ class Document(models.Model):
     )
 
     class Meta:
+        db_table = "tbl_document"
         default_related_name = 'documents'
         ordering = ['-upload_time', ]
 
@@ -124,10 +137,12 @@ class Document(models.Model):
         return os.path.basename(self.file.name)
 
 
-class Grade(models.Model):
-    marks = models.PositiveSmallIntegerField(default=0)
-    thesis_group = models.ForeignKey(
-        ThesisGroup,
+class Mark(models.Model):
+    mark = models.PositiveSmallIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    group = models.ForeignKey(
+        Group,
         on_delete=models.CASCADE,
     )
     student = models.ForeignKey(
@@ -138,6 +153,10 @@ class Grade(models.Model):
         'users.Teacher',
         on_delete=models.CASCADE,
     )
+
+    class Meta:
+        db_table = "tbl_mark"
+        default_related_name = 'marks'
 
     def __str__(self):
         return f'{self.student.user.username} - {self.graded_by.user.username} - {self.marks}'
@@ -152,18 +171,33 @@ class Notification(models.Model):
         on_delete=models.CASCADE,
     )
     group = models.ForeignKey(
-        ThesisGroup,
+        Group,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
     )
 
     class Meta:
+        db_table = "tbl_notification"
         default_related_name = 'notifications'
         ordering = ['-created_at']
 
     def __str__(self):
         return self.text[:15]
+
+
+class MessageChannel(models.Model):
+    title = models.CharField(max_length=16, blank=True)
+    users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+    )
+
+    class Meta:
+        db_table = "tbl_message_channel"
+        default_related_name = "message_channels"
+
+    def __str__(self):
+        return f'{self.title if self.title else "-"} - {self.users.count()}'
 
 
 class Message(models.Model):
@@ -173,11 +207,13 @@ class Message(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    created_for = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
+    message_channel = models.ForeignKey(
+        MessageChannel,
+        on_delete=models.CASCADE,
     )
 
     class Meta:
+        db_table = "tbl_message"
         default_related_name = 'messages'
         ordering = ['-created_at']
 

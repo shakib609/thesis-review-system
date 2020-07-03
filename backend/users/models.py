@@ -3,7 +3,7 @@ from django.core.mail import send_mail
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractBaseUser
 
-from thesis.models import ThesisGroup
+from groups.models import Group
 from users.utils import (
     generate_cv_upload_location,
     generate_propic_upload_location,
@@ -23,6 +23,9 @@ class Role(models.Model):
         primary_key=True,
         choices=RoleType.choices,
     )
+
+    class Meta:
+        db_table = 'tbl_role'
 
     def __str__(self):
         for k, v in self.RoleType.choices:
@@ -67,6 +70,11 @@ class User(AbstractBaseUser):
         related_name='users',
     )
 
+    USERNAME_FIELD = 'username'
+
+    class Meta:
+        db_table = 'tbl_user'
+
     def get_full_name(self):
         return f'{self.first_name} {self.last_name}'.strip()
 
@@ -83,13 +91,14 @@ class Student(models.Model):
         User,
         on_delete=models.CASCADE,
     )
-    thesis_group = models.ForeignKey(
-        ThesisGroup,
+    group = models.ForeignKey(
+        Group,
         on_delete=models.SET_NULL,
         null=True,
     )
 
     class Meta:
+        db_table = 'tbl_student'
         default_related_name = 'students'
 
     def __str__(self):
@@ -111,6 +120,10 @@ class Teacher(models.Model):
         User,
         on_delete=models.CASCADE,
     )
+
+    class Meta:
+        db_table = 'tbl_teacher'
+        default_related_name = 'teachers'
 
     def __str__(self):
         return f'Teacher - {self.user.username}'

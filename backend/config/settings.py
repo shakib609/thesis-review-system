@@ -48,7 +48,7 @@ INSTALLED_APPS = [
 
     # Custom Apps
     'users',
-    'thesis',
+    'groups',
 ]
 
 if DEBUG:
@@ -101,6 +101,9 @@ DATABASES = {
         'PASSWORD': env.str('DB_PASSWORD', 'notsosecret'),
         'HOST': env.str('DB_HOST', '127.0.0.1'),
         'PORT': env.str('DB_PORT', '3306'),
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        },
     }
 }
 
