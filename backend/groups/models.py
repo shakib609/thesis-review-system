@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from rest_framework.exceptions import APIException
 
 import os
 
@@ -12,7 +13,6 @@ class ResearchField(models.Model):
         'users.Teacher',
         related_name='fields',
         blank=True,
-        limit_choices_to={'is_teacher': True},
     )
 
     class Meta:
@@ -25,7 +25,7 @@ class ResearchField(models.Model):
 
 
 class Batch(models.Model):
-    number = models.PositiveIntegerField()
+    number = models.PositiveIntegerField(primary_key=True)
     max_groups_limit = models.PositiveSmallIntegerField(default=5)
     min_groups_limit = models.PositiveSmallIntegerField(default=0)
 
@@ -37,12 +37,53 @@ class Batch(models.Model):
         return self.number
 
 
+class MessageChannel(models.Model):
+    title = models.CharField(max_length=16, blank=True)
+    users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+    )
+
+    class Meta:
+        db_table = "tbl_message_channel"
+        default_related_name = "message_channels"
+
+    def __str__(self):
+        return f'{self.title if self.title else "-"} - {self.users.count()}'
+
+
+class Message(models.Model):
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    message_channel = models.ForeignKey(
+        MessageChannel,
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        db_table = "tbl_message"
+        default_related_name = 'messages'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.text[:15]
+
+
 class Group(models.Model):
     title = models.CharField(max_length=512, blank=True)
     unique_id = models.CharField(max_length=10, blank=True)
     progress = models.IntegerField(default=0)
     approved = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    message_channel = models.OneToOneField(
+        MessageChannel,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
     batch = models.ForeignKey(
         Batch,
         on_delete=models.CASCADE,
@@ -92,6 +133,8 @@ class Group(models.Model):
             student = self.students.exclude(user__department='').first()
             if student is not None:
                 department = student.user.department
+            else:
+                raise APIException('Student has not department')
             last_group = self.objects.filter(
                 unique_id__startswith=department).last()
             if last_group:
@@ -113,21 +156,22 @@ class Document(models.Model):
         PRE_DEFENSE_REPORT = 'Pre-Defense Report'
         DEFENSE_REPORT = 'Defense Report'
 
-    group = models.ForeignKey(
-        Group,
-        on_delete=models.CASCADE,
-    )
-    upload_time = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     file = models.FileField(upload_to=generate_upload_location)
+    is_accepted = models.BooleanField(default=False)
     type = models.CharField(
         max_length=20,
         choices=DocumentType.choices,
+    )
+    group = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
     )
 
     class Meta:
         db_table = "tbl_document"
         default_related_name = 'documents'
-        ordering = ['-upload_time', ]
+        ordering = ['-created_at', ]
 
     def __str__(self):
         return self.filename
@@ -138,9 +182,15 @@ class Document(models.Model):
 
 
 class Mark(models.Model):
-    mark = models.PositiveSmallIntegerField(default=0)
+    class MarkLimit(models.IntegerChoices):
+        SUPERVISOR = 50
+        INTERNAL = 30
+        EXTERNAL = 20
+
+    marks = models.PositiveSmallIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    comments = models.TextField(blank=True)
     group = models.ForeignKey(
         Group,
         on_delete=models.CASCADE,
@@ -157,65 +207,7 @@ class Mark(models.Model):
     class Meta:
         db_table = "tbl_mark"
         default_related_name = 'marks'
+        unique_together = ['student', 'graded_by']
 
     def __str__(self):
         return f'{self.student.user.username} - {self.graded_by.user.username} - {self.marks}'
-
-
-class Notification(models.Model):
-    text = models.TextField()
-    is_viewed = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
-    group = models.ForeignKey(
-        Group,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-    )
-
-    class Meta:
-        db_table = "tbl_notification"
-        default_related_name = 'notifications'
-        ordering = ['-created_at']
-
-    def __str__(self):
-        return self.text[:15]
-
-
-class MessageChannel(models.Model):
-    title = models.CharField(max_length=16, blank=True)
-    users = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-    )
-
-    class Meta:
-        db_table = "tbl_message_channel"
-        default_related_name = "message_channels"
-
-    def __str__(self):
-        return f'{self.title if self.title else "-"} - {self.users.count()}'
-
-
-class Message(models.Model):
-    text = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
-    message_channel = models.ForeignKey(
-        MessageChannel,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        db_table = "tbl_message"
-        default_related_name = 'messages'
-        ordering = ['-created_at']
-
-    def __str__(self):
-        return self.text[:15]
