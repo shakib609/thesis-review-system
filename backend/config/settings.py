@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # 3rd-party
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
 
@@ -57,6 +58,10 @@ if DEBUG:
 AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
+    # 3rd-Party
+    'corsheaders.middleware.CorsMiddleware',
+
+    # Built-In
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -168,3 +173,14 @@ REST_FRAMEWORK = {
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+
+# Django CORS Settings
+CORS_ORIGIN_WHITELIST = env.list(
+    'CORS_ORIGIN_WHITELIST',
+    [
+        'http://localhost',
+        'http://localhost:3000',
+        'http://localhost:8000',
+    ]
+)

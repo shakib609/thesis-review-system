@@ -1,0 +1,8 @@
+{
+  "license": "MIT",
+  "scripts": {
+    "dev:server:db": "docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=notsosecret -e MYSQL_DATABASE=thesis_review_system_db --name thesisdb --rm -d mariadb:latest",
+    "dev:server": "cd backend && poetry run python manage.py migrate && DEBUG=true poetry run python manage.py runserver",
+    "dev:frontend": "cd frontend && BROWSER=none npm start"
+  }
+}

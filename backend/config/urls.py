@@ -19,8 +19,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('api/v2/', include('users.urls')),
-    path('api/v2/', include('groups.urls')),
+    path('api/', include('users.urls')),
+    path('api/', include('groups.urls')),
 ] + static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT,
