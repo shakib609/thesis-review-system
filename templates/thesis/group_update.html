@@ -23,7 +23,7 @@
         <div class="control has-icons-left">
             <input class="input{% if 'title' in form.errors %} is-danger{% endif %}"
                     type="text" name="title" id="title"
-                    placeholder="Title" autofocus="" required=""
+                    placeholder="Title" autofocus="" required
                     value="{{ form.title.value|default_if_none:'' }}">
             <span class="icon is-small is-left">
                 <i class="fas fa-align-justify"></i>
@@ -41,7 +41,7 @@
       <label for="research_field" class="label">Research Field</label>
       <p class="control has-icons-left">
         <span class="select is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
-          <select name="field" >
+          <select name="field" required>
           {% for x,y in form.fields.field.choices %}
             <option value="{{ x }}" {% if form.field.value == x %} selected{% endif %}>{{ y }}</option>
           {% endfor %}
@@ -63,7 +63,7 @@
         <label for="batch" class="label">Batch</label>
         <p class="control has-icons-left">
             <span class="select is-fullwidth{% if 'batch' in form.errors %} is-danger{% endif %}">
-                <select name="batch">
+                <select name="batch" required>
                   {% for x,y in form.fields.batch.choices %}
                   <option value="{{x}}" {% if form.batch.value == x %}selected{% endif %}>{{y}}</option>
                   {% endfor %}
@@ -85,7 +85,7 @@
         <label for="teacher" class="label">Teacher</label>
         <p class="control has-icons-left">
             <span class="select is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
-                <select name="teacher" {% if form.teacher.value %}disabled{% endif %}>
+                <select name="teacher" required {% if form.teacher.value %}disabled{% endif %}>
                   {% for x,y in form.fields.teacher.choices %}
                   <option value="{{x}}"  {% if form.teacher.value == x %}selected{% endif %}>{{y}}</option>
                   {% endfor %}

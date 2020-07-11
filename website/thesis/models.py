@@ -107,11 +107,20 @@ class StudentGroup(models.Model):
 
 
 class Document(models.Model):
+    class DocumentType(models.TextChoices):
+        PROPOSAL = "Proposal"
+        PRE_DEFENSE = "Pre-Defense Report"
+        DEFENSE = "Defense Report"
+
     studentgroup = models.ForeignKey(
         StudentGroup,
         on_delete=models.CASCADE,
         related_name='documents')
     upload_time = models.DateTimeField(auto_now_add=True)
+    document_type = models.CharField(
+        max_length=24,
+        choices=DocumentType.choices,
+    )
     file = models.FileField(upload_to=generate_upload_location)
 
     class Meta:

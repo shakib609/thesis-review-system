@@ -55,7 +55,7 @@ class StudentGroupJoinForm(forms.ModelForm):
 class DocumentUploadForm(forms.ModelForm):
     class Meta:
         model = Document
-        fields = ('file', )
+        fields = ('file', 'document_type', )
 
     def clean_file(self):
         f = self.cleaned_data.get('file')
@@ -64,9 +64,7 @@ class DocumentUploadForm(forms.ModelForm):
                 chunk, mime=True)
             break
         if 'application/pdf' not in mime:
-            raise forms.ValidationError(
-                'Invalid Format!'
-                ' PDF Only!')
+            raise forms.ValidationError({'file': 'Invalid Format! PDF Only!'})
         return f
 
 

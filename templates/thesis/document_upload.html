@@ -1,5 +1,6 @@
 {% extends 'base/thesis_dashboard_base.html' %}
 {% load static %}
+{% load my_tags %}
 
 {% block title %}
     {{ block.super }} | Upload Document
@@ -18,9 +19,9 @@
         {% csrf_token %}
         <div class="field">
           <label for="file" class="label">Document</label>
-          <div class="file has-name {% if form.errors %}is-danger{% endif %}" id="file-container">
+          <div class="file has-name {% if 'file' in form.errors %}is-danger{% endif %}" id="file-container">
               <label class="file-label">
-                  <input class="file-input" accept=".pdf" type="file" name="file" id="file">
+                  <input class="file-input" accept=".pdf" type="file" name="file" id="file" required>
                   <span class="file-cta">
                       <span class="file-icon">
                           <i class="fas fa-upload"></i>
@@ -34,9 +35,35 @@
                   </span>
               </label>
           </div>
-          <p class="help {% if form.errors %}is-danger{% endif %}" id="help">
-              Only PDF files are allowed.
+          <p class="help {% if 'file' in form.errors %}is-danger{% endif %}" id="help">
+            <ul class="help is-danger">
+                {% for error in form.errors|get_item:'file' %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
           </p>
+        </div>
+        <div class="field is-fullwidth">
+            <label for="document_type" class="label">Type</label>
+            <p class="control has-icons-left">
+                <span class="select {% if 'document_type' in form.errors %} is-danger{% endif %}">
+                <select name="document_type" id="document_type" required>
+                {% for x,y in form.fields.document_type.choices %}
+                    <option value="{{ x }}"{% if form.field.value == x %} selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+                </select>
+                </span>
+                <span class="icon is-small is-left">
+                    <i class="fas fa-globe"></i>
+                </span>
+                {% if 'document_type' in form.errors %}
+                <ul class="help is-danger">
+                    {% for error in form.errors|get_item:'document_type' %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </p>
         </div>
         <div style="margin-top:0.5rem;">
             <button id="upload-btn" type="submit" class="button is-primary has-text-centered">
