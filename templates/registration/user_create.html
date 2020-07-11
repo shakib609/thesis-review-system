@@ -117,6 +117,27 @@
             </div>
             <div class="field">
                 <div class="control has-icons-left">
+                  <span class="select is-fullwidth{% if 'department' in form.errors %} is-danger{% endif %}">
+                    <select name="department" >
+                    {% for x,y in form.fields.department.choices %}
+                      <option value="{{ x }}" {% if form.field.value == x %} selected{% endif %}>{{ y.upper }}</option>
+                    {% endfor %}
+                    </select>
+                  </span>
+                  <span class="icon is-small is-left">
+                      <i class="fas fa-users"></i>
+                  </span>
+                  {% if 'department' in form.errors %}
+                  <ul class="help is-danger">
+                      {% for error in form.errors|get_item:'department' %}
+                      <li>{{ error }}</li>
+                      {% endfor %}
+                  </ul>
+                  {% endif %}
+                </div>
+            </div>
+            <div class="field">
+                <div class="control has-icons-left">
                     <input
                       {% if 'password1' in form.errors %}
                         class="input is-danger"

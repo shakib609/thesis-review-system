@@ -32,8 +32,8 @@
                         class="navbar-item {% if request.path == group_list %}is-active{% endif %}">
                         Groups
                     </a>
-                    {% else %}
-                    <div class="navbar-item  has-dropdown is-hoverable">
+                    {% endif %}
+                    <!-- <div class="navbar-item  has-dropdown is-hoverable">
                         <a class="navbar-link" href="#">
                             Group
                         </a>
@@ -45,8 +45,7 @@
                                 Join
                             </a>
                         </div>
-                    </div>
-                    {% endif %}
+                    </div> -->
                     <a href="{% url 'registration:logout' %}"
                         class="navbar-item">
                         Logout
@@ -60,10 +59,10 @@
                         href="{% url 'registration:register' %}">
                     Register
                     </a>
-                    <a class="navbar-item {% if request.path == about %}is-active{% endif %}"
+                    <!-- <a class="navbar-item {% if request.path == about %}is-active{% endif %}"
                         href="{% url 'registration:about' %}">
                     About
-                    </a>
+                    </a> -->
                 {% endif %}
             </div>
         </div>

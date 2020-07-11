@@ -47,6 +47,10 @@ urlpatterns = [
         TeachersListView.as_view(),
         name='teacher_list'),
     path(
+        'teachers/department/<str:department_name>/',
+        TeachersListView.as_view(),
+        name='teacher_list_department'),
+    path(
         'teachers/<username>/',
         TeacherDetailView.as_view(),
         name='teacher_detail'),

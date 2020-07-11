@@ -41,12 +41,9 @@
       <label for="research_field" class="label">Research Field</label>
       <p class="control has-icons-left">
         <span class="select is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
-          {% if form.teacher.value %}
-          <input type="hidden" name="field" value="{{ form.field.value }}" id="research_field">
-          {% endif %}
-          <select name="field" v-model="field" {% if form.field.value %}disabled{% endif %}>
+          <select name="field" >
           {% for x,y in form.fields.field.choices %}
-            <option value="{{ x }}"{% if form.field.value == x %} selected{% endif %}>{{ y }}</option>
+            <option value="{{ x }}" {% if form.field.value == x %} selected{% endif %}>{{ y }}</option>
           {% endfor %}
           </select>
         </span>
@@ -63,25 +60,40 @@
       </p>
     </div>
     <div class="field is-fullwidth">
-        <label for="teacher" class="label">Teacher</label>
+        <label for="batch" class="label">Batch</label>
         <p class="control has-icons-left">
-            <span class="select is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
-                {% if form.teacher.value %}
-                <input type="hidden" name="teacher" value="{{ form.teacher.value }}" id="teacher">
-                {% endif %}
-                <select name="teacher" v-model="selected_teacher" {% if form.teacher.value %}disabled{% endif %}>
-                  <option value="">Select Teacher</option>
-                  <option
-                    v-for="option in options"
-                    :value="option.id">
-                    [[ option.full_name ]] ([[ option.username ]])
-                  </option>
+            <span class="select is-fullwidth{% if 'batch' in form.errors %} is-danger{% endif %}">
+                <select name="batch">
+                  {% for x,y in form.fields.batch.choices %}
+                  <option value="{{x}}" {% if form.batch.value == x %}selected{% endif %}>{{y}}</option>
+                  {% endfor %}
                 </select>
             </span>
             <span class="icon is-small is-left">
                 <i class="fas fa-chalkboard-teacher"></i>
             </span>
-            <p class="help">A teacher can supervise at most 5 Student Groups. Teachers with minimum 5 Student Groups will not be listed.</p>
+            {% if 'batch' in form.errors %}
+            <ul class="help is-danger">
+                {% for error in form.errors|get_item:'batch' %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </p>
+    </div>
+    <div class="field is-fullwidth">
+        <label for="teacher" class="label">Teacher</label>
+        <p class="control has-icons-left">
+            <span class="select is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
+                <select name="teacher" {% if form.teacher.value %}disabled{% endif %}>
+                  {% for x,y in form.fields.teacher.choices %}
+                  <option value="{{x}}"  {% if form.teacher.value == x %}selected{% endif %}>{{y}}</option>
+                  {% endfor %}
+                </select>
+            </span>
+            <span class="icon is-small is-left">
+                <i class="fas fa-chalkboard-teacher"></i>
+            </span>
             {% if 'teacher' in form.errors %}
             <ul class="help is-danger">
                 {% for error in form.errors|get_item:'teacher' %}

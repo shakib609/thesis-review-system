@@ -18,7 +18,7 @@ from .forms import (
 from .mixins import (
     StudentGroupContextMixin, UserHasGroupAccessMixin, UserIsStudentMixin,
     UserIsTeacherMixin)
-from .models import Comment, Document, StudentGroup
+from .models import Batch, Comment, Document, StudentGroup
 from ..registration.models import User
 
 
@@ -119,8 +119,20 @@ class GroupListView(LoginRequiredMixin, UserIsTeacherMixin, ListView):
 
     def get_queryset(self):
         user = self.request.user
-        queryset = user.studentgroups.order_by('title')
+        batch_number = self.kwargs.get('batch_number', '')
+        if batch_number:
+            return user.studentgroups.filter(batch__number=batch_number).order_by('id')
+        queryset = user.studentgroups.order_by('id')
         return queryset
+
+    def get_context_data(self, *args, object_list=None, **kwargs):
+        context_data = super().get_context_data(
+            *args, object_list=object_list, **kwargs)
+        batch_number = self.kwargs.get('batch_number', '')
+        context_data['batches'] = Batch.objects.all()
+        context_data['batch_number'] = int(
+            batch_number) if batch_number else ''
+        return context_data
 
 
 class GroupUpdateView(

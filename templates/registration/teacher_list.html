@@ -9,8 +9,10 @@
 
 
 {% block page_title %}
-    <h3 class="title">Teachers List (Department of CSE, IIUC)</h3>
-    <h4 class="subtitle">List of all the teachers supervising thesis groups.</h4>
+    <h3 class="title">
+      Teachers List
+      {% if department_name %}({{ department_name }}){% endif %}
+    </h3>
 {% endblock page_title %}
 
 
@@ -20,6 +22,20 @@
     <div class="card is-fullwidth">
         <header class="card-header">
             <p class="card-header-title">Teachers</p>
+            <p class="control has-icons-left" style="margin-top: 5px; margin-right: 5px;">
+              <span class="select">
+                  <select name="batch" id="department-select">
+                      <option value="">All Departments</option>
+                      <option value="CSE" {% if department_name == "CSE" %} selected{% endif %}>CSE</option>
+                      <option value="EEE" {% if department_name == "EEE" %} selected{% endif %}>EEE</option>
+                      <option value="ETE" {% if department_name == "ETE" %} selected{% endif %}>ETE</option>
+                      <option value="PHM" {% if department_name == "PHM" %} selected{% endif %}>PHM</option>
+                  </select>
+              </span>
+              <span class="icon is-small is-left">
+                  <i class="fas fa-users"></i>
+              </span>
+          </p>
         </header>
         <div class="card-content">
         {% if teachers %}
@@ -62,5 +78,14 @@
         </div>
     </div>
 </div>
+
+
+<script>
+  const departmentSelectElem = document.getElementById('department-select');
+  departmentSelectElem.addEventListener('change', () => {
+      if (departmentSelectElem.value == '') window.location.href = `/teachers/`;
+      else window.location.href = `/teachers/department/${departmentSelectElem.value}/`;
+  })
+</script>
 
 {% endblock dashboard_content %}

@@ -5,7 +5,6 @@ from django.db.models.signals import pre_save
 
 import os
 
-from ..thesis.models import StudentGroup
 from .signals import remove_studentgroup_if_empty
 
 
@@ -22,17 +21,28 @@ def generate_cv_upload_location(instance, filename):
 
 
 class CutomUserManager(UserManager):
-    def get_by_natural_key(self, username):
-        case_insensitive_username_field = '{}__iexact'.format(
-            self.model.USERNAME_FIELD)
-        return self.get(**{case_insensitive_username_field: username})
+    pass
+
+
+class DepartmentType(models.TextChoices):
+    CSE = 'CSE'
+    EEE = 'EEE'
+    ETE = 'ETE'
+    PHM = 'PHM'
 
 
 class User(AbstractUser):
-    full_name = models.CharField(_('full name'), max_length=180)
-    email = models.EmailField(_('email address'))
-    phone_number = models.CharField(_('phone number'), max_length=16)
     objects = CutomUserManager()
+
+    full_name = models.CharField(max_length=180)
+    email = models.EmailField(blank=True)
+    phone_number = models.CharField(max_length=16, blank=True)
+
+    department = models.CharField(
+        max_length=3,
+        choices=DepartmentType.choices,
+        default=DepartmentType.CSE.value,
+    )
 
     # Only for teachers
     designation = models.CharField(
@@ -49,13 +59,41 @@ class User(AbstractUser):
     is_teacher = models.BooleanField(
         _('teacher status'),
         help_text=_(
-            'Designates whether this user should be treated as teacher.'),
-        default=False)
+            'Designates whether this user should be treated as teacher.'
+        ),
+        default=False,
+    )
+    is_student = models.BooleanField(
+        _('student status'),
+        help_text=_(
+            'Designates whether this user should be treated as student.'),
+        default=False,
+    )
     studentgroup = models.ForeignKey(
-        StudentGroup,
+        'thesis.StudentGroup',
         related_name='students',
         on_delete=models.SET_NULL,
         null=True)
+    
+    def __str__(self):
+        if self.full_name:
+            return f'{self.full_name} - {self.username}'
+        return self.username
+
+
+class Student(User):
+    class Meta:
+        proxy = True
+
+
+class Teacher(User):
+    class Meta:
+        proxy = True
+
+
+class Admin(User):
+    class Meta:
+        proxy = True
 
 
 # Signals

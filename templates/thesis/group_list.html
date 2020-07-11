@@ -11,6 +11,19 @@
     <div class="card is-fullwidth">
         <header class="card-header">
             <p class="card-header-title">Groups</p>
+            <p class="control has-icons-left" style="margin-top: 5px; margin-right: 5px;">
+                <span class="select">
+                    <select name="batch" id="batch-select">
+                        <option value="">All Batches</option>
+                        {% for batch in batches %}
+                        <option value="{{ batch.number }}" {% if batch_number == batch.number %} selected{% endif %}>{{ batch }}</option>
+                        {% endfor %}
+                    </select>
+                </span>
+                <span class="icon is-small is-left">
+                    <i class="fas fa-users"></i>
+                </span>
+            </p>
         </header>
         <div class="card-content">
         {% if groups %}
@@ -38,5 +51,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    const batchSelectElem = document.getElementById('batch-select');
+    batchSelectElem.addEventListener('change', () => {
+        if (batchSelectElem.value == '') window.location.href = `/group/list/`;
+        else window.location.href = `/group/list/${batchSelectElem.value}`;
+    })
+</script>
 
 {% endblock dashboard_content %}

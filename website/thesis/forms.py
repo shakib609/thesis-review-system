@@ -4,6 +4,7 @@ import magic
 from ..registration.models import User
 from .models import (
     StudentGroup,
+    Batch,
     Document,
     Comment,
     ResearchField
@@ -14,17 +15,21 @@ class StudentGroupForm(forms.ModelForm):
     field = forms.ModelChoiceField(
         queryset=ResearchField.objects.all(),
         required=True,
-        empty_label='Select Research Field'
+        empty_label=None,
     )
     teacher = forms.ModelChoiceField(
         queryset=User.objects.filter(is_teacher=True),
         required=False,
-        empty_label='Select Teacher'
+        empty_label=None,
+    )
+    batch = forms.ModelChoiceField(
+        queryset=Batch.objects.all(),
+        empty_label=None,
     )
 
     class Meta:
         model = StudentGroup
-        fields = 'title', 'field', 'teacher'
+        fields = 'title', 'batch', 'field', 'teacher'
 
 
 class StudentGroupJoinForm(forms.ModelForm):

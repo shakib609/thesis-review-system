@@ -23,10 +23,12 @@ class LoginRedirectView(LoginRequiredMixin, RedirectView):
     http_method_names = ['get']
 
     def get_redirect_url(self, *args, **kwargs):
-        request = self.request
-        if request.user.is_teacher:
+        user = self.request.user
+        if user.is_superuser:
+            return reverse_lazy('admin:index')
+        elif user.is_teacher:
             return reverse_lazy('thesis:group_list')
-        if request.user.studentgroup:
+        if user.studentgroup:
             return reverse_lazy('thesis:document_list')
         return reverse_lazy('registration:teacher_list')
 
@@ -101,10 +103,19 @@ class TeachersListView(LoginRequiredMixin, ListView):
     context_object_name = 'teachers'
 
     def get_queryset(self):
-        queryset = User.objects.annotate(
-            group_count=Count('studentgroups')).filter(
-                is_teacher=True).order_by('-group_count', 'full_name')
+        department_name = self.kwargs.get('department_name', '')
+        queryset = User.objects.filter(is_teacher=True).order_by('full_name')
+        if department_name:
+            return queryset.filter(department=department_name)
         return queryset
+
+    def get_context_data(self, *args, object_list=None, **kwargs):
+        context_data = super().get_context_data(
+            *args, object_list=object_list, **kwargs)
+        context_data['department_name'] = self.kwargs.get(
+            'department_name', '')
+        print(context_data)
+        return context_data
 
 
 class TeacherDetailView(LoginRequiredMixin, DetailView):

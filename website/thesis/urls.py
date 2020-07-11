@@ -44,6 +44,10 @@ urlpatterns = [
         views.GroupListView.as_view(),
         name='group_list'),
     path(
+        'list/<int:batch_number>/',
+        views.GroupListView.as_view(),
+        name='group_list_batch'),
+    path(
         '<group_code>/',
         views.DocumentListView.as_view(),
         name='group_detail'),
