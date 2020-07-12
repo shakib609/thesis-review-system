@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
-from .models import User, Student, Teacher, Admin
+from .models import User, Student, Teacher, Admin, Result, Mark
 from .forms import UserCreationFormExtended, TeacherCreateForm
 
 
@@ -40,9 +40,6 @@ UserAdmin.fieldsets = fieldsets = (
     (_('Permissions'), {
         'fields': ('is_teacher', 'is_student', 'is_staff', 'is_superuser',)
     }),
-    (_('Important dates'), {
-        'fields': ('last_login', 'date_joined')
-    }),
 )
 
 UserAdmin.list_display = ('username', 'is_teacher', 'full_name',)
@@ -50,10 +47,28 @@ UserAdmin.list_display = ('username', 'is_teacher', 'full_name',)
 UserAdmin.list_filter = ('is_teacher', 'is_superuser', 'is_active')
 
 
+class ResultInline(admin.TabularInline):
+    model = Result
+
+
+class MarkInline(admin.TabularInline):
+    model = Mark
+    extra = 0
+    fk_name = 'student'
+
+
+class ResultAdmin(admin.ModelAdmin):
+    list_display = ['student', 'total_marks', 'grade', ]
+    list_filter = ['student__department', ]
+    search_fields = ['student__username', 'student']
+
+
 class StudentAdmin(UserAdmin):
     list_display = ('username', 'full_name', 'email', 'phone_number',)
     list_filter = ('is_active', 'department', )
     search_fields = ('username', 'full_name')
+    inlines = [MarkInline, ResultInline]
+    raw_id_fields = ['studentgroup']
     add_fieldsets = (
         (
             'Student Info',
@@ -67,7 +82,6 @@ class StudentAdmin(UserAdmin):
                     'password1',
                     'password2',
                     'profile_picture',
-                    'cv_document',
                 )
             }
         ),
@@ -82,11 +96,12 @@ class StudentAdmin(UserAdmin):
                 'email',
                 'phone_number',
                 'profile_picture',
-                'cv_document',
             )
         }),
-        (_('Important dates'), {
-            'fields': ('last_login', 'date_joined')
+        (_('Thesis/Project Group'), {
+            'fields': (
+                'studentgroup',
+            )
         }),
     )
 
@@ -125,6 +140,15 @@ class TeacherAdmin(UserAdmin):
                 )
             }
         ),
+        (
+            'Permission',
+            {
+                'classes': ('wide', ),
+                'fields': (
+                    'is_external',
+                )
+            }
+        ),
     )
     fieldsets = (
         (None, {
@@ -141,9 +165,15 @@ class TeacherAdmin(UserAdmin):
                 'qualification',
             )
         }),
-        (_('Important dates'), {
-            'fields': ('last_login', 'date_joined')
-        }),
+        (
+            'Permission',
+            {
+                'classes': ('wide', ),
+                'fields': (
+                    'is_external',
+                )
+            }
+        ),
     )
 
     def get_queryset(self, request):
@@ -180,11 +210,7 @@ class AdminAdmin(UserAdmin):
                 'full_name',
                 'email',
                 'phone_number',
-                'profile_picture',
             )
-        }),
-        (_('Important dates'), {
-            'fields': ('last_login', 'date_joined')
         }),
     )
 
@@ -202,3 +228,4 @@ admin.site.unregister(Group)
 admin.site.register(Admin, AdminAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Teacher, TeacherAdmin)
+admin.site.register(Result, ResultAdmin)

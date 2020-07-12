@@ -1,6 +1,5 @@
 from django.db import models
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.db.models.signals import post_save, post_delete
 
 import os
@@ -122,6 +121,7 @@ class Document(models.Model):
         choices=DocumentType.choices,
     )
     file = models.FileField(upload_to=generate_upload_location)
+    is_accepted = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-upload_time', ]
@@ -170,41 +170,62 @@ class ResearchField(models.Model):
         return self.name
 
 
-class Mark(models.Model):
-    mark = models.PositiveSmallIntegerField()
-    remarks = models.TextField(blank=True)
+class Notification(models.Model):
+    content = models.TextField()
+    is_viewed = models.BooleanField(default=False)
     studentgroup = models.ForeignKey(
         StudentGroup,
         on_delete=models.CASCADE,
     )
-    graded_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+    user = models.ForeignKey(
+        'registration.User',
         on_delete=models.CASCADE,
-        limit_choices_to={'is_teacher': True},
-        related_name='graded_by_marks',
     )
-    student = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        limit_choices_to={'is_student': True},
-        related_name='student_marks',
-    )
-
-    class Meta:
-        default_related_name = 'marks'
-        unique_together = ['studentgroup', 'graded_by', 'student']
-
-    def clean(self):
-        group = self.studentgroup
-        if self.student not in group.students.all():
-            raise ValidationError({"student": "Invalid Student"})
-        elif self.graded_by != group.teacher or self.graded_by != group.internal or self.graded_by != group.external:
-            raise ValidationError({"graded_by": "Invalid Teacher"})
 
     def __str__(self):
-        return self.name
+        return f'Notification {self.content[:20]}'
+
+
+def generate_notification_on_document_upload(sender, instance, **kwargs):
+    studentgroup = instance.studentgroup
+    content = f'A new Document was uploaded to {studentgroup}'
+    if studentgroup.teacher:
+        Notification.objects.create(
+            content=content,
+            user=studentgroup.teacher,
+            studentgroup=studentgroup,
+        )
+    if studentgroup.internal:
+        Notification.objects.create(
+            content=content,
+            user=studentgroup.internal,
+            studentgroup=studentgroup,
+        )
+    if studentgroup.external:
+        Notification.objects.create(
+            content=content,
+            user=studentgroup.external,
+            studentgroup=studentgroup,
+        )
+
+
+def generate_notification_on_teacher_comment(sender, instance, **kwargs):
+    studentgroup = instance.studentgroup
+    content = f'There is a new comment in your group by {instance.user}'
+    for student in studentgroup.students.all():
+        Notification.objects.create(
+            content=content,
+            user=student,
+            studentgroup=studentgroup,
+        )
+
+
+def update_result_on_mark_save(sender, instance, **kwargs):
+    Result
 
 
 # Signals
 post_save.connect(generate_and_save_hash, sender=StudentGroup)
 post_delete.connect(auto_delete_file_on_delete, sender=Document)
+post_save.connect(generate_notification_on_document_upload, sender=Document)
+post_save.connect(generate_notification_on_teacher_comment, sender=Comment)
