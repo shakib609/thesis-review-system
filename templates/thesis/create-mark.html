@@ -1,0 +1,59 @@
+{% extends 'base/thesis_dashboard_base.html' %}
+{% load static %}
+{% load my_tags %}
+
+{% block title %}
+    {{ block.super }} | Upload Document
+{% endblock title %}
+
+
+{% block page_title %}
+    <h1 class="title">Grade Students</h1>
+    <h4 class="subtitle">Grade the students of {{ studentgroup }}</h4>
+{% endblock page_title %}
+
+
+{% block dashboard_content %}
+<div class="column">
+    <form method="POST" id="document-form">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        {% if formset.non_form_errors %}
+            <div class="is-size-6 has-text-danger">
+            {{ formset.non_form_errors }}
+            </div>
+        {% endif %}
+        <div class="columns">
+            {% for form in formset %}
+                <div class="column is-6" style="padding-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                    {% for field in form %}
+                        <div class="field is-fullwidth">
+                            <label for="{{ field.id_for_label }}" class="label">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                <p class="help">{{ field.help_text|safe }}</p>
+                                {% endif %}
+                                {% if field.errors %}
+                                <div class="help has-text-danger">
+                                    {{ field.errors }}
+                                </div>
+                                {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        <div style="margin-top:0.5rem;">
+            <button id="upload-btn" type="submit" class="button is-primary has-text-centered">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock dashboard_content %}
+
+
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'js/upload.js' %}"></script>
+{% endblock extra_js %}

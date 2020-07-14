@@ -1,8 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
+from django.forms import formset_factory
 from django.views.generic import (
     CreateView, FormView, ListView, TemplateView, UpdateView)
 from django.conf import settings
@@ -13,13 +14,18 @@ from django.contrib.auth.decorators import login_required
 import json
 
 from .forms import (
-    CommentCreateForm, DocumentUploadForm, StudentGroupForm,
-    StudentGroupJoinForm)
+    CommentCreateForm,
+    DocumentUploadForm,
+    MarkForm,
+    BaseMarkFormSet,
+    StudentGroupForm,
+    StudentGroupJoinForm,
+)
 from .mixins import (
     StudentGroupContextMixin, UserHasGroupAccessMixin, UserIsStudentMixin,
     UserIsTeacherMixin)
 from .models import Batch, Comment, Document, StudentGroup, Notification
-from ..registration.models import User
+from ..registration.models import User, Mark
 
 
 class GroupCreateJoinView(
@@ -264,6 +270,57 @@ def get_teachers_list_by_field_json(request, field_id):
     )
 
     data = json.dumps(list(available_teachers), cls=DjangoJSONEncoder)
-    return JsonResponse(
-        data,
-        safe=False)
+    return JsonResponse(data, safe=False,)
+
+
+@login_required
+def grade_students(request, group_code):
+    studentgroup = get_object_or_404(StudentGroup, md5hash=group_code)
+    user = request.user
+    students = studentgroup.students.all().order_by('username')
+    students_count = students.count()
+    MarkFormSet = formset_factory(
+        MarkForm,
+        extra=students_count,
+        min_num=students_count,
+        max_num=students_count,
+        validate_min=True,
+        validate_max=True,
+        formset=BaseMarkFormSet,
+    )
+    formset_initial = {
+        "form_kwargs": {
+            'user': user,
+            'studentgroup': studentgroup,
+        },
+        "initial": [{"student": student.id} for student in students],
+    }
+    if request.method == 'POST':
+        formset = MarkFormSet(request.POST, **formset_initial)
+        if formset.is_valid():
+            formset.save()
+            return redirect(
+                reverse_lazy(
+                    'thesis:group_detail',
+                    args=(group_code,),
+                ),
+            )
+        else:
+            return render(
+                request,
+                'thesis/create-mark.html',
+                context={
+                    'studentgroup': studentgroup,
+                    'user': user,
+                    'formset': formset,
+                },
+            )
+    return render(
+        request,
+        'thesis/create-mark.html',
+        context={
+            'studentgroup': studentgroup,
+            'user': user,
+            'formset': MarkFormSet(**formset_initial)
+        },
+    )

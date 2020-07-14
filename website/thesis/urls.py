@@ -71,6 +71,11 @@ urlpatterns = [
         name='group_approve'
     ),
     path(
+        '<group_code>/grading/',
+        views.grade_students,
+        name='grading_students'
+    ),
+    path(
         '<group_code>/update_progress/',
         views.StudentGroupProgressUpdateView.as_view(),
         name='progress_update'

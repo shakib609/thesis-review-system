@@ -88,23 +88,11 @@
                         {% if studentgroup %}
                         <h3 class="title">
                             {{ studentgroup.title }}&nbsp;
-
-                            {% if user.is_teacher %}
-                                <a href="{% url 'thesis:group_approve' studentgroup.md5hash %}">
+                            {% if not studentgroup.approved %}
+                            <span class="button is-static is-outlined is-danger">
+                                Pending
+                            </span>
                             {% endif %}
-                                {% if studentgroup.approved %}
-                                <span class="button is-static is-outlined is-success">
-                                    Approved
-                                </span>
-                                {% else %}
-                                <span class="button is-static is-outlined is-danger">
-                                    Pending
-                                </span>
-                                {% endif %}
-                            {% if user.is_teacher %}
-                                </a>
-                            {% endif %}
-
                         </h3>
                         <h4 class="subtitle is-size-6">
                           <b>Research Field: </b>
@@ -123,7 +111,7 @@
                           <br>
                           <b>Members: </b>{{ studentgroup.students.all|join:", " }}
                         </h4>
-                        <div class="box" id="progress-app" style="margin-bottom:-0.4rem;border-radius:0;">
+                        {% comment %} <div class="box" id="progress-app" style="margin-bottom:-0.4rem;border-radius:0;">
                           <div class="columns">
                             <div class="column is-2"><b>Progress: </b><small>[[ progress ]]%</small></div>
                             <div class="column">
@@ -163,7 +151,7 @@
                             </div>
                             {% endif %}
                           </div>
-                        </div>
+                        </div> {% endcomment %}
                         {% else %}
                         <h3 class="title">Groups</h3>
                         {% endif %}
@@ -181,7 +169,7 @@
 
 {% block extra_js %}
   {{ block.super }}
-  {% if studentgroup %}
+  {% comment %} {% if studentgroup %}
   <script>
   new Vue({
     el: '#progress-app',
@@ -230,5 +218,5 @@
     }
   })
   </script>
-  {% endif %}
+  {% endif %} {% endcomment %}
 {% endblock extra_js %}
