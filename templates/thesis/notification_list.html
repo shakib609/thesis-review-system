@@ -1,0 +1,43 @@
+{% extends 'base/thesis_dashboard_base.html' %}
+
+{% block title %}
+    {{ block.super }} | Notifications
+{% endblock title %}
+
+
+{% block page_title %}
+    <h3 class="title">Notifications</h3>
+{% endblock page_title %}
+
+
+{% block dashboard_content %}
+<div class="column">
+    <div class="card is-fullwidth">
+        <header class="card-header">
+            <p class="card-header-title">Notifications</p>
+        </header>
+        <div class="card-content">
+        {% if notifications %}
+        {% for notification in notifications %}
+            <div class="columns is-mobile" {% if not forloop.last %}style="border-bottom:1px solid rgba(0,0,0,0.1);"{% endif %}>
+                <div class="column is-10">
+                    <p class="is-size-6">
+                        {{ notification.content }} {% if not notification.is_viewed %}<b>(Unread)</b>{% endif %}
+                    </p>
+                    <p class="is-size-7">{{ notification.created_at }}</p>
+                </div>
+                <div class="column is-2 has-text-right">
+                    <a href="{% if request.user.studentgroup == notification.studentgroup %}{% url 'thesis:document_list' %}{% else %}{% url 'thesis:group_detail' notification.studentgroup.md5hash %}{% endif %}"
+                        class="button is-small is-link">
+                        View
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+        {% else %}
+            <p class="has-text-centered">You have checked all your notifications.</p>
+        {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock dashboard_content %}

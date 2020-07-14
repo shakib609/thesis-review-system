@@ -18,7 +18,7 @@ from .forms import (
 from .mixins import (
     StudentGroupContextMixin, UserHasGroupAccessMixin, UserIsStudentMixin,
     UserIsTeacherMixin)
-from .models import Batch, Comment, Document, StudentGroup
+from .models import Batch, Comment, Document, StudentGroup, Notification
 from ..registration.models import User
 
 
@@ -84,6 +84,18 @@ class DocumentListView(
             '-created_at')
         return context
 
+    def get(self, request, *args, **kwargs):
+        notifications = Notification.objects.filter(
+            user=request.user,
+            studentgroup=self.studentgroup,
+            is_viewed=False,
+        )
+        for notification in notifications:
+            notification.is_viewed = True
+        Notification.objects.bulk_update(notifications, ['is_viewed'])
+        response = super().get(request, *args, **kwargs)
+        return response
+
 
 class DocumentUploadView(
         LoginRequiredMixin, UserIsStudentMixin, UserHasGroupAccessMixin,
@@ -119,10 +131,10 @@ class GroupListView(LoginRequiredMixin, UserIsTeacherMixin, ListView):
 
     def get_queryset(self):
         user = self.request.user
+        queryset = user.studentgroups.filter(approved=True).order_by('id')
         batch_number = self.kwargs.get('batch_number', '')
         if batch_number:
-            return user.studentgroups.filter(batch__number=batch_number).order_by('id')
-        queryset = user.studentgroups.order_by('id')
+            return queryset.filter(batch__number=batch_number)
         return queryset
 
     def get_context_data(self, *args, object_list=None, **kwargs):
@@ -133,6 +145,15 @@ class GroupListView(LoginRequiredMixin, UserIsTeacherMixin, ListView):
         context_data['batch_number'] = int(
             batch_number) if batch_number else ''
         return context_data
+
+
+class NotificationListView(LoginRequiredMixin, ListView):
+    template_name = "thesis/notification_list.html"
+    http_method_names = ['get']
+    context_object_name = 'notifications'
+
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user, is_viewed=False).order_by('-created_at')
 
 
 class GroupUpdateView(

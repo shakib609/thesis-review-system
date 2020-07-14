@@ -20,12 +20,13 @@
 {% url 'thesis:group_update' as group_update %}
 {% url 'thesis:group_create' as group_create %}
 {% url 'thesis:group_join' as group_join %}
+{% url 'thesis:user_notifications' as user_notifications %}
 {% url 'registration:user_update' as user_update %}
 {% url 'registration:user_delete' as user_delete %}
 
 <div class="container is-fluid" id="main-container">
     <div class="columns">
-        <div class="column is-2">
+        <div class="column is-2" style="min-width: 210px;">
             <aside class="menu has-text-weight-bold">
                 <p class="menu-label">Department</p>
                 <ul class="menu-list">
@@ -66,6 +67,8 @@
                 </ul>
                 <p class="menu-label">Account</p>
                 <ul class="menu-list">
+                    <li><a href="{{ user_notifications }}">
+                        <i class="fas fa-bell" ></i>&nbsp; Notifications {% if unread_notifications_count %}<b>({{unread_notifications_count}})</b>{% endif %}</a></li>
                     <li><a href="{{ user_update }}"
                         class="{% if request.path == user_update %}is-active{% endif %}">
                         <i class="fas fa-cog"></i>&nbsp; Profile Settings</a></li>

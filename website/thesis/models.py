@@ -1,13 +1,13 @@
 from django.db import models
 from django.conf import settings
-from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from django.db.models.signals import pre_save, post_save, post_delete
 
 import os
 from hashlib import md5
 from datetime import datetime
 
 from ..registration.models import DepartmentType
-from .signals import generate_and_save_hash, auto_delete_file_on_delete
 
 
 def generate_upload_location(instance, filename):
@@ -93,6 +93,9 @@ class StudentGroup(models.Model):
         else:
             return 'Finished'
 
+    class Meta:
+        ordering = ['id']
+
     def save(self, *args, **kwargs):
         return super().save(*args, **kwargs)
 
@@ -173,6 +176,7 @@ class ResearchField(models.Model):
 class Notification(models.Model):
     content = models.TextField()
     is_viewed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
     studentgroup = models.ForeignKey(
         StudentGroup,
         on_delete=models.CASCADE,
@@ -182,33 +186,40 @@ class Notification(models.Model):
         on_delete=models.CASCADE,
     )
 
+    class Meta:
+        ordering = ['-created_at']
+        default_related_name = 'notifications'
+
     def __str__(self):
         return f'Notification {self.content[:20]}'
 
 
+@receiver(post_save, sender=Document)
 def generate_notification_on_document_upload(sender, instance, **kwargs):
     studentgroup = instance.studentgroup
-    content = f'A new Document was uploaded to {studentgroup}'
-    if studentgroup.teacher:
-        Notification.objects.create(
-            content=content,
-            user=studentgroup.teacher,
-            studentgroup=studentgroup,
-        )
-    if studentgroup.internal:
-        Notification.objects.create(
-            content=content,
-            user=studentgroup.internal,
-            studentgroup=studentgroup,
-        )
-    if studentgroup.external:
-        Notification.objects.create(
-            content=content,
-            user=studentgroup.external,
-            studentgroup=studentgroup,
-        )
+    content = f'A new Document({instance.document_type}) was uploaded to {studentgroup}'
+    if studentgroup.approved:
+        if studentgroup.teacher:
+            Notification.objects.create(
+                content=content,
+                user=studentgroup.teacher,
+                studentgroup=studentgroup,
+            )
+        if studentgroup.internal:
+            Notification.objects.create(
+                content=content,
+                user=studentgroup.internal,
+                studentgroup=studentgroup,
+            )
+        if studentgroup.external:
+            Notification.objects.create(
+                content=content,
+                user=studentgroup.external,
+                studentgroup=studentgroup,
+            )
 
 
+@receiver(post_save, sender=Comment)
 def generate_notification_on_teacher_comment(sender, instance, **kwargs):
     studentgroup = instance.studentgroup
     content = f'There is a new comment in your group by {instance.user}'
@@ -220,12 +231,16 @@ def generate_notification_on_teacher_comment(sender, instance, **kwargs):
         )
 
 
-def update_result_on_mark_save(sender, instance, **kwargs):
-    Result
+@receiver(pre_save, sender=StudentGroup)
+def generate_and_save_hash(sender, instance, **kwargs):
+    if not instance.md5hash:
+        h = instance.generate_hash()
+        instance.md5hash = h
+        instance.save()
 
 
-# Signals
-post_save.connect(generate_and_save_hash, sender=StudentGroup)
-post_delete.connect(auto_delete_file_on_delete, sender=Document)
-post_save.connect(generate_notification_on_document_upload, sender=Document)
-post_save.connect(generate_notification_on_teacher_comment, sender=Comment)
+@receiver(post_delete, sender=Document)
+def auto_delete_server_file_on_delete(sender, instance, **kwargs):
+    if instance.file:
+        if os.path.isfile(instance.file.path):
+            os.remove(instance.file.path)

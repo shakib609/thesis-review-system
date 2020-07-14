@@ -48,6 +48,10 @@ urlpatterns = [
         views.GroupListView.as_view(),
         name='group_list_batch'),
     path(
+        'notifications/',
+        views.NotificationListView.as_view(),
+        name='user_notifications'),
+    path(
         '<group_code>/',
         views.DocumentListView.as_view(),
         name='group_detail'),

@@ -59,8 +59,12 @@ class MarkInline(admin.TabularInline):
 
 class ResultAdmin(admin.ModelAdmin):
     list_display = ['student', 'total_marks', 'grade', ]
-    list_filter = ['student__department', ]
+    list_filter = ['student__department',
+                   'student__studentgroup__batch']
     search_fields = ['student__username', 'student']
+
+    def get_queryset(self, request):
+        return Result.objects.exclude(student__studentgroup=None)
 
 
 class StudentAdmin(UserAdmin):
@@ -187,6 +191,7 @@ class TeacherAdmin(UserAdmin):
 class AdminAdmin(UserAdmin):
     list_display = ('username',)
     search_fields = ('username', 'full_name')
+    list_filter = ('is_active', )
     add_fieldsets = (
         (
             'Admin Info',
