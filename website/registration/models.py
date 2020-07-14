@@ -85,6 +85,7 @@ class User(AbstractUser):
 class Student(User):
     class Meta:
         proxy = True
+        verbose_name = 'student'
 
 
 class Teacher(User):

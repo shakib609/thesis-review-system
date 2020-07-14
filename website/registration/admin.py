@@ -4,47 +4,41 @@ from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
 from .models import User, Student, Teacher, Admin, Result, Mark
-from .forms import UserCreationFormExtended, TeacherCreateForm
+from .forms import UserCreationFormExtended
 
 
-UserAdmin.add_form = UserCreationFormExtended
-
-UserAdmin.add_fieldsets = (('User Info', {
-    'classes': ('wide', ),
-    'fields': (
-        'username',
-        'email',
-        'phone_number',
-        'password1',
-        'password2',
-    )
-}), ('Permissions', {
-    'classes': ('wide', ),
-    'fields': ('is_teacher', )
-}))
-
-UserAdmin.fieldsets = fieldsets = (
-    (None, {
-        'fields': ('username', 'password')
-    }),
-    (_('Personal info'), {
+class CustomUserAdmin(UserAdmin):
+    add_form = UserCreationFormExtended
+    list_display = ('username', 'full_name', 'email',)
+    list_filter = ('is_active',)
+    add_fieldsets = (('User Info', {
+        'classes': ('wide', ),
         'fields': (
-            'full_name',
+            'username',
             'email',
             'phone_number',
-            'profile_picture',
-            'cv_document',
-            'qualification',
-            'designation',)
-    }),
-    (_('Permissions'), {
-        'fields': ('is_teacher', 'is_student', 'is_staff', 'is_superuser',)
-    }),
-)
-
-UserAdmin.list_display = ('username', 'is_teacher', 'full_name',)
-
-UserAdmin.list_filter = ('is_teacher', 'is_superuser', 'is_active')
+            'password1',
+            'password2',
+        )
+    }), ('Permissions', {
+        'classes': ('wide', ),
+        'fields': ('is_student', 'is_teacher', 'is_superuser', )
+    }))
+    fieldsets = (
+        (None, {
+            'fields': ('username', 'password')
+        }),
+        (_('Personal info'), {
+            'fields': (
+                'full_name',
+                'email',
+                'phone_number',
+            )
+        }),
+        (_('Permissions'), {
+            'fields': ('is_teacher', 'is_student', 'is_superuser',)
+        }),
+    )
 
 
 class ResultInline(admin.TabularInline):
@@ -229,7 +223,7 @@ class AdminAdmin(UserAdmin):
 
 
 admin.site.unregister(Group)
-# admin.site.register(User, UserAdmin)
+admin.site.register(User, CustomUserAdmin)
 admin.site.register(Admin, AdminAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Teacher, TeacherAdmin)
