@@ -18,12 +18,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from website.registration.views import LoginRedirectView
-
 admin.site.site_header = 'Thesis Review System'
 admin.site.site_title = 'Thesis Review System'
-
-print(admin.site.name)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

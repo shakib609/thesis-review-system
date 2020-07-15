@@ -18,6 +18,7 @@ class UserIsTeacherMixin(UserStatusTestMixin):
     """
     Mixin to check whether the User is a Teacher or not.
     """
+
     def test_func(self):
         return self.request.user.is_teacher
 
@@ -61,4 +62,5 @@ class StudentGroupContextMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['studentgroup'] = self.studentgroup
+        context['graded'] = self.studentgroup.graded(self.request.user)
         return context

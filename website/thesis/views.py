@@ -78,16 +78,26 @@ class DocumentListView(
         StudentGroupContextMixin, ListView):
     template_name = 'thesis/document_list.html'
     http_method_names = ['get']
-    context_object_name = 'documents'
+    context_object_name = 'proposal_documents'
+
+    def filter_by_document_type(self, document_type):
+        return self.studentgroup.documents.filter(
+            document_type=document_type,
+        ).order_by(
+            '-is_accepted', '-upload_time',
+        )
 
     def get_queryset(self):
-        queryset = self.studentgroup.documents.all()
-        return queryset
+        return self.filter_by_document_type(Document.DocumentType.PROPOSAL.value)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comments'] = self.studentgroup.comments.order_by(
             '-created_at')
+        context['pre_defense_documents'] = self.filter_by_document_type(
+            Document.DocumentType.PRE_DEFENSE.value)
+        context['defense_documents'] = self.filter_by_document_type(
+            Document.DocumentType.DEFENSE.value)
         return context
 
     def get(self, request, *args, **kwargs):

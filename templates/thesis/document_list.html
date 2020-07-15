@@ -5,6 +5,15 @@
     {{ block.super }} | {{ studentgroup.title }}
 {% endblock title %}
 
+{% block extra_css %}
+    {{ block.super }}
+    <style>
+        .content-tab {
+            min-height: 290px;
+        }
+    </style>
+{% endblock extra_css %}
+
 
 {% block dashboard_content %}
     <div class="column is-4">
@@ -17,49 +26,107 @@
                 </a>
                 {% endif %}
             </header>
-            <div class="card-content">
-                {% if documents %}
-                {% for d in documents %}
-                <div class="columns is-mobile">
-                    <div class="column is-9 has-text-small">
-                        {{ d.filename }}
-                        <br>
-                        <p class="is-size-7">
-                            Uploaded at:
-                            <time datetime="{{ d.upload_time }}">
-                                {{ d.upload_time|date:"d M Y" }} - {{ d.upload_time|date:"H:i" }}
-                            </time>
-                        </p>
-                    </div>
-                    <div class="column is-3 has-text-right">
-                        <a
-                        href="{% get_media_prefix %}/sg_{{ studentgroup.md5hash }}/{{ d.filename }}"
-                        data-sg-code="{{ studentgroup.md5hash }}"
-                        data-file-name="{{ d.filename }}"
-                        class="button is-small is-link view-button">
-                            View
-                        </a>
-                    </div>
+            <div class="card-content" style="padding: 5px 10px;">
+                <div class="tabs is-centered is-small">
+                    <ul>
+                        <li class="tab is-active" onclick="openTab(event,'proposal_documents')"><a>Proposal</a></li>
+                        <li class="tab" onclick="openTab(event,'pre_defense_documents')"><a>Pre-Defense</a></li>
+                        <li class="tab" onclick="openTab(event,'defense_documents')"><a>Defense</a></li>
+                    </ul>
                 </div>
-                {% endfor %}
-                {% else %}
-                <div class="content has-text-centered">
-                    <div class="hero is-medium">
-                        <div class="hero-body">
-                            <p>
-                                No Documents Submitted Yet!
-                            </p>
-                            {% if not user.is_teacher %}
-                            <p>
-                                <a href="{% url 'thesis:document_upload' %}" class="button is-link">
-                                    <i class="fas fa-upload"></i>&nbsp; Submit Now!
+
+                {% comment %} PROPOSAL Documents {% endcomment %}
+                <div id="proposal_documents" class="content-tab">
+                    {% if proposal_documents %}
+                        {% for d in proposal_documents %}
+                        <div class="columns is-mobile">
+                            <div class="column is-9 has-text-small">
+                                {{ d.filename }} {% if d.is_accepted %}<span title="Accepted" class="fas fa-check-circle has-text-success"></span>{% endif %}
+                                <br>
+                                <p class="is-size-7">
+                                    Uploaded at:
+                                    <time datetime="{{ d.upload_time }}">
+                                        {{ d.upload_time|date:"d M Y" }} - {{ d.upload_time|date:"H:i" }}
+                                    </time>
+                                </p>
+                            </div>
+                            <div class="column is-3 has-text-right">
+                                <a
+                                href="{% get_media_prefix %}/sg_{{ studentgroup.md5hash }}/{{ d.filename }}"
+                                data-sg-code="{{ studentgroup.md5hash }}"
+                                data-file-name="{{ d.filename }}"
+                                class="button is-small is-link view-button">
+                                    View
                                 </a>
-                            </p>
-                            {% endif %}
+                            </div>
                         </div>
-                    </div>
+                        {% endfor %}
+                    {% else %}
+                        {% include "include/no_documents.html" %}
+                    {% endif %}
                 </div>
-                {% endif %}
+
+                {% comment %} PRE_DEFENSE Documents {% endcomment %}
+                <div id="pre_defense_documents" class="content-tab" style="display:none;">
+                    {% if pre_defense_documents %}
+                        {% for d in pre_defense_documents %}
+                        <div class="columns is-mobile">
+                            <div class="column is-9 has-text-small">
+                                {{ d.filename }} {% if d.is_accepted %}<span title="Accepted" class="fas fa-check-circle has-text-success"></span>{% endif %}
+                                <br>
+                                <p class="is-size-7">
+                                    Uploaded at:
+                                    <time datetime="{{ d.upload_time }}">
+                                        {{ d.upload_time|date:"d M Y" }} - {{ d.upload_time|date:"H:i" }}
+                                    </time>
+                                </p>
+                            </div>
+                            <div class="column is-3 has-text-right">
+                                <a
+                                href="{% get_media_prefix %}/sg_{{ studentgroup.md5hash }}/{{ d.filename }}"
+                                data-sg-code="{{ studentgroup.md5hash }}"
+                                data-file-name="{{ d.filename }}"
+                                class="button is-small is-link view-button">
+                                    View
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        {% include "include/no_documents.html" %}
+                    {% endif %}
+                </div>
+
+                {% comment %} DEFENSE Documents {% endcomment %}
+                <div id="defense_documents" class="content-tab" style="display:none;">
+                    {% if defense_documents %}
+                        {% for d in defense_documents %}
+                        <div class="columns is-mobile">
+                            <div class="column is-9 has-text-small">
+                                {{ d.filename }} {% if d.is_accepted %}<span title="Accepted" class="fas fa-check-circle has-text-success"></span>{% endif %}
+                                <br>
+                                <p class="is-size-7">
+                                    Uploaded at:
+                                    <time datetime="{{ d.upload_time }}">
+                                        {{ d.upload_time|date:"d M Y" }} - {{ d.upload_time|date:"H:i" }}
+                                    </time>
+                                </p>
+                            </div>
+                            <div class="column is-3 has-text-right">
+                                <a
+                                href="{% get_media_prefix %}/sg_{{ studentgroup.md5hash }}/{{ d.filename }}"
+                                data-sg-code="{{ studentgroup.md5hash }}"
+                                data-file-name="{{ d.filename }}"
+                                class="button is-small is-link view-button">
+                                    View
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        {% include "include/no_documents.html" %}
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
@@ -160,6 +227,20 @@
             e.preventDefault();
             document_viewer.classList.add('is-hidden');
             iframe.setAttribute('src', '');
+        }
+
+        function openTab(evt, tabName) {
+            var i, x, tablinks;
+            x = document.getElementsByClassName("content-tab");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < x.length; i++) {
+                tablinks[i].classList.remove('is-active');
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.classList.add("is-active");
         }
     </script>
 {% endblock extra_js %}

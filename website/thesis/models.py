@@ -1,10 +1,10 @@
 from django.db import models
 from django.conf import settings
 from django.dispatch import receiver
-from django.db.models.signals import pre_save, post_save, post_delete
+from django.db.models.signals import post_save, post_delete
 
 import os
-from hashlib import md5
+from uuid import uuid4
 from datetime import datetime
 
 from ..registration.models import DepartmentType
@@ -12,8 +12,7 @@ from ..registration.models import DepartmentType
 
 def generate_upload_location(instance, filename):
     filename = filename + str(datetime.now())
-    m = md5(filename.encode())
-    filename = m.hexdigest()[:10] + '.pdf'
+    filename = uuid4().hex[:10] + '.pdf'
     return 'sg_{}/{}'.format(
         instance.studentgroup.md5hash,
         filename)
@@ -82,30 +81,29 @@ class StudentGroup(models.Model):
 
     @property
     def status(self):
-        if self.progress == 0:
-            return 'Created'
-        elif self.progress <= 59:
-            return 'In Progress'
-        elif self.progress <= 89:
-            return 'Pre-Defense Done'
-        elif self.progress <= 99:
+        documents_queryset = self.documents.filter(is_accepted=True)
+        if documents_queryset.filter(document_type=Document.DocumentType.DEFENSE.value).exists():
             return 'Defense Done'
+        elif documents_queryset.filter(document_type=Document.DocumentType.PRE_DEFENSE.value).exists():
+            return 'Pre-Defense Done'
+        elif documents_queryset.filter(document_type=Document.DocumentType.PROPOSAL.value).exists():
+            return 'Proposal Done'
         else:
-            return 'Finished'
+            return 'Pending Proposal Approval'
+
+    def graded(self, user):
+        return self.marks.filter(graded_by=user).exists()
 
     class Meta:
         ordering = ['id']
 
     def save(self, *args, **kwargs):
+        if not self.md5hash:
+            self.md5hash = uuid4().hex[:8]
         return super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.department}_{self.batch.number}_{self.id}'
-
-    def generate_hash(self):
-        text = self.title + str(datetime.now())
-        m = md5(text.encode())
-        return m.hexdigest()[:8]
 
 
 class Document(models.Model):
@@ -229,14 +227,6 @@ def generate_notification_on_teacher_comment(sender, instance, **kwargs):
             user=student,
             studentgroup=studentgroup,
         )
-
-
-@receiver(pre_save, sender=StudentGroup)
-def generate_and_save_hash(sender, instance, **kwargs):
-    if not instance.md5hash:
-        h = instance.generate_hash()
-        instance.md5hash = h
-        instance.save()
 
 
 @receiver(post_delete, sender=Document)

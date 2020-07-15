@@ -92,6 +92,10 @@
                             <span class="button is-static is-outlined is-danger">
                                 Pending
                             </span>
+                            {% elif studentgroup.status %}
+                            <span class="button is-static is-outlined is-link">
+                                {{ studentgroup.status }}
+                            </span>
                             {% endif %}
                         </h3>
                         <h4 class="subtitle is-size-6">
@@ -110,6 +114,19 @@
                             {% endif %}
                           <br>
                           <b>Members: </b>{{ studentgroup.students.all|join:", " }}
+
+                        {% if studentgroup.status == 'Defense Done' and user == studentgroup.teacher or user == studentgroup.internal or user == studentgroup.external %}
+                          <br/>
+                          <b>Grading Status:</b>
+                          {% if graded %}
+                            <span title="Graded" class="fas fa-check-circle has-text-success"></span>
+                            Submitted
+                          {% else %}
+                            <a href="{% url 'thesis:grading_students' studentgroup.md5hash %}">
+                              Grade Students
+                            </a>
+                          {% endif %}
+                        {% endif %}
                         </h4>
                         {% comment %} <div class="box" id="progress-app" style="margin-bottom:-0.4rem;border-radius:0;">
                           <div class="columns">
