@@ -7,76 +7,92 @@ app_name = 'thesis'
 
 urlpatterns = [
     path(
-        'documents/',
+        'group/documents/',
         views.DocumentListView.as_view(),
         name='document_list'),
     path(
-        'create_join/',
+        'group/create_join/',
         views.GroupCreateJoinView.as_view(),
         name='group_create_join'),
     path(
-        'create/',
+        'group/create/',
         views.GroupCreateView.as_view(),
         name='group_create'),
     path(
-        'create/field/<field_id>/teachers/',
+        'group/create/field/<field_id>/teachers/',
         views.get_teachers_list_by_field_json,
         name='get_teachers'
     ),
     path(
-        'join/',
+        'group/join/',
         views.GroupJoinView.as_view(),
         name='group_join'),
     path(
-        'upload/',
+        'group/upload/',
         views.DocumentUploadView.as_view(),
         name='document_upload'),
     path(
-        'invite/',
+        'group/invite/',
         views.GroupInviteView.as_view(),
         name='group_invite'),
     path(
-        'update/',
+        'group/update/',
         views.GroupUpdateView.as_view(),
         name='group_update'),
     path(
-        'list/',
+        'group/list/',
         views.GroupListView.as_view(),
         name='group_list'),
     path(
-        'list/<int:batch_number>/',
+        'group/list/<int:batch_number>/',
         views.GroupListView.as_view(),
         name='group_list_batch'),
     path(
-        'notifications/',
+        'internal-group/list/',
+        views.InternalGroupListView.as_view(),
+        name='internal_group_list'),
+    path(
+        'internal-group/list/<int:batch_number>/',
+        views.InternalGroupListView.as_view(),
+        name='internal_group_list'),
+    path(
+        'external-group/list/',
+        views.ExternalGroupListView.as_view(),
+        name='external_group_list'),
+    path(
+        'external-group/list/<int:batch_number>/',
+        views.ExternalGroupListView.as_view(),
+        name='external_group_list'),
+    path(
+        'group/notifications/',
         views.NotificationListView.as_view(),
         name='user_notifications'),
     path(
-        '<group_code>/',
+        'group/<group_code>/',
         views.DocumentListView.as_view(),
         name='group_detail'),
     path(
-        'comment/create/',
+        'group/comment/create/',
         views.CommentCreateView.as_view(),
         name='comment_create'
     ),
     path(
-        '<group_code>/comment/create/',
+        'group/<group_code>/comment/create/',
         views.CommentCreateView.as_view(),
         name='comment_create_teacher'
     ),
     path(
-        '<group_code>/approve/',
+        'group/<group_code>/approve/',
         views.StudentGroupApproveView.as_view(),
         name='group_approve'
     ),
     path(
-        '<group_code>/grading/',
+        'group/<group_code>/grading/',
         views.grade_students,
         name='grading_students'
     ),
     path(
-        '<group_code>/update_progress/',
+        'group/<group_code>/update_progress/',
         views.StudentGroupProgressUpdateView.as_view(),
         name='progress_update'
     ),

@@ -140,18 +140,10 @@ class GroupInviteView(
     template_name = "thesis/group_invite.html"
 
 
-class GroupListView(LoginRequiredMixin, UserIsTeacherMixin, ListView):
+class BaseGroupListView(LoginRequiredMixin, UserIsTeacherMixin, ListView):
     template_name = "thesis/group_list.html"
     http_method_names = ['get']
     context_object_name = 'groups'
-
-    def get_queryset(self):
-        user = self.request.user
-        queryset = user.studentgroups.filter(approved=True).order_by('id')
-        batch_number = self.kwargs.get('batch_number', '')
-        if batch_number:
-            return queryset.filter(batch__number=batch_number)
-        return queryset
 
     def get_context_data(self, *args, object_list=None, **kwargs):
         context_data = super().get_context_data(
@@ -161,6 +153,29 @@ class GroupListView(LoginRequiredMixin, UserIsTeacherMixin, ListView):
         context_data['batch_number'] = int(
             batch_number) if batch_number else ''
         return context_data
+
+    def get_studentgroups(self, studentgroup_related_name):
+        user = self.request.user
+        queryset = getattr(user, studentgroup_related_name).filter(approved=True).order_by('id')
+        batch_number = self.kwargs.get('batch_number', '')
+        if batch_number:
+            return queryset.filter(batch__number=batch_number)
+        return queryset
+
+
+class GroupListView(BaseGroupListView):
+    def get_queryset(self):
+        return self.get_studentgroups('studentgroups')
+
+
+class InternalGroupListView(BaseGroupListView):
+    def get_queryset(self):
+        return self.get_studentgroups('internal_studentgroups')
+
+
+class ExternalGroupListView(BaseGroupListView):
+    def get_queryset(self):
+        return self.get_studentgroups('external_studentgroups')
 
 
 class NotificationListView(LoginRequiredMixin, ListView):
@@ -309,6 +324,10 @@ def grade_students(request, group_code):
         formset = MarkFormSet(request.POST, **formset_initial)
         if formset.is_valid():
             formset.save()
+            messages.success(
+                request,
+                'Grades have been submitted successfully.',
+                extra_tags='is-success')
             return redirect(
                 reverse_lazy(
                     'thesis:group_detail',

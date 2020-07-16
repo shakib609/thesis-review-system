@@ -1,16 +1,22 @@
 {% extends 'base/thesis_dashboard_base.html' %}
+{% load my_tags %}
 
 {% block title %}
     {{ block.super }} | Groups
 {% endblock title %}
 
 
+{% url 'thesis:internal_group_list' as internal_group_list %}
+{% url 'thesis:external_group_list' as external_group_list %}
+
 
 {% block dashboard_content %}
 <div class="column">
     <div class="card is-fullwidth">
         <header class="card-header">
-            <p class="card-header-title">Groups</p>
+            <p class="card-header-title">
+                Groups{% if request.path|startswith:internal_group_list %}(Internal){% endif %}
+            </p>
             <p class="control has-icons-left" style="margin-top: 5px; margin-right: 5px;">
                 <span class="select">
                     <select name="batch" id="batch-select">
@@ -31,7 +37,7 @@
             <div class="columns is-mobile">
                 <div class="column is-10">
                     <p class="has-text-weight-bold">
-                        {{ group.title }}
+                        {{ group }} - {{ group.title }}
                     </p>
                     <p class="is-size-7">
                         Members: {{ group.students.all|join:', ' }}
@@ -46,18 +52,31 @@
             </div>
         {% endfor %}
         {% else %}
-            <p class="has-text-centered">No Groups registered under your supervision yet!</p>
+            <p class="has-text-centered">
+                {% if request.path|startswith:internal_group_list or request.path|startswith:external_group_list %}
+                You are not reviewing any groups.
+                {% else %}
+                No Groups registered under your supervision yet!</p>
+                {% endif %}
         {% endif %}
         </div>
     </div>
 </div>
+{% endblock dashboard_content %}
 
+{% block extra_js %}
+{{ block.super }}
 <script>
     const batchSelectElem = document.getElementById('batch-select');
+    const groupPaths = ["/group/list/", "/internal-group/list/", "/external-group/list/"]
+    let selectedPath;
+    const currentPath = window.location.pathname;
+    groupPaths.map((path) => {
+        if (currentPath.startsWith(path)) selectedPath = path;
+    })
     batchSelectElem.addEventListener('change', () => {
-        if (batchSelectElem.value == '') window.location.href = `/group/list/`;
-        else window.location.href = `/group/list/${batchSelectElem.value}`;
+        if (batchSelectElem.value == '') window.location.href = selectedPath;
+        else window.location.href = `${selectedPath}${batchSelectElem.value}`;
     })
 </script>
-
-{% endblock dashboard_content %}
+{% endblock extra_js %}

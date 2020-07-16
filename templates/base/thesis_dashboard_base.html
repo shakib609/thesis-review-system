@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
-
+{% load my_tags %}
 
 {% block extra_css %}
 <style>
@@ -16,6 +16,8 @@
 {% url 'registration:teacher_list' as teacher_list %}
 {% url 'thesis:document_upload' as document_upload %}
 {% url 'thesis:group_list' as group_list %}
+{% url 'thesis:internal_group_list' as internal_group_list %}
+{% url 'thesis:external_group_list' as external_group_list %}
 {% url 'thesis:group_invite' as group_invite %}
 {% url 'thesis:group_update' as group_update %}
 {% url 'thesis:group_create' as group_create %}
@@ -40,9 +42,18 @@
                 <p class="menu-label">Group</p>
                 <ul class="menu-list">
                     {% if user.is_teacher %}
-                    <li><a href="{{ group_list }}"
-                    class="{% if request.path == group_list %}is-active{% endif %}">
-                        <i class="fas fa-align-justify"></i>&nbsp; Groups</a></li>
+                      {% if user.is_external %}
+                      <li><a href="{{ external_group_list }}"
+                      class="{% if request.path|startswith:external_group_list %}is-active{% endif %}">
+                          <i class="fas fa-align-justify"></i>&nbsp; Groups</a></li>
+                      {% else %}
+                      <li><a href="{{ group_list }}"
+                      class="{% if request.path|startswith:group_list %}is-active{% endif %}">
+                          <i class="fas fa-align-justify"></i>&nbsp; Groups</a></li>
+                      <li><a href="{{ internal_group_list }}"
+                      class="{% if request.path|startswith:internal_group_list %}is-active{% endif %}">
+                          <i class="fas fa-align-justify"></i>&nbsp; Groups(Internal)</a></li>
+                      {% endif %}
                     {% elif user.studentgroup %}
                     <li><a href="{{ document_list }}"
                     class="{% if request.path == document_list %}is-active{% endif %}">

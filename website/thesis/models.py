@@ -56,7 +56,7 @@ class StudentGroup(models.Model):
         default=None,
         related_name='external_studentgroups',
         on_delete=models.SET_DEFAULT,
-        limit_choices_to={"is_teacher": True},
+        limit_choices_to={"is_teacher": True, "is_external": True},
     )
     title = models.CharField(max_length=256)
     department = models.CharField(

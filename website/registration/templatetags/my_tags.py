@@ -20,3 +20,10 @@ def random_classname():
                'is-black', 'is-dark', 'is-light', 'is-white']
 
     return str(choice(classes))
+
+
+@register.filter('startswith')
+def startswith(text, starts):
+    if isinstance(text, str):
+        return text.startswith(starts)
+    return False
