@@ -27,3 +27,8 @@ def startswith(text, starts):
     if isinstance(text, str):
         return text.startswith(starts)
     return False
+
+
+@register.filter(name='addclass')
+def addclass(field, class_attr):
+    return field.as_widget(attrs={'class': class_attr})

@@ -58,7 +58,7 @@
       <div class="field is-fullwidth">
         <label for="field" class="label">Research Field</label>
         <p class="control has-icons-left">
-          <span class="select is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
+          <span class="select is-fullwidth{% if 'field' in form.errors %} is-danger{% endif %}">
             <select name="field" v-model="field" id="field">
             {% for x,y in form.fields.field.choices %}
               <option value="{{ x }}"{% if form.field.value == x %} selected{% endif %}>{{ y }}</option>
@@ -69,11 +69,11 @@
               <i class="fas fa-globe"></i>
           </span>
           {% if 'field' in form.errors %}
-          <ul class="help is-danger">
-              {% for error in form.errors|get_item:'field' %}
-              <li>{{ error }}</li>
-              {% endfor %}
-          </ul>
+            <ul class="help is-danger">
+                {% for error in form.errors|get_item:'field' %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
           {% endif %}
         </p>
       </div>
@@ -92,12 +92,12 @@
               <span class="icon is-small is-left">
                   <i class="fas fa-chalkboard-teacher"></i>
               </span>
-              {% if 'teacher' in form.errors %}
-              <ul class="help is-danger">
-                  {% for error in form.errors|get_item:'teacher' %}
-                  <li>{{ error }}</li>
-                  {% endfor %}
-              </ul>
+              {% if 'batch' in form.errors %}
+                <ul class="help is-danger">
+                    {% for error in form.errors|get_item:'teacher' %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
               {% endif %}
           </p>
       </div>
@@ -115,13 +115,12 @@
               <span class="icon is-small is-left">
                   <i class="fas fa-chalkboard-teacher"></i>
               </span>
-              <p class="help">A teacher can supervise at most 5 Student Groups. Teachers with minimum 5 Student Groups will not be listed.</p>
               {% if 'teacher' in form.errors %}
-              <ul class="help is-danger">
-                  {% for error in form.errors|get_item:'teacher' %}
-                  <li>{{ error }}</li>
-                  {% endfor %}
-              </ul>
+                <ul class="help is-danger">
+                    {% for error in form.errors|get_item:'teacher' %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
               {% endif %}
           </p>
       </div>

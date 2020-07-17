@@ -75,6 +75,12 @@ class User(AbstractUser):
         on_delete=models.SET_NULL,
         null=True)
 
+    def studentgroup_count_by_batch(self, batch):
+        return self.studentgroups.filter(
+            approved=True,
+            batch=batch,
+        ).count()
+
     def __str__(self):
         name = self.username
         if self.full_name:

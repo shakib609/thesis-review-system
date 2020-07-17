@@ -1,5 +1,7 @@
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.views.generic import (
     TemplateView,
     CreateView,
@@ -8,11 +10,11 @@ from django.views.generic import (
     ListView,
     DetailView
 )
-from django.http import HttpResponseRedirect, Http404
-from django.urls import reverse_lazy
 from django.contrib import messages
-from django.db.models import Count
-from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect, Http404
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import (
     StudentSignUpForm, UserUpdateForm, TeacherUpdateForm)
@@ -129,3 +131,25 @@ class TeacherDetailView(LoginRequiredMixin, DetailView):
             return obj
         else:
             raise Http404("No Teachers found matching the query")
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(
+                request,
+                'Your password was successfully updated!',
+                extra_tags='is-success')
+            return redirect(reverse_lazy('registration:change_password'))
+        else:
+            messages.error(
+                request,
+                'Please correct the error below.',
+                extra_tags='is-danger')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'registration/change_password.html', {'form': form})

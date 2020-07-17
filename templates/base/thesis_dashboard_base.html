@@ -24,6 +24,7 @@
 {% url 'thesis:group_join' as group_join %}
 {% url 'thesis:user_notifications' as user_notifications %}
 {% url 'registration:user_update' as user_update %}
+{% url 'registration:change_password' as change_password %}
 {% url 'registration:user_delete' as user_delete %}
 
 <div class="container is-fluid" id="main-container">
@@ -78,14 +79,18 @@
                 </ul>
                 <p class="menu-label">Account</p>
                 <ul class="menu-list">
-                    <li><a href="{{ user_notifications }}">
+                    <li><a href="{{ user_notifications }}"
+                        class="{% if request.path == user_notifications %}is-active{% endif %}">
                         <i class="fas fa-bell" ></i>&nbsp; Notifications {% if unread_notifications_count %}<b>({{unread_notifications_count}})</b>{% endif %}</a></li>
                     <li><a href="{{ user_update }}"
                         class="{% if request.path == user_update %}is-active{% endif %}">
                         <i class="fas fa-cog"></i>&nbsp; Profile Settings</a></li>
-                    <li><a href="{{ user_delete }}"
+                    <li><a href="{{ change_password }}"
+                        class="{% if request.path == change_password %}is-active{% endif %}">
+                        <i class="fas fa-key"></i>&nbsp; Change Password</a></li>
+                    {% comment %} <li><a href="{{ user_delete }}"
                         class="{% if request.path == user_delete %}is-active{% endif %}">
-                        <i class="fas fa-trash"></i>&nbsp; Account Removal</a></li>
+                        <i class="fas fa-trash"></i>&nbsp; Account Removal</a></li> {% endcomment %}
                 </ul>
             </aside>
         </div>

@@ -25,7 +25,7 @@ from .mixins import (
     StudentGroupContextMixin, UserHasGroupAccessMixin, UserIsStudentMixin,
     UserIsTeacherMixin)
 from .models import Batch, Comment, Document, StudentGroup, Notification
-from ..registration.models import User, Mark
+from ..registration.models import User
 
 
 class GroupCreateJoinView(
@@ -156,7 +156,8 @@ class BaseGroupListView(LoginRequiredMixin, UserIsTeacherMixin, ListView):
 
     def get_studentgroups(self, studentgroup_related_name):
         user = self.request.user
-        queryset = getattr(user, studentgroup_related_name).filter(approved=True).order_by('id')
+        queryset = getattr(user, studentgroup_related_name).filter(
+            approved=True).order_by('id')
         batch_number = self.kwargs.get('batch_number', '')
         if batch_number:
             return queryset.filter(batch__number=batch_number)

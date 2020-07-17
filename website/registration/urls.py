@@ -9,6 +9,7 @@ from .views import (
     UserDeleteView,
     TeachersListView,
     TeacherDetailView,
+    change_password,
 )
 
 app_name = 'registration'
@@ -38,6 +39,10 @@ urlpatterns = [
         'account/',
         UserUpdateView.as_view(),
         name='user_update'),
+    path(
+        'account/change-password/',
+        change_password,
+        name='change_password'),
     path(
         'delete/',
         UserDeleteView.as_view(),

@@ -121,6 +121,7 @@
 {% block extra_js %}
   {{ block.super }}
     <script>
+        {% comment %} Code for Showing Document Viewer {% endcomment %}
         var baseURL = "{% static 'pdfjs/web/viewer.html' %}?file=/media/sg_{{ studentgroup.md5hash }}/",
             view_buttons = document.getElementsByClassName('view-button'),
             document_viewer = document.getElementById('document-viewer'),
@@ -132,7 +133,10 @@
             view_button.onclick = function (e) {
                 e.preventDefault();
                 var fileName = this.getAttribute('data-file-name');
-                iframe.setAttribute('src', baseURL + fileName);
+                const iframeSrc = baseURL + fileName;
+                const currentIframeSrc = iframe.getAttribute('src');
+                if (currentIframeSrc != iframeSrc)
+                    iframe.setAttribute('src', baseURL + fileName);
                 document_viewer.classList.remove('is-hidden');
             }
         }

@@ -1,5 +1,4 @@
 from django import forms
-from django.forms import formset_factory
 import magic
 
 from ..registration.models import (
@@ -30,6 +29,17 @@ class StudentGroupForm(forms.ModelForm):
         queryset=Batch.objects.all(),
         empty_label=None,
     )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        teacher = cleaned_data.get("teacher")
+        batch = cleaned_data.get("batch")
+        if teacher.studentgroup_count_by_batch(batch) >= batch.max_groups_num:
+            raise forms.ValidationError(
+                {
+                    'teacher': f'{teacher} has already got maximum number of groups({batch.max_groups_num}) registered for {batch}',
+                },
+            )
 
     class Meta:
         model = StudentGroup
@@ -63,12 +73,14 @@ class DocumentUploadForm(forms.ModelForm):
 
     def clean_file(self):
         f = self.cleaned_data.get('file')
+
         for chunk in f.chunks():
             mime = magic.from_buffer(
                 chunk, mime=True)
+            if 'application/pdf' not in mime:
+                raise forms.ValidationError(
+                    {'file': 'Invalid Format! PDF Only!'})
             break
-        if 'application/pdf' not in mime:
-            raise forms.ValidationError({'file': 'Invalid Format! PDF Only!'})
         return f
 
 
