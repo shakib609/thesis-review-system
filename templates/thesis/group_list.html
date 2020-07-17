@@ -5,6 +5,12 @@
     {{ block.super }} | Groups
 {% endblock title %}
 
+{% block page_title %}
+    <h3 class="title">
+        Groups{% if request.path|startswith:internal_group_list %}(Internal){% endif %}
+    </h3>
+{% endblock page_title %}
+
 
 {% url 'thesis:internal_group_list' as internal_group_list %}
 {% url 'thesis:external_group_list' as external_group_list %}

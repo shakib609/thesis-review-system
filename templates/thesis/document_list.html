@@ -16,7 +16,7 @@
 
 
 {% block dashboard_content %}
-    <div class="column is-4">
+    <div class="column is-12-mobile is-5-desktop is-4-widescreen">
         <div class="card">
             <header class="card-header">
                 <p class="card-header-title">Documents</p>
@@ -35,98 +35,12 @@
                     </ul>
                 </div>
 
-                {% comment %} PROPOSAL Documents {% endcomment %}
-                <div id="proposal_documents" class="content-tab">
-                    {% if proposal_documents %}
-                        {% for d in proposal_documents %}
-                        <div class="columns is-mobile">
-                            <div class="column is-9 has-text-small">
-                                {{ d.filename }} {% if d.is_accepted %}<span title="Accepted" class="fas fa-check-circle has-text-success"></span>{% endif %}
-                                <br>
-                                <p class="is-size-7">
-                                    Uploaded at:
-                                    <time datetime="{{ d.upload_time }}">
-                                        {{ d.upload_time|date:"d M Y" }} - {{ d.upload_time|date:"H:i" }}
-                                    </time>
-                                </p>
-                            </div>
-                            <div class="column is-3 has-text-right">
-                                <a
-                                href="{% get_media_prefix %}/sg_{{ studentgroup.md5hash }}/{{ d.filename }}"
-                                data-sg-code="{{ studentgroup.md5hash }}"
-                                data-file-name="{{ d.filename }}"
-                                class="button is-small is-link view-button">
-                                    View
-                                </a>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        {% include "include/no_documents.html" %}
-                    {% endif %}
-                </div>
+                {% include "include/document_list_tab.html" with container_id="proposal_documents" documents=proposal_documents %}
 
-                {% comment %} PRE_DEFENSE Documents {% endcomment %}
-                <div id="pre_defense_documents" class="content-tab" style="display:none;">
-                    {% if pre_defense_documents %}
-                        {% for d in pre_defense_documents %}
-                        <div class="columns is-mobile">
-                            <div class="column is-9 has-text-small">
-                                {{ d.filename }} {% if d.is_accepted %}<span title="Accepted" class="fas fa-check-circle has-text-success"></span>{% endif %}
-                                <br>
-                                <p class="is-size-7">
-                                    Uploaded at:
-                                    <time datetime="{{ d.upload_time }}">
-                                        {{ d.upload_time|date:"d M Y" }} - {{ d.upload_time|date:"H:i" }}
-                                    </time>
-                                </p>
-                            </div>
-                            <div class="column is-3 has-text-right">
-                                <a
-                                href="{% get_media_prefix %}/sg_{{ studentgroup.md5hash }}/{{ d.filename }}"
-                                data-sg-code="{{ studentgroup.md5hash }}"
-                                data-file-name="{{ d.filename }}"
-                                class="button is-small is-link view-button">
-                                    View
-                                </a>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        {% include "include/no_documents.html" %}
-                    {% endif %}
-                </div>
+                {% include "include/document_list_tab.html" with container_id="pre_defense_documents" documents=pre_defense_documents style="display:none;" %}
 
-                {% comment %} DEFENSE Documents {% endcomment %}
-                <div id="defense_documents" class="content-tab" style="display:none;">
-                    {% if defense_documents %}
-                        {% for d in defense_documents %}
-                        <div class="columns is-mobile">
-                            <div class="column is-9 has-text-small">
-                                {{ d.filename }} {% if d.is_accepted %}<span title="Accepted" class="fas fa-check-circle has-text-success"></span>{% endif %}
-                                <br>
-                                <p class="is-size-7">
-                                    Uploaded at:
-                                    <time datetime="{{ d.upload_time }}">
-                                        {{ d.upload_time|date:"d M Y" }} - {{ d.upload_time|date:"H:i" }}
-                                    </time>
-                                </p>
-                            </div>
-                            <div class="column is-3 has-text-right">
-                                <a
-                                href="{% get_media_prefix %}/sg_{{ studentgroup.md5hash }}/{{ d.filename }}"
-                                data-sg-code="{{ studentgroup.md5hash }}"
-                                data-file-name="{{ d.filename }}"
-                                class="button is-small is-link view-button">
-                                    View
-                                </a>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        {% include "include/no_documents.html" %}
-                    {% endif %}
-                </div>
+                {% include "include/document_list_tab.html" with container_id="defense_documents" documents=defense_documents style="display:none;" %}
+
             </div>
         </div>
     </div>
@@ -229,6 +143,7 @@
             iframe.setAttribute('src', '');
         }
 
+        {% comment %} Code for making Tabs Work {% endcomment %}
         function openTab(evt, tabName) {
             var i, x, tablinks;
             x = document.getElementsByClassName("content-tab");

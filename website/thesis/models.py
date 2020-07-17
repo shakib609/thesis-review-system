@@ -89,7 +89,7 @@ class StudentGroup(models.Model):
         elif documents_queryset.filter(document_type=Document.DocumentType.PROPOSAL.value).exists():
             return 'Proposal Done'
         else:
-            return 'Pending Proposal Approval'
+            return 'Pending'
 
     def graded(self, user):
         return self.marks.filter(graded_by=user).exists()
