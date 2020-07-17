@@ -1,0 +1,32 @@
+{% load static %}
+
+<div id="{{ container_id }}" class="content-tab" style="{{ style }}">
+    {% if documents %}
+        {% for d in documents %}
+        <div class="columns is-mobile">
+            <div class="column is-8 has-text-small">
+                {{ d.filename }} {% if d.is_accepted %}<span title="Accepted" class="fas fa-check-circle has-text-success"></span>{% endif %}
+                <br>
+                <p class="is-size-7">
+                    <span class="icon"><i class="fas fa-upload"></i></span>
+                    <time datetime="{{ d.upload_time }}">
+                        {{ d.upload_time|date:"d M Y" }} - {{ d.upload_time|date:"H:i" }}
+                    </time>
+                </p>
+            </div>
+            <div class="column has-text-right">
+                <a
+                    href="{% get_media_prefix %}/sg_{{ studentgroup.md5hash }}/{{ d.filename }}"
+                    data-sg-code="{{ studentgroup.md5hash }}"
+                    data-file-name="{{ d.filename }}"
+                    title="View"
+                    class="button is-small is-link view-button">
+                    <span class="icon"><i class="fas fa-eye"></i></span>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        {% include "include/no_documents.html" %}
+    {% endif %}
+</div>
