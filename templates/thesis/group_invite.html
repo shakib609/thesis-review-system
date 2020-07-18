@@ -17,8 +17,14 @@
     <p class="is-size-2 box" style="font-family:monospace;display:inline-block;">
         {{ studentgroup.md5hash }}</p>
     <br>
-    <p class="is-size-6 is-text-dark">
+    <p class="help is-text-dark">
         P.S. The code is case-sensitive.
     </p>
+    {% if studentgroup.approved %}
+    <p class="help has-text-danger">
+        Your group has been already approved by admin. <br>
+        Contact admin if you have to add a new group member.
+    </p>
+    {% endif %}
 </div>
 {% endblock dashboard_content %}

@@ -18,11 +18,11 @@ urlpatterns = [
         'group/create/',
         views.GroupCreateView.as_view(),
         name='group_create'),
-    path(
-        'group/create/field/<field_id>/teachers/',
-        views.get_teachers_list_by_field_json,
-        name='get_teachers'
-    ),
+    # path(
+    #     'group/create/field/<field_id>/teachers/',
+    #     views.get_teachers_list_by_field_json,
+    #     name='get_teachers'
+    # ),
     path(
         'group/join/',
         views.GroupJoinView.as_view(),
@@ -68,14 +68,18 @@ urlpatterns = [
         views.NotificationListView.as_view(),
         name='user_notifications'),
     path(
-        'group/<group_code>/',
-        views.DocumentListView.as_view(),
-        name='group_detail'),
-    path(
         'group/comment/create/',
         views.CommentCreateView.as_view(),
         name='comment_create'
     ),
+    path(
+        'group/<group_code>/',
+        views.DocumentListView.as_view(),
+        name='group_detail'),
+    path(
+        'group/<group_code>/toggle-document/<document_id>/',
+        views.DocumentAcceptedToggleView.as_view(),
+        name='group_document_toggle_view'),
     path(
         'group/<group_code>/comment/create/',
         views.CommentCreateView.as_view(),

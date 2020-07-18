@@ -5,7 +5,13 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 from django.forms import formset_factory
 from django.views.generic import (
-    CreateView, FormView, ListView, TemplateView, UpdateView)
+    CreateView,
+    FormView,
+    ListView,
+    TemplateView,
+    UpdateView,
+    RedirectView,
+)
 from django.conf import settings
 from django.db.models import Count
 from django.core.serializers.json import DjangoJSONEncoder
@@ -131,6 +137,29 @@ class DocumentUploadView(
             'Document Uploaded successfully!',
             extra_tags='is-success')
         return HttpResponseRedirect(self.get_success_url())
+
+
+class DocumentAcceptedToggleView(
+        LoginRequiredMixin,
+        UserIsTeacherMixin,
+        StudentGroupContextMixin,
+        RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        document = get_object_or_404(
+            Document,
+            studentgroup=self.studentgroup,
+            id=self.kwargs['document_id'],
+        )
+        document.is_accepted = not document.is_accepted
+        document.save()
+        if document.is_accepted:
+            messages.success(
+                self.request, 'Document has been approved', extra_tags='is-success')
+        else:
+            messages.error(
+                self.request, 'Document has been disapproved', extra_tags='is-danger')
+        return reverse_lazy('thesis:group_detail', args=(self.studentgroup.md5hash,))
 
 
 class GroupInviteView(

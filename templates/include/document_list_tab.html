@@ -23,6 +23,32 @@
                     class="button is-small is-link view-button">
                     <span class="icon"><i class="fas fa-eye"></i></span>
                 </a>
+                <a
+                    href="{% get_media_prefix %}/sg_{{ studentgroup.md5hash }}/{{ d.filename }}"
+                    title="Download"
+                    target="_blank"
+                    class="button is-small is-info">
+                    <span class="icon"><i class="fas fa-download"></i></span>
+                </a>
+                {% if user == studentgroup.teacher %}
+                    {% if d.is_accepted %}
+                        <button
+                            title="Disapprove"
+                            data-btn-type="disapprove"
+                            data-doc-id="{{ d.id }}"
+                            class="button is-small is-danger appr-btn">
+                            <span class="icon"><i class="fas fa-times"></i></span>
+                        </button>
+                    {% else %}
+                        <button
+                            title="Approve"
+                            data-btn-type="approve"
+                            data-doc-id="{{ d.id }}"
+                            class="button is-small is-success appr-btn">
+                            <span class="icon"><i class="fas fa-check"></i></span>
+                        </button>
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
         {% endfor %}

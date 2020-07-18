@@ -25,6 +25,7 @@
 {% url 'thesis:user_notifications' as user_notifications %}
 {% url 'registration:user_update' as user_update %}
 {% url 'registration:change_password' as change_password %}
+{% url 'registration:logout' as logout %}
 {% url 'registration:user_delete' as user_delete %}
 
 <div class="container is-fluid" id="main-container">
@@ -88,6 +89,9 @@
                     <li><a href="{{ change_password }}"
                         class="{% if request.path == change_password %}is-active{% endif %}">
                         <i class="fas fa-key"></i>&nbsp; Change Password</a></li>
+                    <li><a href="{{ logout }}"
+                        class="{% if request.path == logout %}is-active{% endif %}">
+                        <i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a></li>
                     {% comment %} <li><a href="{{ user_delete }}"
                         class="{% if request.path == user_delete %}is-active{% endif %}">
                         <i class="fas fa-trash"></i>&nbsp; Account Removal</a></li> {% endcomment %}

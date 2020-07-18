@@ -35,11 +35,11 @@
                     </ul>
                 </div>
 
-                {% include "include/document_list_tab.html" with container_id="proposal_documents" documents=proposal_documents %}
+                {% include "include/document_list_tab.html" with studentgroup=studentgroup container_id="proposal_documents" documents=proposal_documents %}
 
-                {% include "include/document_list_tab.html" with container_id="pre_defense_documents" documents=pre_defense_documents style="display:none;" %}
+                {% include "include/document_list_tab.html" with studentgroup=studentgroup container_id="pre_defense_documents" documents=pre_defense_documents style="display:none;" %}
 
-                {% include "include/document_list_tab.html" with container_id="defense_documents" documents=defense_documents style="display:none;" %}
+                {% include "include/document_list_tab.html" with studentgroup=studentgroup container_id="defense_documents" documents=defense_documents style="display:none;" %}
 
             </div>
         </div>
@@ -161,5 +161,30 @@
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.classList.add("is-active");
         }
+
+        {% comment %} Code for toggling document accepted {% endcomment %}
+        const appr_btns = document.getElementsByClassName("appr-btn");
+
+        function approveButtonHandler(e) {
+            const btnType = this.getAttribute('data-btn-type')
+            let confirmationStatus = false;
+            switch(btnType) {
+                case 'approve':
+                    confirmationStatus = confirm('Are you sure you want to approve this document?');
+                    break;
+                case 'disapprove':
+                    confirmationStatus = confirm('Are you sure you want to disapprove this document?');
+                    break;
+            }
+            if (confirmationStatus) {
+                const documentId = this.getAttribute('data-doc-id')
+                window.location.href = `/group/{{ studentgroup.md5hash }}/toggle-document/${documentId}/`;
+            }
+        }
+
+        for (let i = 0; i < appr_btns.length; i++) {
+            appr_btns[i].addEventListener('click', approveButtonHandler)
+        }
+
     </script>
 {% endblock extra_js %}

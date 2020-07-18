@@ -63,11 +63,14 @@
         <label for="batch" class="label">Batch</label>
         <p class="control has-icons-left">
             <span class="select is-fullwidth{% if 'batch' in form.errors %} is-danger{% endif %}">
-                <select name="batch" required>
+                <select name="batch" required {% if form.instance.approved %}disabled{% endif %}>
                   {% for x,y in form.fields.batch.choices %}
                   <option value="{{x}}" {% if form.batch.value == x %}selected{% endif %}>{{y}}</option>
                   {% endfor %}
                 </select>
+                {% if form.instance.approved %}
+                <input type="hidden" name="batch" value="{{ form.batch.value }}">
+                {% endif %}
             </span>
             <span class="icon is-small is-left">
                 <i class="fas fa-chalkboard-teacher"></i>
@@ -85,7 +88,7 @@
         <label for="teacher" class="label">Teacher</label>
         <p class="control has-icons-left">
             <span class="select is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
-                <select name="teacher" required {% if form.teacher.value %}disabled{% endif %}>
+                <select name="teacher" required {% if form.instance.approved %}disabled{% endif %}>
                   {% for x,y in form.fields.teacher.choices %}
                   <option value="{{x}}"  {% if form.teacher.value == x %}selected{% endif %}>{{y}}</option>
                   {% endfor %}
@@ -109,38 +112,3 @@
 </div>
 
 {% endblock dashboard_content %}
-
-{% block extra_js %}
-{{ block.super }}
-<script>
-new Vue({
-  el: '#v-app',
-  delimiters: ['[[', ']]'],
-  data: {
-    options: [],
-    field: {% if form.field.value %}{{ form.field.value }}{% else %}''{% endif %},
-    selected_teacher: {% if form.teacher.value %}{{ form.teacher.value }}{% else %}''{% endif %}
-  },
-  methods: {
-    getTeacherOptions(field_id) {
-      fetch('http://localhost:8000/group/create/field/'+field_id+'/teachers/').then(
-        response => response.json()
-      ).then(
-        data => {this.options = JSON.parse(data)}
-      ).catch(e => console.log(e))
-    }
-  },
-  watch: {
-    field(newF, oldF) {
-      if (newF != null) {
-        this.getTeacherOptions(newF)
-      }
-    }
-  },
-  created: function () {
-    if (this.field)
-      this.getTeacherOptions(this.field)
-  }
-})
-</script>
-{% endblock extra_js %}

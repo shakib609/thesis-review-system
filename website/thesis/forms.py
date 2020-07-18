@@ -34,7 +34,7 @@ class StudentGroupForm(forms.ModelForm):
         cleaned_data = super().clean()
         teacher = cleaned_data.get("teacher")
         batch = cleaned_data.get("batch")
-        if teacher.studentgroup_count_by_batch(batch) >= batch.max_groups_num:
+        if teacher and teacher.studentgroup_count_by_batch(batch) >= batch.max_groups_num:
             raise forms.ValidationError(
                 {
                     'teacher': f'{teacher} has already got maximum number of groups({batch.max_groups_num}) registered for {batch}',
