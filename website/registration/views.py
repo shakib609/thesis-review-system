@@ -29,6 +29,8 @@ class LoginRedirectView(LoginRequiredMixin, RedirectView):
         if user.is_superuser:
             return reverse_lazy('admin:index')
         elif user.is_teacher:
+            if user.is_external:
+                return reverse_lazy('thesis:external_group_list')
             return reverse_lazy('thesis:group_list')
         if user.studentgroup:
             return reverse_lazy('thesis:document_list')
@@ -116,7 +118,6 @@ class TeachersListView(LoginRequiredMixin, ListView):
             *args, object_list=object_list, **kwargs)
         context_data['department_name'] = self.kwargs.get(
             'department_name', '')
-        print(context_data)
         return context_data
 
 

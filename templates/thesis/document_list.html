@@ -72,6 +72,7 @@
             </header>
             <div class="card-content">
                 <div class="content">
+                    {% if not user.is_teacher or user == studentgroup.teacher or user == studentgroup.internal or user == studentgroup.external %}
                     <form
                     {% if user.is_teacher %}
                         action="{% url 'thesis:comment_create_teacher' studentgroup.md5hash %}"
@@ -94,22 +95,17 @@
 
                         {% csrf_token %}
                     </form>
+                    {% endif %}
                     {% if comments %}
                     {% for comment in comments %}
-                    <div class="comment">
-                        <p class="is-size-7" style="margin-bottom:0em;">
-                            <span class="{% if comment.user.is_teacher %}has-text-danger{% else %}has-text-info{% endif %}">
-                                {{ comment.user.username }}
-                            </span>
-                            -
-                            {{ comment.created_at|date:"d M Y" }}
-                            at
-                            {{ comment.created_at|date:"H:i" }}
-                        </p>
-                        <p>{{ comment.content|linebreaksbr }}</p>
-                    </div>
+                        {% if not user.is_teacher or user == studentgroup.teacher %}
+                            {% include "include/comment_item.html" with comment=comment user=user studentgroup=studentgroup %}
+                        {% elif user == studentgroup.internal and user == comment.user %}
+                            {% include "include/comment_item.html" with comment=comment user=user studentgroup=studentgroup %}
+                        {% elif user == studentgroup.external and user == comment.user %}
+                            {% include "include/comment_item.html" with comment=comment user=user studentgroup=studentgroup %}
+                        {% endif %}
                     {% endfor %}
-
                 {% endif %}
                 </div>
             </div>

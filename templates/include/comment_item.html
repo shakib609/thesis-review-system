@@ -1,0 +1,24 @@
+<div class="comment">
+    <div class="tags has-addons" style="display:inline-block;margin-bottom:0;">
+        {% if comment.user.is_teacher %}
+            <span class="tag is-danger">
+                {% if comment.user == studentgroup.teacher %}
+                    Supervisor
+                {% elif comment.user == studentgroup.internal %}
+                    Internal
+                {% elif comment.user == studentgroup.external %}
+                    External
+                {% endif %}
+            </span>
+        {% else %}
+            <span class="tag is-link">Student</span>
+        {% endif %}
+        <span class="tag">{{ comment.user }}</span>
+    </div>
+    <p class="is-size-7" style="margin-bottom:0em;display:inline-block;">
+        {{ comment.created_at|date:"d M Y" }}
+        at
+        {{ comment.created_at|date:"H:i" }}
+    </p>
+    <p class="is-size-6">{{ comment.content|linebreaksbr }}</p>
+</div>

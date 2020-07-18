@@ -142,9 +142,13 @@
                             <span title="Graded" class="fas fa-check-circle has-text-success"></span>
                             Submitted
                           {% else %}
+                            {% if studentgroup.status == 'Defense Done' %}
                             <a href="{% url 'thesis:grading_students' studentgroup.md5hash %}">
                               Grade Students
                             </a>
+                            {% else %}
+                              Defense Report must be accepted by Supervisor before grading
+                            {% endif %}
                           {% endif %}
                         {% endif %}
                         </h4>
