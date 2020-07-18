@@ -18,7 +18,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import (
     StudentSignUpForm, UserUpdateForm, TeacherUpdateForm)
-from .models import User
+from .models import Teacher, User
 
 
 class LoginRedirectView(LoginRequiredMixin, RedirectView):
@@ -126,12 +126,14 @@ class TeacherDetailView(LoginRequiredMixin, DetailView):
     template_name = 'registration/teacher_detail.html'
 
     def get_object(self, queryset=None):
-        username = self.kwargs.get('username')
-        if username is not None:
-            obj = get_object_or_404(User, username=username, is_teacher=True)
-            return obj
-        else:
-            raise Http404("No Teachers found matching the query")
+        obj = get_object_or_404(
+            User, username=self.kwargs['username'])
+        return obj
+
+
+class StudentDetailView(TeacherDetailView):
+    context_object_name = 'student'
+    template_name = 'registration/student_detail.html'
 
 
 @login_required

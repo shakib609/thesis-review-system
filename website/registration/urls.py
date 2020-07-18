@@ -9,6 +9,7 @@ from .views import (
     UserDeleteView,
     TeachersListView,
     TeacherDetailView,
+    StudentDetailView,
     change_password,
 )
 
@@ -59,4 +60,8 @@ urlpatterns = [
         'teachers/<username>/',
         TeacherDetailView.as_view(),
         name='teacher_detail'),
+    path(
+        'students/<username>/',
+        StudentDetailView.as_view(),
+        name='student_detail'),
 ]

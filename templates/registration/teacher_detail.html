@@ -8,34 +8,18 @@
 {% block page_title %}
 <article class="media">
   <figure class="media-left">
-    <p class="image is-128x128">
-      <img class="is-rounded"
-        {% if teacher.profile_picture %}
-          src="/media/{{ teacher.profile_picture }}"
-        {% else %}
-          src="{% static 'assets/avatar.jpg' %}"
-        {% endif %}>
-    </p>
+    <div class="image is-128x128 bg-image" style="background-image:url({% if teacher.profile_picture %}/media/{{ teacher.profile_picture }}{% else %}{% static 'assets/avatar.jpg' %}{% endif %});">
+    </div>
   </figure>
   <div class="media-content">
     <div class="content">
       <h1 class="title">{{ teacher.full_name }} ({{ teacher.username }})</h1>
       <h4 class="subtitle is-size-6 has-text-weight-normal">
-        {% if teacher.designation %}
-        <b>Designation:</b> {{ teacher.designation }} <br>
-        {% endif %}
-        {% if teacher.qualification %}
-          <b>Qualification: </b> {{ teacher.qualification }} <br>
-        {% endif %}
+        <b>Designation:</b> {% if teacher.designation %} {{ teacher.designation }} {% else %} - {% endif %}<br>
+        <b>Qualification: </b>{% if teacher.qualification %} {{ teacher.qualification }}  {% else %} - {% endif %}<br>
         <b>Research Fields:</b>
-          {% if teacher.fields.all %}
-          {{ teacher.fields.all|join:', '}}
-          {% else %}
-          None added yet!
-          {% endif %}
+          {% if teacher.fields.all %} {{ teacher.fields.all|join:', '}} {% else %} - {% endif %}
         <br>
-        <br>
-        Currently Supervising {{ teacher.studentgroups.count }} group{{ teacher.studentgroups.count|pluralize }}.
       </h4>
     </div>
   </div>
@@ -43,56 +27,52 @@
 {% endblock page_title %}
 
 {% block dashboard_content %}
-<div class="container" style="margin-bottom: 40px;">
-  <div class="columns">
-    <div class="column is-6">
-        <div class="field">
-          <label class="label">Full Name</label>
-          <div class="control">
-            <input class="input" type="text" value="{{ teacher.full_name }}" readonly>
-          </div>
-        </div>
-        <div class="field">
-          <label class="label">Designation</label>
-          <div class="control">
-            <input class="input" type="text" value="{% if teacher.designation %}{{ teacher.designation }}{% else %}Not added yet!{% endif %}" readonly>
-          </div>
-        </div>
-        <div class="field">
-          <label class="label">Qualification</label>
-          <div class="control">
-            <input class="input" type="text" value="{% if teacher.qualification %}{{ teacher.qualification }}{% else %}Not added yet!{% endif %}" readonly>
-          </div>
-        </div>
-        <div class="field">
-          <label class="label">Department</label>
-          <div class="control">
-            <input class="input" type="text" value="Computer Science &amp; Engineering" readonly>
-          </div>
-        </div>
-        <div class="field">
-          <label class="label">Email Address</label>
-          <div class="control">
-            <input class="input" type="text" value="{{ teacher.email }}" readonly>
-          </div>
-        </div>
-        <div class="field">
-          <label class="label">Phone Number</label>
-          <div class="control">
-            <input class="input" type="text" value="{{ teacher.phone_number }}" readonly>
-          </div>
-        </div>
-        <div class="field">
-          <div class="control">
-            {% if teacher.cv_document %}
-            <a href="/media/{{ teacher.cv_document }}" class="button is-primary">Download CV</a>
-            {% else %}
-            <button class="button is-disabled is-danger">CV not uploaded yet!</button>
-            {% endif %}
-          </div>
-        </div>
+<div class="column is-5">
+    <div class="field">
+      <label class="label">Full Name</label>
+      <div class="control">
+        <input class="input" type="text" value="{{ teacher.full_name }}" readonly>
+      </div>
     </div>
-  </div>
+    <div class="field">
+      <label class="label">Designation</label>
+      <div class="control">
+        <input class="input" type="text" value="{% if teacher.designation %}{{ teacher.designation }}{% else %}Not added yet!{% endif %}" readonly>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Qualification</label>
+      <div class="control">
+        <input class="input" type="text" value="{% if teacher.qualification %}{{ teacher.qualification }}{% else %}Not added yet!{% endif %}" readonly>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Department</label>
+      <div class="control">
+        <input class="input" type="text" value="Computer Science &amp; Engineering" readonly>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Email Address</label>
+      <div class="control">
+        <input class="input" type="text" value="{{ teacher.email }}" readonly>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Phone Number</label>
+      <div class="control">
+        <input class="input" type="text" value="{{ teacher.phone_number }}" readonly>
+      </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        {% if teacher.cv_document %}
+        <a href="/media/{{ teacher.cv_document }}" class="button is-primary">Download CV</a>
+        {% else %}
+        <button class="button is-disabled is-danger">CV not uploaded yet!</button>
+        {% endif %}
+      </div>
+    </div>
 </div>
 
 {% endblock dashboard_content %}

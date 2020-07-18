@@ -23,8 +23,8 @@
             <p class="card-header-title">
                 Groups{% if request.path|startswith:internal_group_list %}(Internal){% endif %}
             </p>
-            <p class="control has-icons-left" style="margin-top: 5px; margin-right: 5px;">
-                <span class="select">
+            <p class="control has-icons-left" style="margin-top: 10px; margin-right: 5px;">
+                <span class="select is-small">
                     <select name="batch" id="batch-select">
                         <option value="">All Batches</option>
                         {% for batch in batches %}
@@ -44,6 +44,7 @@
                 <div class="column is-10">
                     <p class="has-text-weight-bold">
                         {{ group }} - {{ group.title }}
+                        <span class="tag is-link is-normal">{{ group.status }}</span>
                     </p>
                     <p class="is-size-7">
                         Members: {{ group.students.all|join:', ' }}

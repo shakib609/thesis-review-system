@@ -22,8 +22,8 @@
     <div class="card is-fullwidth">
         <header class="card-header">
             <p class="card-header-title">Teachers</p>
-            <p class="control has-icons-left" style="margin-top: 5px; margin-right: 5px;">
-              <span class="select">
+            <p class="control has-icons-left" style="margin-top: 10px; margin-right: 5px;">
+              <span class="select is-small">
                   <select name="batch" id="department-select">
                       <option value="">All Departments</option>
                       <option value="CSE" {% if department_name == "CSE" %} selected{% endif %}>CSE</option>
@@ -42,24 +42,24 @@
           {% for teacher in teachers %}
             <article class="media">
               <figure class="media-left">
-                <p class="image is-64x64">
-                  <a href="{% url 'registration:teacher_detail' teacher.username %}">
-                    <img class="is-rounded"
-                      {% if teacher.profile_picture %}
-                        src="/media/{{ teacher.profile_picture }}"
-                      {% else %}
-                        src="{% static 'assets/avatar.jpg' %}"
-                      {% endif %}>
-                  </a>
-                </p>
+                <a href="{% url 'registration:teacher_detail' teacher.username %}">
+                  <div class="image is-64x64 bg-image" style="background-image:url({% if teacher.profile_picture %}/media/{{ teacher.profile_picture }}{% else %}{% static 'assets/avatar.jpg' %}{% endif %});">
+                  </div>
+                </a>
               </figure>
               <div class="media-content">
                 <div class="content">
                   <p class="is-size-7">
-                    <strong class="is-size-6">{{ teacher.full_name }} ({{ teacher.username }})</strong><br>
+                    <strong class="is-size-6">
+                      {{ teacher.full_name }} ({{ teacher.username }})
+                    </strong>
+                    {% if teacher.is_external %}
+                      <span class="tag is-link is-light">External</span>
+                    {% endif %}
+                    <br>
                       {% if teacher.designation %}
                       <b>Designation:</b> {{ teacher.designation }} &nbsp;-&nbsp;{% endif %}
-                      <b>Research Fields:</b> {{ teacher.fields.all|join:', '}} <br>
+                      <b>Research Fields:</b> {% if teacher.fields.all %}{{ teacher.fields.all|join:', '}}{% else %}Not assigned yet{% endif %} <br>
                       <b>Email Address:</b> <a href="mailto:{{ teacher.email }}" class="has-text-grey-darker">{{ teacher.email }}</a>
                       &nbsp;-&nbsp;
                       <b>Phone Number:</b> <a href="tel:{{ teacher.phone_number }}" class="has-text-grey-darker">{{ teacher.phone_number }}</a>

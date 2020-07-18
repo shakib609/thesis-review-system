@@ -105,13 +105,14 @@
         </div>
 
         <div class="field">
-            <label for="username" class="label">Varsity ID</label>
+            <label for="username" class="label">Varsity ID/Username</label>
             <div class="control has-icons-left">
+                <input type="hidden" name="username" value="{{ form.username.value }}">
                 <input
                   {% if 'username' in form.errors %}
-                    class="input is-danger is-uppercase"
+                    class="input is-danger"
                   {% else %}
-                    class="input is-uppercase"
+                    class="input"
                   {% endif %}
                   type="text"
                   name="username"
@@ -132,6 +133,36 @@
                 {% endif %}
             </div>
         </div>
+        <div class="field">
+          <label class="label">Profile Picture</label>
+          <div
+            {% if 'profile_picture' in form.errors %}
+              class="file is-danger has-name"
+            {% else %}
+              class="file is-info"
+            {% endif %}>
+            <label class="file-label">
+              <input class="file-input" type="file" accept="image/*" name="profile_picture">
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  Select File
+                </span>
+              </span>
+            </label>
+          </div>
+          <p class="help">Square jpeg photos preferred.</p>
+          {% if 'profile_picture' in form.errors %}
+          <ul class="help is-danger">
+              {% for error in form.errors|get_item:'profile_picture' %}
+              <li>{{ error }}</li>
+              {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+
         {% if user.is_teacher %}
         <div class="field">
             <label for="qualification" class="label">Qualification</label>
@@ -186,35 +217,6 @@
                 </ul>
                 {% endif %}
             </div>
-        </div>
-        <div class="field">
-          <label class="label">Profile Picture</label>
-          <div
-            {% if 'profile_picture' in form.errors %}
-              class="file is-danger has-name"
-            {% else %}
-              class="file is-info"
-            {% endif %}>
-            <label class="file-label">
-              <input class="file-input" type="file" accept="image/*" name="profile_picture">
-              <span class="file-cta">
-                <span class="file-icon">
-                  <i class="fas fa-upload"></i>
-                </span>
-                <span class="file-label">
-                  Select File
-                </span>
-              </span>
-            </label>
-          </div>
-          <p class="help">Square jpeg photos preferred.</p>
-          {% if 'profile_picture' in form.errors %}
-          <ul class="help is-danger">
-              {% for error in form.errors|get_item:'profile_picture' %}
-              <li>{{ error }}</li>
-              {% endfor %}
-          </ul>
-          {% endif %}
         </div>
         <div class="field">
           <label class="label">CV Document</label>

@@ -109,11 +109,11 @@
                         <h3 class="title">
                             {{ studentgroup.title }}&nbsp;
                             {% if not studentgroup.approved %}
-                            <span class="button is-static is-outlined is-danger">
+                            <span class="tag is-danger is-large is-light">
                                 Pending
                             </span>
                             {% elif studentgroup.status %}
-                            <span class="button is-static is-outlined is-link">
+                            <span class="tag is-link is-large is-light">
                                 {{ studentgroup.status }}
                             </span>
                             {% endif %}
@@ -126,14 +126,20 @@
                               Not assigned yet
                             {% endif %}
                           <br>
-                          <b>Superviser: </b>
+                          <b>Supervisor: </b>
                             {% if studentgroup.teacher %}
+                              <a href="{% url 'registration:teacher_detail' user.username %}">
                               {{ studentgroup.teacher.username }}
+                              </a>
                             {% else %}
                               Not assigned yet!
                             {% endif %}
                           <br>
-                          <b>Members: </b>{{ studentgroup.students.all|join:", " }}
+                          <b>Members: </b>
+                          {% comment %} {{ studentgroup.students.all|join:", " }} {% endcomment %}
+                          {% for student in studentgroup.students.all %}
+                            <a href="{% if user == student %}/account/{% else %}{% url 'registration:student_detail' student.username %}{% endif %}">{{ student }}</a>,
+                          {% endfor %}
 
                         {% if studentgroup.status == 'Defense Done' and user == studentgroup.teacher or user == studentgroup.internal or user == studentgroup.external %}
                           <br/>

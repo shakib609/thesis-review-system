@@ -56,6 +56,7 @@ class UserUpdateForm(forms.ModelForm):
             'email',
             'phone_number',
             'username',
+            'profile_picture',
         )
 
 

@@ -1,28 +1,34 @@
 .container {
-    padding: 0 15px;
+  padding: 0 15px;
 }
 
 nav.navbar {
-    margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 #main-container {
-    min-height: 510px;
+  min-height: 510px;
+}
+
+.bg-image {
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
 }
 
 .comment {
-    margin-top: 0.75rem;
+  margin-top: 0.75rem;
 }
 
 .menu-list a.is-active {
-    background-color: transparent;
-    color: #276cda;
+  background-color: transparent;
+  color: #276cda;
 }
 
 .menu-list a:hover {
-    color: #276cda;
+  color: #276cda;
 }
 
 .footer {
-    padding: 15px 0;
+  padding: 15px 0;
 }

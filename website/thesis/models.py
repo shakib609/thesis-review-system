@@ -193,26 +193,38 @@ class Notification(models.Model):
 
 
 @receiver(post_save, sender=Document)
-def generate_notification_on_document_upload(sender, instance, **kwargs):
+def generate_notification_on_document_upload(sender, instance, created, **kwargs):
     studentgroup = instance.studentgroup
-    content = f'A new Document({instance.document_type}) was uploaded to {studentgroup}'
-    if studentgroup.approved:
-        if studentgroup.teacher:
+    if created:
+        content = f'A new Document({instance.document_type}) was uploaded to {studentgroup}'
+        if studentgroup.approved:
+            if studentgroup.teacher:
+                Notification.objects.create(
+                    content=content,
+                    user=studentgroup.teacher,
+                    studentgroup=studentgroup,
+                )
+            # if studentgroup.internal:
+            #     Notification.objects.create(
+            #         content=content,
+            #         user=studentgroup.internal,
+            #         studentgroup=studentgroup,
+            #     )
+            # if studentgroup.external:
+            #     Notification.objects.create(
+            #         content=content,
+            #         user=studentgroup.external,
+            #         studentgroup=studentgroup,
+            #     )
+    else:
+        if instance.is_accepted:
+            content = f'Your {instance.filename}({instance.document_type}) document was approved.'
+        else:
+            content = f'Your {instance.filename}({instance.document_type}) document was disapproved.'
+        for student in studentgroup.students.all():
             Notification.objects.create(
                 content=content,
-                user=studentgroup.teacher,
-                studentgroup=studentgroup,
-            )
-        if studentgroup.internal:
-            Notification.objects.create(
-                content=content,
-                user=studentgroup.internal,
-                studentgroup=studentgroup,
-            )
-        if studentgroup.external:
-            Notification.objects.create(
-                content=content,
-                user=studentgroup.external,
+                user=student,
                 studentgroup=studentgroup,
             )
 
