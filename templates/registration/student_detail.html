@@ -1,0 +1,54 @@
+{% extends 'base/thesis_dashboard_base.html' %}
+{% load static %}
+
+{% block title %}
+  {{ student.full_name }} | {{ block.super }}
+{% endblock title %}
+
+{% block page_title %}
+<article class="media">
+  <figure class="media-left">
+    <div class="image is-128x128 bg-image" style="background-image:url({% if student.profile_picture %}/media/{{ student.profile_picture }}{% else %}{% static 'assets/avatar.jpg' %}{% endif %});">
+    </div>
+  </figure>
+  <div class="media-content">
+    <div class="content">
+      <h1 class="title">{{ student.full_name }} ({{ student.username }})</h1>
+      <h4 class="subtitle is-size-6 has-text-weight-normal">
+        <b>Group Title:</b> {% if user.studentgroup %} {{ user.studentgroup.title }} {% else %} - {% endif %} <br>
+        <b>Group Status:</b> {% if user.studentgroup %} <span class="tag is-link is-light">{{ user.studentgroup.status }}</span> {% else %} - {% endif %}<br>
+        <b>Supervisor:</b> {% if user.studentgroup and user.studentgroup.teacher %} <a href="{% url 'registration:teacher_detail' user.studentgroup.teacher.username %}">{{ user.studentgroup.teacher }}</a>{% else %} - {% endif %}<br>
+      </h4>
+    </div>
+  </div>
+</article>
+{% endblock page_title %}
+
+{% block dashboard_content %}
+<div class="column is-5 is-5-widescreen">
+    <div class="field">
+      <label class="label">Full Name</label>
+      <div class="control">
+        <input class="input" type="text" value="{{ student.full_name }}" readonly>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Department</label>
+      <div class="control">
+        <input class="input" type="text" value="Computer Science &amp; Engineering" readonly>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Email Address</label>
+      <div class="control">
+        <input class="input" type="text" value="{{ student.email }}" readonly>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Phone Number</label>
+      <div class="control">
+        <input class="input" type="text" value="{{ student.phone_number }}" readonly>
+      </div>
+    </div>
+</div>
+{% endblock dashboard_content %}
