@@ -96,8 +96,7 @@ DATABASES = {
         'HOST': env.str('DB_HOST', '127.0.0.1'),
         'PORT': env.str('DB_PORT', '3306'),
         'OPTIONS': {
-            'CHARSET': 'utf8mb4',
-            'COLLATION': 'utf8mb4_unicode_ci',
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         }
     },
 }
