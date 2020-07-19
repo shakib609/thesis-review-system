@@ -95,6 +95,10 @@ DATABASES = {
         'PASSWORD': env.str('DB_PASSWORD', 'foobar'),
         'HOST': env.str('DB_HOST', '127.0.0.1'),
         'PORT': env.str('DB_PORT', '3306'),
+        'OPTIONS': {
+            'CHARSET': 'utf8mb4',
+            'COLLATION': 'utf8mb4_unicode_ci',
+        }
     },
 }
 
