@@ -10,9 +10,23 @@ class DocumentInline(admin.StackedInline):
 
 
 class StudentGroupAdmin(admin.ModelAdmin):
-    list_filter = ('batch', 'approved', )
+    list_filter = ('batch', 'approved',)
     list_display = ('title', 'teacher', 'internal', 'external', 'approved',)
     inlines = [DocumentInline]
+    fieldsets = (
+        (None, {
+            "fields": (
+                'title',
+                'field',
+                'batch',
+                'department',
+                'teacher',
+                'internal',
+                'external',
+                'approved',
+            ),
+        }),
+    )
 
 
 admin.site.register(Batch)

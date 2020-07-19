@@ -63,7 +63,7 @@ class ResultAdmin(admin.ModelAdmin):
 
 class StudentAdmin(UserAdmin):
     list_display = ('username', 'full_name', 'email', 'phone_number',)
-    list_filter = ('is_active', 'department', )
+    list_filter = ('is_active', 'department', 'studentgroup__batch',)
     search_fields = ('username', 'full_name')
     inlines = [MarkInline, ResultInline]
     raw_id_fields = ['studentgroup']
@@ -79,6 +79,7 @@ class StudentAdmin(UserAdmin):
                     'phone_number',
                     'password1',
                     'password2',
+                    'department',
                     'profile_picture',
                 )
             }
@@ -93,6 +94,7 @@ class StudentAdmin(UserAdmin):
                 'full_name',
                 'email',
                 'phone_number',
+                'department',
                 'profile_picture',
             )
         }),
@@ -117,7 +119,7 @@ class StudentAdmin(UserAdmin):
 
 class TeacherAdmin(UserAdmin):
     list_display = ('username', 'full_name', 'email', 'designation',)
-    list_filter = ('is_superuser', 'department',)
+    list_filter = ('is_external', 'department',)
     search_fields = ('username', 'full_name')
     add_fieldsets = (
         (
@@ -131,6 +133,7 @@ class TeacherAdmin(UserAdmin):
                     'phone_number',
                     'password1',
                     'password2',
+                    'department',
                     'profile_picture',
                     'cv_document',
                     'designation',
@@ -158,9 +161,10 @@ class TeacherAdmin(UserAdmin):
                 'email',
                 'phone_number',
                 'profile_picture',
-                'cv_document',
+                'department',
                 'designation',
                 'qualification',
+                'cv_document',
             )
         }),
         (

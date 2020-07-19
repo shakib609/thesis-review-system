@@ -129,7 +129,7 @@
                           <b>Supervisor: </b>
                             {% if studentgroup.teacher %}
                               <a href="{% url 'registration:teacher_detail' user.username %}">
-                              {{ studentgroup.teacher.username }}
+                              {{ studentgroup.teacher }}
                               </a>
                             {% else %}
                               Not assigned yet!
