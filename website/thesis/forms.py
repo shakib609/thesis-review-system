@@ -30,6 +30,10 @@ class StudentGroupForm(forms.ModelForm):
         empty_label=None,
     )
 
+    def __init__(self, user, *args, **kwargs) -> None:
+        self.user = user
+        return super().__init__(*args, **kwargs)
+
     def clean(self):
         cleaned_data = super().clean()
         teacher = cleaned_data.get("teacher")
@@ -40,6 +44,10 @@ class StudentGroupForm(forms.ModelForm):
                     'teacher': f'{teacher} has already got maximum number of groups({batch.max_groups_num}) registered for {batch}',
                 },
             )
+
+    def save(self, commit=True):
+        self.instance.department = self.user.department
+        return super().save(commit=commit)
 
     class Meta:
         model = StudentGroup
