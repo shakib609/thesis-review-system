@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from environs import Env
 
+env = ENV = Env()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,12 +22,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=aq!6dh_h%b6ld*8&1*&15&c9zxw99sxnoro4^5cl^!f1!0yj3'
+SECRET_KEY = env.str(
+    'SECRET_KEY',
+    '=aq!6dh_h%b6ld*8&1*&15&c9zxw99sxnoro4^5cl^!f1!0yj3',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get('DEBUG', '1')))
+DEBUG = env.bool('DEBUG', False)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*'] if DEBUG else env.list('ALLOWED_HOSTS', [])
 
 
 # Application definition
@@ -84,18 +89,20 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': env.str('DB_NAME', 'thesisReviewSystem'),
+        'USER': env.str('DB_USER', 'root'),
+        'PASSWORD': env.str('DB_PASSWORD', 'foobar'),
+        'HOST': env.str('DB_HOST', '127.0.0.1'),
+        'PORT': env.str('DB_PORT', '3306'),
+    },
+}
+
+if DEBUG:
+    DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'db.sqlite3',
     }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': os.environ.get('DB_NAME', 'thesisReviewSystem'),
-    #     'USER': os.environ.get('DB_USER', 'root'),
-    #     'PASSWORD': os.environ.get('DB_PASSWORD', 'foobar'),
-    #     'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
-    #     'PORT': os.environ.get('DB_PORT', '3306'),
-    # }
-}
 
 
 # Password validation
