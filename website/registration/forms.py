@@ -35,6 +35,7 @@ class StudentSignUpForm(UserCreationForm):
             'full_name',
             'email',
             'phone_number',
+            'cgpa',
             'password1',
             'password2',
         )
@@ -57,6 +58,7 @@ class UserUpdateForm(forms.ModelForm):
             'phone_number',
             'username',
             'profile_picture',
+            'cgpa',
         )
 
 

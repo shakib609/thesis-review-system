@@ -58,10 +58,16 @@ class User(AbstractUser):
         default=False,
     )
     is_external = models.BooleanField(
+        _('external teacher status'),
         help_text=_(
             'Designates whether this teacher should be treated as an external teacher.'
         ),
         default=False,
+    )
+    cgpa = models.DecimalField(
+        blank=True,
+        decimal_places=2,
+        max_digits=5,
     )
     is_student = models.BooleanField(
         _('student status'),

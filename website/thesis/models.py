@@ -58,6 +58,30 @@ class StudentGroup(models.Model):
         on_delete=models.SET_DEFAULT,
         limit_choices_to={"is_teacher": True, "is_external": True},
     )
+    first_choice = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        related_name='first_choice_studentgroups',
+        on_delete=models.SET_NULL,
+        limit_choices_to={"is_teacher": True}
+    )
+    second_choice = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        related_name='second_choice_studentgroups',
+        on_delete=models.SET_NULL,
+        limit_choices_to={"is_teacher": True}
+    )
+    third_choice = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        related_name='third_choice_studentgroups',
+        on_delete=models.SET_NULL,
+        limit_choices_to={"is_teacher": True}
+    )
     title = models.CharField(max_length=256)
     department = models.CharField(
         max_length=3,

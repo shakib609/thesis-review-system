@@ -20,14 +20,22 @@ class StudentGroupForm(forms.ModelForm):
         required=True,
         empty_label=None,
     )
-    teacher = forms.ModelChoiceField(
-        queryset=User.objects.filter(is_teacher=True),
-        required=False,
-        empty_label=None,
-    )
     batch = forms.ModelChoiceField(
         queryset=Batch.objects.all(),
         empty_label=None,
+    )
+    first_choice = forms.ModelChoiceField(
+        queryset=User.objects.filter(is_teacher=True),
+        required=True,
+        empty_label=None,
+    )
+    second_choice = forms.ModelChoiceField(
+        queryset=User.objects.filter(is_teacher=True),
+        required=False,
+    )
+    third_choice = forms.ModelChoiceField(
+        queryset=User.objects.filter(is_teacher=True),
+        required=False,
     )
 
     def __init__(self, user, *args, **kwargs) -> None:
@@ -36,14 +44,19 @@ class StudentGroupForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        teacher = cleaned_data.get("teacher")
-        batch = cleaned_data.get("batch")
-        if teacher and teacher.studentgroup_count_by_batch(batch) >= batch.max_groups_num:
-            raise forms.ValidationError(
-                {
-                    'teacher': f'{teacher} has already got maximum number of groups({batch.max_groups_num}) registered for {batch}',
-                },
-            )
+        first_choice = cleaned_data['first_choice']
+        second_choice = cleaned_data.get('second_choice')
+        third_choice = cleaned_data.get('third_choice')
+        if second_choice is None and third_choice is not None:
+            raise forms.ValidationError({
+                'second_choice': 'Must Select a second choice'
+            })
+        if first_choice == second_choice or first_choice == third_choice or (second_choice is not None and third_choice is not None and second_choice == third_choice):
+            raise forms.ValidationError({
+                'first_choice': 'Choices must be different',
+                'second_choice': 'Choices must be different',
+                'third_choice': 'Choices must be different',
+            })
 
     def save(self, commit=True):
         self.instance.department = self.user.department
@@ -51,7 +64,7 @@ class StudentGroupForm(forms.ModelForm):
 
     class Meta:
         model = StudentGroup
-        fields = 'title', 'batch', 'field', 'teacher'
+        fields = 'title', 'batch', 'field', 'first_choice', 'second_choice', 'third_choice'
 
 
 class StudentGroupJoinForm(forms.ModelForm):

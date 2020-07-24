@@ -77,6 +77,31 @@
         </div>
 
         <div class="field">
+            <label for="cgpa" class="label">CGPA</label>
+            <div class="control has-icons-left">
+                <input
+                  class="input {% if 'cgpa' in form.errors %}is-danger{% endif %}"
+                  type="number"
+                  name="cgpa"
+                  placeholder="CGPA"
+                  required=""
+                  step=".01"
+                  value="{{ form.cgpa.value|default_if_none:'' }}"
+                  spellcheck="false">
+                <span class="icon is-small is-left">
+                    <i class="fas fa-percent"></i>
+                </span>
+                {% if 'cgpa' in form.errors %}
+                <ul class="help is-danger">
+                    {% for error in form.errors|get_item:'cgpa' %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="field">
             <label for="phone_number" class="label">Phone Number</label>
             <div class="control has-icons-left">
                 <input

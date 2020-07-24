@@ -60,6 +60,12 @@ class ResultAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return Result.objects.exclude(student__studentgroup=None)
 
+    def has_add_permission(self, request) -> bool:
+        return False
+
+    def has_delete_permission(self, request) -> bool:
+        return False
+
 
 class StudentAdmin(UserAdmin):
     list_display = ('username', 'full_name', 'email', 'phone_number',)
@@ -173,6 +179,7 @@ class TeacherAdmin(UserAdmin):
                 'classes': ('wide', ),
                 'fields': (
                     'is_external',
+                    'is_superuser',
                 )
             }
         ),

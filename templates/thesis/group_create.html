@@ -32,7 +32,7 @@
 
 {% block dashboard_content %}
 
-<div class="column is-6">
+<div class="column is-5-desktop is-12-touch">
 
   <form method="POST" class="has-text-left" id="v-app">
       {% csrf_token %}
@@ -102,12 +102,11 @@
           </p>
       </div>
       <div class="field is-fullwidth">
-          <label for="teacher" class="label">Teacher</label>
+          <label for="first_choice" class="label">Supervisor(1st Choice)</label>
           <p class="control has-icons-left">
-              <span class="select is-fullwidth{% if 'teacher' in form.errors %} is-danger{% endif %}">
-                  <select name="teacher" v-model="selected_teacher" id="teacher">
-
-                    {% for x,y in form.fields.teacher.choices %}
+              <span class="select is-fullwidth{% if 'first_choice' in form.errors %} is-danger{% endif %}">
+                  <select name="first_choice" id="first_choice">
+                    {% for x,y in form.fields.first_choice.choices %}
                     <option value="{{x}}">{{y}}</option>
                     {% endfor %}
                   </select>
@@ -115,9 +114,55 @@
               <span class="icon is-small is-left">
                   <i class="fas fa-chalkboard-teacher"></i>
               </span>
-              {% if 'teacher' in form.errors %}
+              {% if 'first_choice' in form.errors %}
                 <ul class="help is-danger">
-                    {% for error in form.errors|get_item:'teacher' %}
+                    {% for error in form.errors|get_item:'first_choice' %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+              {% endif %}
+          </p>
+      </div>
+
+      <div class="field is-fullwidth">
+          <label for="second_choice" class="label">Supervisor(2nd Choice)</label>
+          <p class="control has-icons-left">
+              <span class="select is-fullwidth{% if 'second_choice' in form.errors %} is-danger{% endif %}">
+                  <select name="second_choice" id="second_choice">
+                    {% for x,y in form.fields.second_choice.choices %}
+                    <option value="{{x}}">{{y}}</option>
+                    {% endfor %}
+                  </select>
+              </span>
+              <span class="icon is-small is-left">
+                  <i class="fas fa-chalkboard-teacher"></i>
+              </span>
+              {% if 'second_choice' in form.errors %}
+                <ul class="help is-danger">
+                    {% for error in form.errors|get_item:'second_choice' %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+              {% endif %}
+          </p>
+      </div>
+
+      <div class="field is-fullwidth">
+          <label for="third_choice" class="label">Supervisor(3rd Choice)</label>
+          <p class="control has-icons-left">
+              <span class="select is-fullwidth{% if 'third_choice' in form.errors %} is-danger{% endif %}">
+                  <select name="third_choice" id="third_choice">
+                    {% for x,y in form.fields.third_choice.choices %}
+                    <option value="{{x}}">{{y}}</option>
+                    {% endfor %}
+                  </select>
+              </span>
+              <span class="icon is-small is-left">
+                  <i class="fas fa-chalkboard-teacher"></i>
+              </span>
+              {% if 'third_choice' in form.errors %}
+                <ul class="help is-danger">
+                    {% for error in form.errors|get_item:'third_choice' %}
                     <li>{{ error }}</li>
                     {% endfor %}
                 </ul>
