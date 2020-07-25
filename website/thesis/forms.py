@@ -139,6 +139,11 @@ class MarkForm(forms.ModelForm):
         label="Student",
         required=True,
     )
+    mark = forms.IntegerField(
+        label='Mark(Out of 100)',
+        max_value=100,
+        min_value=0,
+    )
 
     class Meta:
         model = Mark
@@ -159,27 +164,6 @@ class MarkForm(forms.ModelForm):
         self.fields['student_choice'].choices = [
             (s.id, s) for s in studentgroup.students.all()
         ]
-
-    def clean_mark(self):
-        mark_limits = {
-            'teacher': 50,
-            'internal': 20,
-            'external': 30,
-        }
-        mark = self.cleaned_data['mark']
-        if self.user == self.studentgroup.teacher and mark > mark_limits['teacher']:
-            raise forms.ValidationError(
-                f'Mark is greater than limit({mark_limits["teacher"]})',
-            )
-        elif self.user == self.studentgroup.internal and mark > mark_limits['internal']:
-            raise forms.ValidationError(
-                f'Mark is greater than limit({mark_limits["internal"]})',
-            )
-        elif self.user == self.studentgroup.external and mark > mark_limits['external']:
-            raise forms.ValidationError(
-                f'Mark is greater than limit({mark_limits["external"]})',
-            )
-        return mark
 
     def save(self, commit=True):
         student_id = self.cleaned_data.pop('student_choice')

@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
+from django.core import validators
 from django.dispatch import receiver
+from django.core.exceptions import ValidationError
 from django.db.models.signals import post_save, post_delete
 
 import os
@@ -22,6 +24,27 @@ class Batch(models.Model):
     number = models.PositiveSmallIntegerField(unique=True)
     max_groups_num = models.PositiveSmallIntegerField(default=5)
     min_groups_num = models.PositiveSmallIntegerField(default=0)
+    supervisor_mark_percentage = models.PositiveIntegerField(default=50, validators=[
+        validators.MaxValueValidator(100),
+        validators.MinValueValidator(0),
+    ])
+    internal_mark_percentage = models.PositiveIntegerField(default=30, validators=[
+        validators.MaxValueValidator(100),
+        validators.MinValueValidator(0),
+    ])
+    external_mark_percentage = models.PositiveIntegerField(default=20, validators=[
+        validators.MaxValueValidator(100),
+        validators.MinValueValidator(0),
+    ])
+
+    def clean(self):
+        if sum([self.supervisor_mark_percentage, self.internal_mark_percentage, self.external_mark_percentage]) != 100:
+            error_message = 'Sum of these must be 100'
+            raise ValidationError({
+                "supervisor_mark_percentage": error_message,
+                "internal_mark_percentage": error_message,
+                "external_mark_percentage": error_message,
+            })
 
     class Meta:
         verbose_name_plural = 'batches'

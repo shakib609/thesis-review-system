@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Value, Case, When, Sum, F
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
@@ -111,12 +112,19 @@ class Admin(User):
 
 
 class Result(models.Model):
-    total_marks = models.PositiveSmallIntegerField(default=0)
+    total_marks = models.DecimalField(
+        default=0,
+        max_digits=6,
+        decimal_places=2,
+    )
     student = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
         limit_choices_to={"is_student": True}
     )
+
+    def __str__(self) -> str:
+        return f'{self.student.username} Result'
 
     @property
     def grade(self):
@@ -201,10 +209,32 @@ def create_result_on_student_creation(sender, instance, **kwargs):
 @receiver(post_save, sender=Mark)
 def update_result_on_mark_edit(sender, instance, **kwargs):
     student = instance.student
+    studentgroup = instance.studentgroup
     result = Result.objects.filter(student=student).first()
     if result:
-        result_marks = student.student_marks.all().aggregate(
-            total_marks=models.Sum('mark')
+        result_marks = student.student_marks.annotate(
+            _processed_mark=Case(
+                When(
+                    graded_by=studentgroup.teacher,
+                    then=F(
+                        'mark') * (studentgroup.batch.supervisor_mark_percentage / 100)
+                ),
+                When(
+                    graded_by=studentgroup.internal,
+                    then=F(
+                        'mark') * (studentgroup.batch.internal_mark_percentage / 100)
+                ),
+                When(
+                    graded_by=studentgroup.external,
+                    then=F(
+                        'mark') * (studentgroup.batch.internal_mark_percentage / 100)
+                ),
+                default=Value('mark'),
+                output_field=models.DecimalField(),
+            )
+        ).aggregate(
+            total_marks=Sum('_processed_mark')
         )
+        print(result_marks)
         result.total_marks = result_marks['total_marks']
         result.save()
