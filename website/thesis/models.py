@@ -24,6 +24,9 @@ class Batch(models.Model):
     number = models.PositiveSmallIntegerField(unique=True)
     max_groups_num = models.PositiveSmallIntegerField(default=5)
     min_groups_num = models.PositiveSmallIntegerField(default=0)
+    max_students_per_group = models.PositiveSmallIntegerField(default=2, validators=[
+        validators.MinValueValidator(1),
+    ])
     supervisor_mark_percentage = models.PositiveIntegerField(default=50, validators=[
         validators.MaxValueValidator(100),
         validators.MinValueValidator(0),

@@ -74,6 +74,22 @@ class GroupJoinView(LoginRequiredMixin, UserIsStudentMixin, FormView):
     def form_valid(self, form):
         md5hash = form.cleaned_data.get('md5hash')
         studentgroup = get_object_or_404(StudentGroup, md5hash=md5hash)
+        if studentgroup.status != 'Pending':
+            messages.error(
+                self.request,
+                "The Group has already been approved by admin. You can not join this group.",
+                extra_tags='is-danger',
+            )
+            return HttpResponseRedirect('/group/join/')
+        batch = studentgroup.batch
+        students_count = studentgroup.students.all().count()
+        if students_count >= batch.max_students_per_group:
+            messages.error(
+                self.request,
+                'The Group has already reached maximum capacity',
+                extra_tags='is-danger'
+            )
+            return HttpResponseRedirect('/group/join/')
         user = self.request.user
         user.studentgroup = studentgroup
         user.save()
