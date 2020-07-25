@@ -50,12 +50,15 @@ class MarkInline(admin.StackedInline):
     extra = 0
     fields = ['student', 'mark', 'graded_by', 'remarks', ]
     fk_name = 'student'
+    readonly_fields = ['graded_by', 'remarks', ]
 
 
 class ResultAdmin(admin.ModelAdmin):
     list_display = ['student', 'total_marks', 'grade', ]
-    list_filter = ['student__department',
-                   'student__studentgroup__batch']
+    list_filter = [
+        'student__department',
+        'student__studentgroup__batch',
+    ]
     search_fields = ['student__username', 'student']
     change_list_template = 'admin/result_change_list.html'
 

@@ -358,7 +358,7 @@ def grade_students(request, group_code):
             'user': user,
             'studentgroup': studentgroup,
         },
-        "initial": [{"student": student.id} for student in students],
+        "initial": [{"student_choice": student.id} for student in students],
     }
     if request.method == 'POST':
         formset = MarkFormSet(request.POST, **formset_initial)

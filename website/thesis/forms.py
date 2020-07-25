@@ -1,4 +1,5 @@
 from django import forms
+from django.shortcuts import get_object_or_404
 import magic
 
 from ..registration.models import (
@@ -118,7 +119,7 @@ class BaseMarkFormSet(forms.BaseFormSet):
             return
         students = set()
         for form in self.forms:
-            student = form.cleaned_data.get('student')
+            student = form.cleaned_data.get('student_choice')
             if student in students:
                 raise forms.ValidationError(
                     "Students must be different for each form"
@@ -134,10 +135,15 @@ class BaseMarkFormSet(forms.BaseFormSet):
 
 
 class MarkForm(forms.ModelForm):
+    student_choice = forms.ChoiceField(
+        label="Student",
+        required=True,
+    )
+
     class Meta:
         model = Mark
         fields = [
-            'student',
+            'student_choice',
             'mark',
             'remarks',
         ]
@@ -150,12 +156,9 @@ class MarkForm(forms.ModelForm):
             visible.field.widget.attrs['class'] = 'input'
             if visible.field.required:
                 visible.field.widget.attrs['required'] = ''
-            if visible.field.label == 'Student':
-                student_choices = [
-                    (s.id, s) for s in studentgroup.students.all()
-                ]
-                print(student_choices)
-                visible.field.choices = student_choices
+        self.fields['student_choice'].choices = [
+            (s.id, s) for s in studentgroup.students.all()
+        ]
 
     def clean_mark(self):
         mark_limits = {
@@ -179,6 +182,8 @@ class MarkForm(forms.ModelForm):
         return mark
 
     def save(self, commit=True):
+        student_id = self.cleaned_data.pop('student_choice')
         self.instance.graded_by = self.user
         self.instance.studentgroup = self.studentgroup
+        self.instance.student_id = student_id
         return super().save(commit=commit)
