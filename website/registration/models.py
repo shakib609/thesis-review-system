@@ -41,16 +41,27 @@ class User(AbstractUser):
 
     # Only for teachers
     designation = models.CharField(
-        _('designation'), max_length=256,
-        null=True, blank=True)
+        _('designation'),
+        max_length=256,
+        null=True,
+        blank=True,
+    )
     qualification = models.CharField(
-        _('qualification'), max_length=512, null=True, blank=True)
+        _('qualification'),
+        max_length=512,
+        null=True,
+        blank=True,
+    )
     profile_picture = models.ImageField(
         upload_to=generate_propic_upload_location,
-        null=True, blank=True)
+        null=True,
+        blank=True,
+    )
     cv_document = models.FileField(
         upload_to=generate_cv_upload_location,
-        null=True, blank=True)
+        null=True,
+        blank=True,
+    )
     is_teacher = models.BooleanField(
         _('teacher status'),
         help_text=_(
@@ -76,11 +87,19 @@ class User(AbstractUser):
             'Designates whether this user should be treated as student.'),
         default=False,
     )
+    is_superuser = models.BooleanField(
+        _('Admin'),
+        help_text=_(
+            'Designates whether this user should be treated as admin.'),
+        default=False,
+    )
     studentgroup = models.ForeignKey(
         'thesis.StudentGroup',
         related_name='students',
         on_delete=models.SET_NULL,
-        null=True)
+        null=True,
+        blank=True,
+    )
 
     def studentgroup_count_by_batch(self, batch):
         return self.studentgroups.filter(
@@ -227,7 +246,7 @@ def update_result_on_mark_edit(sender, instance, **kwargs):
                 When(
                     graded_by=studentgroup.external,
                     then=F(
-                        'mark') * (studentgroup.batch.internal_mark_percentage / 100)
+                        'mark') * (studentgroup.batch.external_mark_percentage / 100)
                 ),
                 default=Value('mark'),
                 output_field=models.DecimalField(),

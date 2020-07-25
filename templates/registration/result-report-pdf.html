@@ -40,14 +40,20 @@
             <th class="tbl-marks">Total Marks</th>
             <th class="tbl-grade">Grade</th>
         </tr>
-        {% for result in results %}
-        <tr>
-            <td class="tbl-id">{{ result.student.username }}</td>
-            <td class="tbl-name">{{ result.student.full_name }}</td>
-            <td class="tbl-marks">{{ result.total_marks }}</td>
-            <td class="tbl-grade">{{ result.grade }}</td>
-        </tr>
-        {% endfor %}
+        {% if results %}
+            {% for result in results %}
+            <tr>
+                <td class="tbl-id">{{ result.student.username }}</td>
+                <td class="tbl-name">{{ result.student.full_name }}</td>
+                <td class="tbl-marks">{{ result.total_marks }}</td>
+                <td class="tbl-grade">{{ result.grade }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="4" style="text-align: center;padding: 15px 0;">No Students have received all the marks yet.</td>
+            </tr>
+        {% endif %}
     </table>
 </body>
 </html>
