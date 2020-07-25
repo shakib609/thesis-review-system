@@ -45,9 +45,10 @@ class ResultInline(admin.TabularInline):
     model = Result
 
 
-class MarkInline(admin.TabularInline):
+class MarkInline(admin.StackedInline):
     model = Mark
     extra = 0
+    fields = ['student', 'mark', 'graded_by', 'remarks', ]
     fk_name = 'student'
 
 
@@ -69,7 +70,7 @@ class ResultAdmin(admin.ModelAdmin):
 
 
 class StudentAdmin(UserAdmin):
-    list_display = ('username', 'full_name', 'email', 'phone_number',)
+    list_display = ('username', 'full_name', 'email', 'phone_number', 'cgpa',)
     list_filter = ('is_active', 'department', 'studentgroup__batch',)
     search_fields = ('username', 'full_name')
     inlines = [MarkInline, ResultInline]

@@ -149,11 +149,13 @@ class MarkForm(forms.ModelForm):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'input'
             if visible.field.required:
-                visible.field.widget.attrs['required'] = 'required'
+                visible.field.widget.attrs['required'] = ''
             if visible.field.label == 'Student':
-                visible.field.choices = [
+                student_choices = [
                     (s.id, s) for s in studentgroup.students.all()
                 ]
+                print(student_choices)
+                visible.field.choices = student_choices
 
     def clean_mark(self):
         mark_limits = {
