@@ -12,13 +12,15 @@ from django.views.generic import (
 )
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
+from django_weasyprint import WeasyTemplateResponseMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import (
     StudentSignUpForm, UserUpdateForm, TeacherUpdateForm)
-from .models import Teacher, User
+from .models import Result, User
+from ..thesis.models import Batch
 
 
 class LoginRedirectView(LoginRequiredMixin, RedirectView):
@@ -66,7 +68,7 @@ class UserCreateView(CreateView):
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
-    template_name = "registration/user_update.html"
+    template_name = 'registration/user_update.html'
     http_method_names = ['get', 'post']
     success_url = reverse_lazy('registration:user_update')
 
@@ -89,7 +91,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class UserDeleteView(LoginRequiredMixin, TemplateView):
-    template_name = "registration/user_delete.html"
+    template_name = 'registration/user_delete.html'
     http_method_names = ['get', 'post']
 
     def post(self, request, *args, **kwargs):
@@ -156,3 +158,34 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'registration/change_password.html', {'form': form})
+
+
+class ReportPDFView(
+    LoginRequiredMixin,
+    WeasyTemplateResponseMixin,
+        ListView):
+    context_object_name = 'results'
+    pdf_attachment = False
+    template_name = 'registration/result-report-pdf.html'
+
+    def get_queryset(self):
+        department = self.kwargs['department']
+        batch_id = self.kwargs['batch_id']
+        return Result.objects.filter(
+            student__department=department,
+            student__studentgroup__batch__id=batch_id,
+        ).order_by('student__username')
+
+    def get_batch(self):
+        return get_object_or_404(Batch, pk=self.kwargs['batch_id'])
+
+    def get_pdf_filename(self):
+        department = self.kwargs['department']
+        batch = self.get_batch()
+        return f'{department}-{batch.number}.pdf'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['department'] = self.kwargs['department']
+        context['batch'] = self.get_batch()
+        return context

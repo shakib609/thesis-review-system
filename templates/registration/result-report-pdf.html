@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Result Report - {{ department }} - {{ batch }}</title>
+
+    <style>
+        *, body {
+            font-family: 'Roboto', sans-serif;
+        }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        .tbl-id {
+            width: 90px;
+        }
+        .tbl-marks {
+            width: 100px;
+            text-align: center;
+        }
+        .tbl-grade {
+            width: 60px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <img src="{% static 'assets/iiuclogo.png' %}" alt="IIUC Logo" style="margin-left: 120px; width: 400px;">
+
+    <h3 style="text-align:center;">Result of {{ department }} - {{ batch }}</h4>
+
+    <table style="width:100%">
+        <tr>
+            <th class="tbl-id">Matric ID</th>
+            <th class="tbl-name">Name</th>
+            <th class="tbl-marks">Total Marks</th>
+            <th class="tbl-grade">Grade</th>
+        </tr>
+        {% for result in results %}
+        <tr>
+            <td class="tbl-id">{{ result.student.username }}</td>
+            <td class="tbl-name">{{ result.student.full_name }}</td>
+            <td class="tbl-marks">{{ result.total_marks }}</td>
+            <td class="tbl-grade">{{ result.grade }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -11,6 +11,7 @@ from .views import (
     TeacherDetailView,
     StudentDetailView,
     change_password,
+    ReportPDFView,
 )
 
 app_name = 'registration'
@@ -64,4 +65,8 @@ urlpatterns = [
         'students/<username>/',
         StudentDetailView.as_view(),
         name='student_detail'),
+    path(
+        'reports/<str:department>/<int:batch_id>/',
+        ReportPDFView.as_view(),
+        name='report_pdf'),
 ]

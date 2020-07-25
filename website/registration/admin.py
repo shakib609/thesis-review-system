@@ -56,6 +56,7 @@ class ResultAdmin(admin.ModelAdmin):
     list_filter = ['student__department',
                    'student__studentgroup__batch']
     search_fields = ['student__username', 'student']
+    change_list_template = 'admin/result_change_list.html'
 
     def get_queryset(self, request):
         return Result.objects.exclude(student__studentgroup=None)
@@ -63,7 +64,7 @@ class ResultAdmin(admin.ModelAdmin):
     def has_add_permission(self, request) -> bool:
         return False
 
-    def has_delete_permission(self, request) -> bool:
+    def has_delete_permission(self, request, obj=None) -> bool:
         return False
 
 
