@@ -52,8 +52,7 @@ class StudentGroupAdmin(admin.ModelAdmin):
         return ['-_cgpa']
 
     def get_queryset(self, request):
-        queryset = super().get_queryset(request)
-        return queryset.annotate(_cgpa=Max('students__cgpa'))
+        return super().get_queryset(request).annotate(_cgpa=Max('students__cgpa')).order_by('-_cgpa')
 
     def cgpa(self, obj):
         return '{:.2f}'.format(obj._cgpa)

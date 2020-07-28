@@ -221,9 +221,8 @@ def remove_studentgroup_if_empty(sender, instance, **kwargs):
 
 @receiver(post_save, sender=User)
 def create_result_on_student_creation(sender, instance, **kwargs):
-    if instance.is_student:
-        if not Result.objects.filter(student=instance).exists():
-            Result.objects.create(student=instance)
+    if instance.is_student and not Result.objects.filter(student=instance).exists():
+        Result.objects.create(student=instance)
 
 
 @receiver(post_save, sender=Mark)

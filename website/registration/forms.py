@@ -48,6 +48,10 @@ class StudentSignUpForm(UserCreationForm):
             raise ValidationError('Invalid ID')
         return username
 
+    def save(self, commit=True):
+        self.instance.is_student = True
+        super().save(commit)
+
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:
