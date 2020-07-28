@@ -77,6 +77,7 @@ class User(AbstractUser):
         default=False,
     )
     cgpa = models.DecimalField(
+        null=True,
         blank=True,
         decimal_places=2,
         max_digits=5,
