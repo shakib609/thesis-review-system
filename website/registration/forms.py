@@ -50,7 +50,7 @@ class StudentSignUpForm(UserCreationForm):
 
     def save(self, commit=True):
         self.instance.is_student = True
-        super().save(commit)
+        return super().save(commit)
 
 
 class UserUpdateForm(forms.ModelForm):
