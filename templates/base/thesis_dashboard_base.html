@@ -110,7 +110,7 @@
                             {{ studentgroup.title }}&nbsp;
                             {% if not studentgroup.approved %}
                             <span class="tag is-danger is-large is-light">
-                                Pending
+                                Pending Admin Approval
                             </span>
                             {% elif studentgroup.status %}
                             <span class="tag is-link is-large is-light">
@@ -138,7 +138,7 @@
                           <b>Members: </b>
                           {% comment %} {{ studentgroup.students.all|join:", " }} {% endcomment %}
                           {% for student in studentgroup.students.all %}
-                            <a href="{% if user == student %}/account/{% else %}{% url 'registration:student_detail' student.username %}{% endif %}">{{ student }}</a>,
+                            <a href="{% if user == student %}/account/{% else %}{% url 'registration:student_detail' student.username %}{% endif %}">{{ student }}</a>{% if not forloop.last %},{% endif %}
                           {% endfor %}
 
                         {% if studentgroup.status == 'Defense Done' and user == studentgroup.teacher or user == studentgroup.internal or user == studentgroup.external %}
