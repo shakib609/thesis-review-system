@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 import magic
 
 from ..registration.models import (
-    User,
+    Student, User,
     Mark,
 )
 from .models import (
@@ -167,7 +167,9 @@ class MarkForm(forms.ModelForm):
 
     def save(self, commit=True):
         student_id = self.cleaned_data.pop('student_choice')
+        student = get_object_or_404(Student, pk=student_id)
         self.instance.graded_by = self.user
         self.instance.studentgroup = self.studentgroup
-        self.instance.student_id = student_id
+        self.instance.student = student
+        self.instance.result = student.result
         return super().save(commit=commit)

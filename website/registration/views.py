@@ -1,5 +1,5 @@
 from django.contrib.auth import login
-from django.db.models import Case, When, F, BooleanField
+from django.db.models import Count
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -172,7 +172,8 @@ class ReportPDFView(
     def get_queryset(self):
         department = self.kwargs['department']
         batch_id = self.kwargs['batch_id']
-        return Result.objects.filter(
+        return Result.objects.annotate(marks_count=Count('marks')).filter(
+            marks_count=3,
             student__department=department,
             student__studentgroup__batch__id=batch_id,
         ).order_by('student__username')

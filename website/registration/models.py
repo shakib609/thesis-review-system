@@ -177,6 +177,12 @@ class Mark(models.Model):
         'thesis.StudentGroup',
         on_delete=models.CASCADE,
     )
+    result = models.ForeignKey(
+        Result,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
     graded_by = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

@@ -1,10 +1,12 @@
 from django.contrib import admin
+from django.db.models import Count, Case, When, BooleanField
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
-from .models import User, Student, Teacher, Admin, Result, Mark
 from .forms import UserCreationFormExtended
+from .filters import ResultReadinessFilter
+from .models import User, Student, Teacher, Admin, Result, Mark
 
 
 class CustomUserAdmin(UserAdmin):
@@ -53,14 +55,23 @@ class MarkInline(admin.StackedInline):
     readonly_fields = ['graded_by', 'remarks', ]
 
 
+class MarkInlineResult(MarkInline):
+    fk_name = 'result'
+    fields = ['mark', 'graded_by', 'remarks', ]
+
+
 class ResultAdmin(admin.ModelAdmin):
     list_display = ['student', 'total_marks', 'grade', ]
-    list_filter = [
-        'student__department',
-        'student__studentgroup__batch',
-    ]
     search_fields = ['student__username', 'student']
     change_list_template = 'admin/result_change_list.html'
+    inlines = [MarkInlineResult]
+
+    def get_list_filter(self, request):
+        return [
+            ResultReadinessFilter,
+            'student__department',
+            'student__studentgroup__batch',
+        ]
 
     def get_queryset(self, request):
         return Result.objects.exclude(student__studentgroup=None)

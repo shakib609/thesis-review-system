@@ -130,6 +130,13 @@ class StudentGroup(models.Model):
     )
 
     @property
+    def max_cgpa(self):
+        student = self.students.all().order_by('-cgpa').first()
+        if student:
+            return student.cgpa
+        return 0
+
+    @property
     def status(self):
         documents_queryset = self.documents.filter(is_accepted=True)
         if documents_queryset.filter(document_type=Document.DocumentType.DEFENSE.value).exists():

@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.db.models import Max
+from django.contrib.admin.views.main import ChangeList
 
+from .filters import CgpaOrderingFilter
 from .models import (
     StudentGroup, Batch,  Document, ResearchField)
 
@@ -16,15 +18,33 @@ class DocumentInline(admin.StackedInline):
         return False
 
 
+class StudentGroupChangeList(ChangeList):
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        existing_ordering = [
+            order for order in queryset.query.order_by
+            # if not order.endsWith('_cgpa')
+        ]
+
+        print(existing_ordering)
+        queryset = queryset.order_by()
+        query_param = request.GET.get('cgpa')
+        if query_param == 'Ascending':
+            return queryset.order_by('_cgpa', *existing_ordering)
+        elif query_param == 'Descending':
+            return queryset.order_by('-_cgpa', *existing_ordering)
+        return queryset
+
+
 class StudentGroupAdmin(admin.ModelAdmin):
-    list_filter = ('batch', 'approved',)
+    list_filter = ('batch', 'approved', CgpaOrderingFilter)
     list_display = (
         'title',
+        'approved',
         'teacher',
         'internal',
         'external',
-        'approved',
-        'cgpa',
+        'max_cgpa',
     )
     list_selected_related = ('batch', 'students')
     search_fields = ('title',)
@@ -48,15 +68,13 @@ class StudentGroupAdmin(admin.ModelAdmin):
         }),
     )
 
-    def get_ordering(self, request):
-        return ['-_cgpa']
-
     def get_queryset(self, request):
-        return super().get_queryset(request).annotate(_cgpa=Max('students__cgpa')).order_by('-_cgpa')
+        return super().get_queryset(request).annotate(
+            _cgpa=Max('students__cgpa'),
+        )
 
-    def cgpa(self, obj):
-        return '{:.2f}'.format(obj._cgpa)
-    cgpa.admin_order_field = '_cgpa'
+    def get_changelist(self, request, **kwargs):
+        return StudentGroupChangeList
 
 
 admin.site.register(Batch)
