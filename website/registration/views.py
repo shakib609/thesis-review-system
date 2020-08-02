@@ -29,13 +29,13 @@ class LoginRedirectView(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         user = self.request.user
-        if user.is_superuser:
-            return reverse_lazy('admin:index')
-        elif user.is_teacher:
+        if user.is_teacher:
             if user.is_external:
                 return reverse_lazy('thesis:external_group_list')
             return reverse_lazy('thesis:group_list')
-        if user.studentgroup:
+        elif user.is_superuser:
+            return reverse_lazy('admin:index')
+        elif user.studentgroup:
             return reverse_lazy('thesis:document_list')
         return reverse_lazy('registration:teacher_list')
 

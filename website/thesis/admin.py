@@ -23,7 +23,6 @@ class StudentGroupChangeList(ChangeList):
         queryset = super().get_queryset(request)
         existing_ordering = [
             order for order in queryset.query.order_by
-            # if not order.endsWith('_cgpa')
         ]
 
         print(existing_ordering)
@@ -37,7 +36,7 @@ class StudentGroupChangeList(ChangeList):
 
 
 class StudentGroupAdmin(admin.ModelAdmin):
-    list_filter = ('batch', 'approved', CgpaOrderingFilter)
+    list_filter = ('batch', 'approved', CgpaOrderingFilter, 'field',)
     list_display = (
         'title',
         'approved',

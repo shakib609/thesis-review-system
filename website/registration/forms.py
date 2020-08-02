@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.core.exceptions import ValidationError
 
 import re
@@ -18,6 +18,24 @@ class UserCreationFormExtended(UserCreationForm):
 
     def clean_username(self):
         return self.cleaned_data.get("username")
+
+
+class AdminTeacherChangeForm(UserChangeForm):
+    def save(self, commit: bool = True):
+        if self.cleaned_data.get('is_superuser'):
+            self.instance.is_staff = True
+        else:
+            self.instance.is_staff = False
+        return super().save(commit)
+
+
+class AdminTeacherCreateForm(UserCreationForm):
+    def save(self, commit: bool = True):
+        if self.cleaned_data.get('is_superuser'):
+            self.instance.is_staff = True
+        else:
+            self.instance.is_staff = False
+        return super().save(commit)
 
 
 class TeacherCreateForm(UserCreationForm):

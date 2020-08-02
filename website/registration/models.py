@@ -102,6 +102,9 @@ class User(AbstractUser):
         blank=True,
     )
 
+    class Meta:
+        ordering = ['username']
+
     def studentgroup_count_by_batch(self, batch):
         return self.studentgroups.filter(
             approved=True,

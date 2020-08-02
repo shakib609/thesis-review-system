@@ -7,6 +7,10 @@
     nav.navbar {
         border-bottom: 2px #276cda solid;
     }
+    .group-details-text-container {
+      display: inline-block;
+      margin-bottom: 3px;
+    }
 </style>
 {% endblock extra_css %}
 
@@ -55,6 +59,10 @@
                       <li><a href="{{ internal_group_list }}"
                       class="{% if request.path|startswith:internal_group_list %}is-active{% endif %}">
                           <i class="fas fa-align-justify"></i>&nbsp; Groups(As Internal)</a></li>
+                      {% endif %}
+                      {% if user.is_superuser %}
+                        <li><a href="/admin">
+                            <i class="fas fa-align-justify"></i>&nbsp; Admin Panel</a></li>
                       {% endif %}
                     {% elif user.studentgroup %}
                     <li><a href="{{ document_list }}"
@@ -106,57 +114,66 @@
                 <div class="column">
                     {% block page_title %}
                         {% if studentgroup %}
-                        <h3 class="title">
-                            {{ studentgroup.title }}&nbsp;
-                            {% if not studentgroup.approved %}
-                            <span class="tag is-danger is-large is-light">
-                                Pending Admin Approval
-                            </span>
-                            {% elif studentgroup.status %}
-                            <span class="tag is-link is-large is-light">
-                                {{ studentgroup.status }}
-                            </span>
-                            {% endif %}
-                        </h3>
+                        <h3 class="title">{{ studentgroup.title }}</h3>
                         <h4 class="subtitle is-size-6">
-                          <b>Research Field: </b>
-                            {% if studentgroup.field %}
-                              {{ studentgroup.field.name }}
-                            {% else %}
-                              Not assigned yet
-                            {% endif %}
-                          <br>
-                          <b>Supervisor: </b>
-                            {% if studentgroup.teacher %}
-                              <a href="{% url 'registration:teacher_detail' user.username %}">
-                              {{ studentgroup.teacher }}
-                              </a>
-                            {% else %}
-                              Not assigned yet!
-                            {% endif %}
-                          <br>
-                          <b>Members: </b>
-                          {% comment %} {{ studentgroup.students.all|join:", " }} {% endcomment %}
-                          {% for student in studentgroup.students.all %}
-                            <a href="{% if user == student %}/account/{% else %}{% url 'registration:student_detail' student.username %}{% endif %}">{{ student }}</a>{% if not forloop.last %},{% endif %}
-                          {% endfor %}
-
-                        {% if studentgroup.status == 'Defense Done' and user == studentgroup.teacher or user == studentgroup.internal or user == studentgroup.external %}
+                          <span class="group-details-text-container">
+                            <b>Status: </b>
+                            <span class="tag {% if not studentgroup.approved or studentgroup.status == 'Pending' %}is-danger{% elif studentgroup.status == 'Defense Done' %}is-success{% else %}is-link{% endif %}">
+                                  {% if not studentgroup.approved %}
+                                    Pending Admin Approval
+                                  {% else %}
+                                    {{ studentgroup.status }}
+                                  {% endif %}
+                              </span>
+                          </span>
                           <br/>
-                          <b>Grading Status:</b>
-                          {% if graded %}
-                            <span title="Graded" class="fas fa-check-circle has-text-success"></span>
-                            Submitted
-                          {% else %}
-                            {% if studentgroup.status == 'Defense Done' %}
-                            <a href="{% url 'thesis:grading_students' studentgroup.md5hash %}">
-                              Grade Students
-                            </a>
+                          <span class="group-details-text-container">
+                            <b>Grading Status:</b>
+                            {% if graded %}
+                              <span class="tag is-success">
+                                Graded
+                              </span>
                             {% else %}
-                              Defense Report must be accepted by Supervisor before grading
+                              {% if studentgroup.status == 'Defense Done' %}
+                              <a href="{% url 'thesis:grading_students' studentgroup.md5hash %}" class="tag is-link">
+                                Submit Marks
+                              </a>
+                              {% else %}
+                              <span class="tag is-danger">
+                                Defense Report Must be Accepted
+                              </span>
+                              {% endif %}
                             {% endif %}
-                          {% endif %}
-                        {% endif %}
+                          </span>
+                          <br>
+                          <span class="group-details-text-container">
+                            <b>Research Field: </b>
+                              {% if studentgroup.field %}
+                                <span class="tag is-link">{{ studentgroup.field.name }}</span>
+                              {% else %}
+                                <span class="tag is-danger">Not assigned yet!</span>
+                              {% endif %}
+                          </span>
+                          <br>
+                          <span class="group-details-text-container">
+                            <b>Supervisor: </b>
+                              {% if studentgroup.teacher %}
+                                <a href="{% url 'registration:teacher_detail' user.username %}" class="tag is-link">
+                                {{ studentgroup.teacher }}
+                                </a>
+                              {% else %}
+                                <span class="tag is-danger">Not assigned yet!</span>
+                              {% endif %}
+                          </span>
+                          <br>
+                          <span class="group-details-text-container">
+                          <b>Members: </b>
+                            {% for student in studentgroup.students.all %}
+                              <a
+                                href="{% if user == student %}/account/{% else %}{% url 'registration:student_detail' student.username %}{% endif %}"
+                                class="tag is-link">{{ student }}</a>
+                            {% endfor %}
+                          </span>
                         </h4>
                         {% else %}
                         <h3 class="title">Groups</h3>

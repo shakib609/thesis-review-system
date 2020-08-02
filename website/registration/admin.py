@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
-from .forms import UserCreationFormExtended
+from .forms import UserCreationFormExtended, AdminTeacherChangeForm, AdminTeacherCreateForm
 from .filters import ResultReadinessFilter
 from .models import User, Student, Teacher, Admin, Result, Mark
 
@@ -140,6 +140,8 @@ class StudentAdmin(UserAdmin):
 
 
 class TeacherAdmin(UserAdmin):
+    form = AdminTeacherChangeForm
+    add_form = AdminTeacherCreateForm
     list_display = ('username', 'full_name', 'email', 'designation',)
     list_filter = ('is_external', 'department',)
     search_fields = ('username', 'full_name')
