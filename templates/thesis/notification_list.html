@@ -6,20 +6,17 @@
 
 
 {% block page_title %}
-    <h3 class="title">Notifications</h3>
+    {% comment %} <h3 class="title">Notifications</h3> {% endcomment %}
 {% endblock page_title %}
 
 
 {% block dashboard_content %}
 <div class="column">
-    <div class="card is-fullwidth">
-        <header class="card-header">
-            <p class="card-header-title">Notifications</p>
-        </header>
-        <div class="card-content">
+    <div class="panel is-link">
+        <div class="panel-heading">Notifications</div>
         {% if notifications %}
         {% for notification in notifications %}
-            <div class="columns is-mobile" {% if not forloop.last %}style="border-bottom:1px solid rgba(0,0,0,0.1);"{% endif %}>
+            <div class="panel-block columns is-mobile" {% if not forloop.last %}style="border-bottom:1px solid rgba(0,0,0,0.1);"{% endif %}>
                 <div class="column is-10">
                     <p class="is-size-6">
                         {{ notification.content }} {% if not notification.is_viewed %}<b>(Unread)</b>{% endif %}
@@ -35,9 +32,8 @@
             </div>
         {% endfor %}
         {% else %}
-            <p class="has-text-centered">You have checked all your notifications.</p>
+            <p class="panel-block has-text-centered py-4">You have checked all your notifications.</p>
         {% endif %}
-        </div>
     </div>
 </div>
 {% endblock dashboard_content %}
