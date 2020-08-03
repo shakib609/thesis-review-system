@@ -1,11 +1,14 @@
 from django.contrib import admin
-from django.db.models import Count, Case, When, BooleanField
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
-from .forms import UserCreationFormExtended, AdminTeacherChangeForm, AdminTeacherCreateForm
 from .filters import ResultReadinessFilter
+from .forms import (
+    UserCreationFormExtended,
+    AdminTeacherChangeForm,
+    AdminTeacherCreateForm,
+)
 from .models import User, Student, Teacher, Admin, Result, Mark
 
 
@@ -13,19 +16,28 @@ class CustomUserAdmin(UserAdmin):
     add_form = UserCreationFormExtended
     list_display = ('username', 'full_name', 'email',)
     list_filter = ('is_active',)
-    add_fieldsets = (('User Info', {
-        'classes': ('wide', ),
-        'fields': (
-            'username',
-            'email',
-            'phone_number',
-            'password1',
-            'password2',
+    add_fieldsets = (
+        (
+            'User Info',
+            {
+                'classes': ('wide', ),
+                'fields': (
+                    'username',
+                    'email',
+                    'phone_number',
+                    'password1',
+                    'password2',
+                )
+            }
+        ),
+        (
+            'Permissions',
+            {
+                'classes': ('wide', ),
+                'fields': ('is_teacher', 'is_superuser', )
+            },
         )
-    }), ('Permissions', {
-        'classes': ('wide', ),
-        'fields': ('is_student', 'is_teacher', 'is_superuser', )
-    }))
+    )
     fieldsets = (
         (None, {
             'fields': ('username', 'password')
@@ -38,7 +50,7 @@ class CustomUserAdmin(UserAdmin):
             )
         }),
         (_('Permissions'), {
-            'fields': ('is_teacher', 'is_student', 'is_superuser',)
+            'fields': ('is_teacher', 'is_superuser',)
         }),
     )
 
@@ -64,17 +76,17 @@ class ResultAdmin(admin.ModelAdmin):
     list_display = ['student', 'total_marks', 'grade', ]
     search_fields = ['student__username', 'student']
     change_list_template = 'admin/result_change_list.html'
+    list_filter = [
+        ResultReadinessFilter,
+        'student__department',
+        'student__studentgroup__batch',
+    ]
     inlines = [MarkInlineResult]
 
-    def get_list_filter(self, request):
-        return [
-            ResultReadinessFilter,
-            'student__department',
-            'student__studentgroup__batch',
-        ]
-
     def get_queryset(self, request):
-        return Result.objects.exclude(student__studentgroup=None)
+        return Result.objects.exclude(
+            student__studentgroup=None,
+        ).order_by('student__username')
 
     def has_add_permission(self, request) -> bool:
         return False
