@@ -1,8 +1,13 @@
+{% load static %}
+
 <nav class="navbar is-light has-background-light">
     <div class="container is-fluid">
         <div class="navbar-brand">
         <a class="navbar-item" href="{% url 'registration:login' %}">
-            <h1 class="has-text-weight-bold">Thesis Review System</h1>
+            <img src="{% static 'assets/iiuc-small-logo.png' %}" alt="IIUC Logo" style="height: 35px;" class="mr-2">
+            <h1 class="has-text-weight-bold">
+                Thesis Review System
+            </h1>
         </a>
         <span class="navbar-burger burger" data-target="navbarMenuHeroA">
             <span></span>

@@ -1,9 +1,12 @@
 {% extends 'base/base_hero.html' %}
+{% load static %}
 
 {% block content %}
 <div class="column is-4 is-offset-4">
     <div class="box">
-        <h3 class="title">Login</h3>
+        <img src="{% static 'assets/iiuc-small-logo.png' %}" alt="IIUC Logo" style="width: 70px;" class="mx-auto">
+        <h3 class="title">Please Login</h3>
+        <h3 class="subtitle">One-stop solution for managing your Thesis</h3>
         <form method="post">
             {% csrf_token %}
             <div class="field">

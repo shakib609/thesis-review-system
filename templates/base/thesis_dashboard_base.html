@@ -160,7 +160,7 @@
                           <span class="group-details-text-container">
                             <b>Supervisor: </b>
                               {% if studentgroup.teacher %}
-                                <a href="{% url 'registration:teacher_detail' user.username %}" class="tag is-link">
+                                <a href="{% url 'registration:teacher_detail' studentgroup.teacher.username %}" class="tag is-link">
                                 {{ studentgroup.teacher }}
                                 </a>
                               {% else %}
