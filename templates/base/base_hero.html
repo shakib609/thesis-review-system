@@ -1,8 +1,10 @@
 {% extends 'base/base.html' %}
+{% load static %}
 {% load my_tags %}
 
 {% block body %}
-<section class="hero is-light is-fullheight">
+<section class="hero is-transparent is-fullheight">
+  <div class="hero-bg"></div>
   <!-- Hero head: will stick at the top -->
   <div class="hero-head">
     {% block navbar %}
@@ -13,11 +15,13 @@
   <!-- Hero content: will be in the middle -->
   <div class="hero-body">
     <div class="container has-text-centered">
-      <div class="columns">
-        <div class="column is-4 is-offset-4">
-          {% include "include/messages.html" %}
+      {% if messages %}
+        <div class="columns">
+          <div class="column is-4 is-offset-4">
+            {% include "include/messages.html" %}
+          </div>
         </div>
-      </div>
+      {% endif %}
       {% block content %}
       {% endblock content %}
     </div>
