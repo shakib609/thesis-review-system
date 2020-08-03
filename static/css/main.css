@@ -40,6 +40,6 @@ nav.navbar {
   background-image: url("/static/assets/hero-bg.webp");
   background-size: cover;
   background-position: center;
-  filter: blur(8px);
-  -webkit-filter: blur(8px);
+  filter: blur(3px);
+  -webkit-filter: blur(3px);
 }
