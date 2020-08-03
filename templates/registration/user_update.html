@@ -186,6 +186,11 @@
               {% endfor %}
           </ul>
           {% endif %}
+
+          <p>Current Profile Picture: {% if not user.profile_picture %}-{% endif %}</p>
+          {% if user.profile_picture %}
+            <img width="150px" src="/media/{{ user.profile_picture }}" alt="{{ user.username }} profile picture">
+          {% endif %}
         </div>
 
         {% if user.is_teacher %}
