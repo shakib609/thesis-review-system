@@ -5,11 +5,11 @@
     {{ block.super }} | Groups
 {% endblock title %}
 
-{% block page_title %}
+{% comment %} {% block page_title %}
     <h3 class="title">
         Groups{% if request.path|startswith:internal_group_list %}(Internal){% endif %}
     </h3>
-{% endblock page_title %}
+{% endblock page_title %} {% endcomment %}
 
 
 {% url 'thesis:internal_group_list' as internal_group_list %}
@@ -18,7 +18,60 @@
 
 {% block dashboard_content %}
 <div class="column">
-    <div class="card is-fullwidth">
+    <div class="panel is-link">
+        <p class="panel-heading is-flex" style="justify-content:space-between;">
+          <span>Groups{% if request.path|startswith:internal_group_list %} (As Internal){% endif %}</span>
+          <span class="select is-small">
+                <select name="batch" id="batch-select">
+                    <option value="">All Batches</option>
+                    {% for batch in batches %}
+                    <option value="{{ batch.number }}" {% if batch_number == batch.number %} selected{% endif %}>{{ batch }}</option>
+                    {% endfor %}
+                </select>
+            </span>
+        </p>
+
+        {% if groups %}
+            {% for group in groups %}
+                <div class="panel-block columns is-mobile">
+                    <div class="column is-10">
+                        <p class="has-text-weight-bold mb-2">
+                            {{ group }} - {{ group.title }}
+                            <span class="tag is-link is-light is-normal">
+                                {{ group.status }}
+                            </span>
+                        </p>
+                        <p class="is-size-7">
+                            Members:
+                            {% for student in group.students.all %}
+                            <a
+                                href="{% url 'registration:student_detail' student.username %}"
+                                class="tag is-light">
+                                {{ student }}
+                            </a>
+                            {% endfor %}
+                        </p>
+                    </div>
+                    <div class="column is-2 has-text-right">
+                        <a href="{% url 'thesis:group_detail' group.md5hash %}"
+                            class="button is-small is-link">
+                            View
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="panel-block has-text-centered py-3">
+                {% if request.path|startswith:internal_group_list or request.path|startswith:external_group_list %}
+                    You are not reviewing any groups.
+                {% else %}
+                    No Groups registered under your supervision yet!
+                {% endif %}
+            </p>
+        {% endif %}
+
+    </div>
+    {% comment %} <div class="card is-fullwidth">
         <header class="card-header">
             <p class="card-header-title">
                 Groups{% if request.path|startswith:internal_group_list %}(Internal){% endif %}
@@ -39,35 +92,36 @@
         </header>
         <div class="card-content">
         {% if groups %}
-        {% for group in groups %}
-            <div class="columns is-mobile">
-                <div class="column is-10">
-                    <p class="has-text-weight-bold">
-                        {{ group }} - {{ group.title }}
-                        <span class="tag is-link is-normal">{{ group.status }}</span>
-                    </p>
-                    <p class="is-size-7">
-                        Members: {{ group.students.all|join:', ' }}
-                    </p>
+            {% for group in groups %}
+                <div class="columns is-mobile">
+                    <div class="column is-10">
+                        <p class="has-text-weight-bold">
+                            {{ group }} - {{ group.title }}
+                            <span class="tag is-link is-normal">{{ group.status }}</span>
+                        </p>
+                        <p class="is-size-7">
+                            Members: {{ group.students.all|join:', ' }}
+                        </p>
+                    </div>
+                    <div class="column is-2 has-text-right">
+                        <a href="{% url 'thesis:group_detail' group.md5hash %}"
+                            class="button is-small is-link">
+                            View
+                        </a>
+                    </div>
                 </div>
-                <div class="column is-2 has-text-right">
-                    <a href="{% url 'thesis:group_detail' group.md5hash %}"
-                        class="button is-small is-link">
-                        View
-                    </a>
-                </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
         {% else %}
             <p class="has-text-centered">
                 {% if request.path|startswith:internal_group_list or request.path|startswith:external_group_list %}
                 You are not reviewing any groups.
                 {% else %}
-                No Groups registered under your supervision yet!</p>
+                No Groups registered under your supervision yet!
                 {% endif %}
+            </p>
         {% endif %}
         </div>
-    </div>
+    </div> {% endcomment %}
 </div>
 {% endblock dashboard_content %}
 

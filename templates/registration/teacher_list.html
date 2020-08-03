@@ -9,73 +9,63 @@
 
 
 {% block page_title %}
-    <h3 class="title">
-      Teachers List
-      {% if department_name %}({{ department_name }}){% endif %}
-    </h3>
 {% endblock page_title %}
 
 
 {% block dashboard_content %}
 
 <div class="column">
-    <div class="card is-fullwidth">
-        <header class="card-header">
-            <p class="card-header-title">Teachers</p>
-            <p class="control has-icons-left" style="margin-top: 10px; margin-right: 5px;">
-              <span class="select is-small">
-                  <select name="batch" id="department-select">
-                      <option value="">All Departments</option>
-                      <option value="CSE" {% if department_name == "CSE" %} selected{% endif %}>CSE</option>
-                      <option value="EEE" {% if department_name == "EEE" %} selected{% endif %}>EEE</option>
-                      <option value="ETE" {% if department_name == "ETE" %} selected{% endif %}>ETE</option>
-                      <option value="PHM" {% if department_name == "PHM" %} selected{% endif %}>PHM</option>
-                  </select>
-              </span>
-              <span class="icon is-small is-left">
-                  <i class="fas fa-users"></i>
-              </span>
-          </p>
-        </header>
-        <div class="card-content">
+    <div class="panel is-link">
+        <p class="panel-heading is-flex" style="justify-content:space-between;">
+          <span>Teachers{% if department_name %}({{ department_name }}){% endif %}</span>
+          <span class="select is-small">
+              <select name="batch" id="department-select">
+                  <option value="">All Departments</option>
+                  <option value="CSE" {% if department_name == "CSE" %} selected{% endif %}>CSE</option>
+                  <option value="EEE" {% if department_name == "EEE" %} selected{% endif %}>EEE</option>
+                  <option value="ETE" {% if department_name == "ETE" %} selected{% endif %}>ETE</option>
+                  <option value="PHM" {% if department_name == "PHM" %} selected{% endif %}>PHM</option>
+              </select>
+          </span>
+        </p>
+
         {% if teachers %}
           {% for teacher in teachers %}
-            <article class="media">
-              <figure class="media-left">
-                <a href="{% url 'registration:teacher_detail' teacher.username %}">
-                  <div class="image is-64x64 bg-image" style="background-image:url({% if teacher.profile_picture %}/media/{{ teacher.profile_picture }}{% else %}{% static 'assets/avatar.jpg' %}{% endif %});">
+              <article class="media panel-block" style="border-top:none; margin: 0;">
+                <figure class="media-left">
+                  <a href="{% url 'registration:teacher_detail' teacher.username %}">
+                    <div class="image is-64x64 bg-image" style="background-image:url({% if teacher.profile_picture %}/media/{{ teacher.profile_picture }}{% else %}{% static 'assets/avatar.jpg' %}{% endif %});">
+                    </div>
+                  </a>
+                </figure>
+                <div class="media-content">
+                  <div class="content">
+                    <p class="is-size-7">
+                      <strong class="is-size-6">
+                        {{ teacher.full_name }} ({{ teacher.username }})
+                      </strong>
+                      {% if teacher.is_external %}
+                        <span class="tag is-link is-light">External</span>
+                      {% endif %}
+                      <br>
+                        {% if teacher.designation %}
+                        <b>Designation:</b> {{ teacher.designation }} &nbsp;-&nbsp;{% endif %}
+                        <b>Research Fields:</b> {% if teacher.fields.all %}{{ teacher.fields.all|join:', '}}{% else %}Not assigned yet{% endif %} <br>
+                        <b>Email Address:</b> <a href="mailto:{{ teacher.email }}" class="has-text-grey-darker">{{ teacher.email }}</a>
+                        &nbsp;-&nbsp;
+                        <b>Phone Number:</b> <a href="tel:{{ teacher.phone_number }}" class="has-text-grey-darker">{{ teacher.phone_number }}</a>
+                    </p>
                   </div>
-                </a>
-              </figure>
-              <div class="media-content">
-                <div class="content">
-                  <p class="is-size-7">
-                    <strong class="is-size-6">
-                      {{ teacher.full_name }} ({{ teacher.username }})
-                    </strong>
-                    {% if teacher.is_external %}
-                      <span class="tag is-link is-light">External</span>
-                    {% endif %}
-                    <br>
-                      {% if teacher.designation %}
-                      <b>Designation:</b> {{ teacher.designation }} &nbsp;-&nbsp;{% endif %}
-                      <b>Research Fields:</b> {% if teacher.fields.all %}{{ teacher.fields.all|join:', '}}{% else %}Not assigned yet{% endif %} <br>
-                      <b>Email Address:</b> <a href="mailto:{{ teacher.email }}" class="has-text-grey-darker">{{ teacher.email }}</a>
-                      &nbsp;-&nbsp;
-                      <b>Phone Number:</b> <a href="tel:{{ teacher.phone_number }}" class="has-text-grey-darker">{{ teacher.phone_number }}</a>
-                  </p>
                 </div>
-              </div>
-              <div class="media-right">
-                <a href="{% url 'registration:teacher_detail' teacher.username %}"
-                class="button is-small is-info">View</a>
-              </div>
-            </article>
+                <div class="media-right">
+                  <a href="{% url 'registration:teacher_detail' teacher.username %}"
+                  class="button is-small is-info">View</a>
+                </div>
+              </article>
           {% endfor %}
         {% else %}
-            <p class="has-text-centered">No Teachers have registered in the system yet!</p>
+            <p class="panel-block has-text-centered py-3">No Teachers have been registered to the system yet!</p>
         {% endif %}
-        </div>
     </div>
 </div>
 
