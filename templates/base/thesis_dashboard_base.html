@@ -127,25 +127,27 @@
                               </span>
                           </span>
                           <br/>
-                          <span class="group-details-text-container">
-                            <b>Grading Status:</b>
-                            {% if graded %}
-                              <span class="tag is-success">
-                                Graded
-                              </span>
-                            {% else %}
-                              {% if studentgroup.status == 'Defense Done' %}
-                              <a href="{% url 'thesis:grading_students' studentgroup.md5hash %}" class="tag is-link">
-                                Submit Marks
-                              </a>
+                          {% if user.is_teacher %}
+                            <span class="group-details-text-container">
+                              <b>Grading Status:</b>
+                              {% if graded %}
+                                <span class="tag is-success">
+                                  Graded
+                                </span>
                               {% else %}
-                              <span class="tag is-danger">
-                                Defense Report Must be Accepted
-                              </span>
+                                {% if studentgroup.status == 'Defense Done' %}
+                                <a href="{% url 'thesis:grading_students' studentgroup.md5hash %}" class="tag is-danger">
+                                  Ready for grading
+                                </a>
+                                {% else %}
+                                <span class="tag is-danger">
+                                  Defense Report Must be Accepted
+                                </span>
+                                {% endif %}
                               {% endif %}
-                            {% endif %}
-                          </span>
-                          <br>
+                            </span>
+                            <br>
+                          {% endif %}
                           <span class="group-details-text-container">
                             <b>Research Field: </b>
                               {% if studentgroup.field %}

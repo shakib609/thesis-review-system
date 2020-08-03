@@ -3,7 +3,7 @@
 <div id="{{ container_id }}" class="content-tab" style="{{ style }}">
     {% if documents %}
         {% for d in documents %}
-        <div class="columns is-mobile">
+        <div class="columns is-mobile panel-block">
             <div class="column is-7 has-text-small">
                 {{ d.filename }} {% if d.is_accepted %}<span title="Accepted" class="fas fa-check-circle has-text-success"></span>{% endif %}
                 <br>

@@ -17,101 +17,93 @@
 
 {% block dashboard_content %}
     <div class="column is-12-mobile is-5-desktop is-4-widescreen">
-        <div class="card">
-            <header class="card-header">
-                <p class="card-header-title">Documents</p>
+        <section class="panel is-link">
+            <p class="panel-heading is-flex" style="justify-content:space-between;">
+                <span>Documents</span>
                 {% if not user.is_teacher %}
-                <a href="{% url 'thesis:document_upload' %}" class="card-header-icon">
-                    <span class="icon"><i class="fas fa-upload"></i></span>
-                </a>
+                    <a href="{% url 'thesis:document_upload' %}" class="icon has-text-white">
+                        <i class="fas fa-upload"></i>
+                    </a>
                 {% endif %}
-            </header>
-            <div class="card-content" style="padding: 5px 10px;">
-                <div class="tabs is-centered is-small">
-                    <ul>
-                        <li class="tab is-active" onclick="openTab(event,'proposal_documents')"><a>Proposal</a></li>
-                        <li class="tab" onclick="openTab(event,'pre_defense_documents')"><a>Pre-Defense</a></li>
-                        <li class="tab" onclick="openTab(event,'defense_documents')"><a>Defense</a></li>
-                    </ul>
-                </div>
+            </p>
+            <p class="panel-tabs">
+                <a class="is-active" onclick="openTab(event,'proposal_documents')">Proposal</a>
+                <a onclick="openTab(event,'pre_defense_documents')">Pre-Defense</a>
+                <a onclick="openTab(event,'defense_documents')">Defense</a>
+            </p>
+        
+            {% include "include/document_list_tab.html" with studentgroup=studentgroup container_id="proposal_documents" documents=proposal_documents %}
 
-                {% include "include/document_list_tab.html" with studentgroup=studentgroup container_id="proposal_documents" documents=proposal_documents %}
+            {% include "include/document_list_tab.html" with studentgroup=studentgroup container_id="pre_defense_documents" documents=pre_defense_documents style="display:none;" %}
 
-                {% include "include/document_list_tab.html" with studentgroup=studentgroup container_id="pre_defense_documents" documents=pre_defense_documents style="display:none;" %}
-
-                {% include "include/document_list_tab.html" with studentgroup=studentgroup container_id="defense_documents" documents=defense_documents style="display:none;" %}
-
-            </div>
-        </div>
+            {% include "include/document_list_tab.html" with studentgroup=studentgroup container_id="defense_documents" documents=defense_documents style="display:none;" %}
+        </section>
     </div>
+    
     <div class="column">
-        <div class="card is-hidden" id="document-viewer">
-            <header class="card-header">
-                <p class="card-header-title">
-                    Document Viewer
-                </p>
-                <a class="card-header-icon" id="document-viewer-close">
-                    <span class="icon">
-                        <i class="fas fa-times"></i>
-                    </span>
+
+        {% comment %} Document Viewer {% endcomment %}
+        <section class="panel is-hidden mt-4" id="document-viewer">
+            <p class="panel-heading is-flex" style="justify-content:space-between;">
+                <span>Documents</span>
+                <a class="icon has-text-dark" id="document-viewer-close">
+                    <i class="fas fa-times"></i>
                 </a>
-            </header>
-            <div class="card-content">
+            </p>
+            <div class="panel-body">
                 <div class="content">
                     <iframe id="iframe"
                     src=""
                     frameborder="0" width="100%" height="500"></iframe>
                 </div>
             </div>
-        </div>
-        <div class="card">
-            <header class="card-header">
-                <p class="card-header-title">
-                    Comments
-                </p>
-            </header>
-            <div class="card-content">
-                <div class="content">
-                    {% if not user.is_teacher or user == studentgroup.teacher or user == studentgroup.internal or user == studentgroup.external %}
-                    <form
-                    {% if user.is_teacher %}
-                        action="{% url 'thesis:comment_create_teacher' studentgroup.md5hash %}"
-                    {% else %}
-                        action="{% url 'thesis:comment_create' %}"
-                    {% endif %}
-                    method="post">
-                        <div class="field">
-                            <div class="control">
-                                <textarea name="content"
-                                    class="textarea"
-                                    rows="2"
-                                    placeholder="Write your comment here!" required=""></textarea>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <p class="control">
-                                <button type="submit" class="button is-link">Post</button></p>
-                        </div>
+        </section>
 
-                        {% csrf_token %}
-                    </form>
-                    {% endif %}
-                    {% if comments %}
-                    {% for comment in comments %}
-                        {% if not user.is_teacher or user == studentgroup.teacher %}
-                            {% include "include/comment_item.html" with comment=comment user=user studentgroup=studentgroup %}
-                        {% elif user == studentgroup.internal and user == comment.user %}
-                            {% include "include/comment_item.html" with comment=comment user=user studentgroup=studentgroup %}
-                        {% elif user == studentgroup.external and user == comment.user %}
-                            {% include "include/comment_item.html" with comment=comment user=user studentgroup=studentgroup %}
-                        {% endif %}
-                    {% endfor %}
+        <section class="panel is-link pb-4">
+            <p class="panel-heading">
+                Comments
+            </p>
+            {% if not user.is_teacher or user == studentgroup.teacher or user == studentgroup.internal or user == studentgroup.external %}
+                <form class="px-3 pt-3" method="post"
+                {% if user.is_teacher %}
+                    action="{% url 'thesis:comment_create_teacher' studentgroup.md5hash %}"
+                {% else %}
+                    action="{% url 'thesis:comment_create' %}"
                 {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
+                >
+                    <div class="field">
+                        <div class="control">
+                            <textarea name="content"
+                                class="textarea"
+                                rows="2"
+                                placeholder="Write your comment here!" required=""></textarea>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <p class="control">
+                            <button type="submit" class="button is-link">Post</button></p>
+                    </div>
 
+                    {% csrf_token %}
+                </form>
+            {% endif %}
+            {% if comments %}
+                {% for comment in comments %}
+                    {% if not user.is_teacher or user == studentgroup.teacher %}
+                        {% include "include/comment_item.html" with comment=comment user=user studentgroup=studentgroup %}
+                    {% elif user == studentgroup.internal and user == comment.user %}
+                        {% include "include/comment_item.html" with comment=comment user=user studentgroup=studentgroup %}
+                    {% elif user == studentgroup.external and user == comment.user %}
+                        {% include "include/comment_item.html" with comment=comment user=user studentgroup=studentgroup %}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p class="panel-body">
+                    
+                </p>
+            {% endif %}
+        </section>
+    </div>
 {% endblock dashboard_content %}
 
 {% block extra_js %}
@@ -150,7 +142,7 @@
             for (i = 0; i < x.length; i++) {
                 x[i].style.display = "none";
             }
-            tablinks = document.getElementsByClassName("tab");
+            tablinks = document.querySelectorAll(".panel-tabs > a");
             for (i = 0; i < x.length; i++) {
                 tablinks[i].classList.remove('is-active');
             }
