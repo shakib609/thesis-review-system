@@ -1,4 +1,5 @@
 from django.db import models
+from django.core import validators
 from django.db.models import Value, Case, When, Sum, F
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -81,6 +82,10 @@ class User(AbstractUser):
         blank=True,
         decimal_places=2,
         max_digits=5,
+        validators=[
+            validators.MinValueValidator(2),
+            validators.MaxValueValidator(4),
+        ]
     )
     is_student = models.BooleanField(
         _('student status'),
