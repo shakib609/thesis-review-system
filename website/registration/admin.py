@@ -99,6 +99,7 @@ class StudentAdmin(UserAdmin):
     list_display = ('username', 'full_name', 'email', 'phone_number', 'cgpa',)
     list_filter = ('is_active', 'department', 'studentgroup__batch',)
     search_fields = ('username', 'full_name')
+    change_list_template = 'admin/student_change_list.html'
     inlines = [MarkInline, ResultInline]
     raw_id_fields = ['studentgroup']
     add_fieldsets = (

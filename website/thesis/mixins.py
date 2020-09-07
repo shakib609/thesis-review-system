@@ -14,6 +14,15 @@ class UserStatusTestMixin(UserPassesTestMixin):
         return redirect('registration:login_redirect')
 
 
+class UserIsSuperuserMixin(UserStatusTestMixin):
+    """
+    Mixin to check whether the User is a Teacher or not.
+    """
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+
 class UserIsTeacherMixin(UserStatusTestMixin):
     """
     Mixin to check whether the User is a Teacher or not.

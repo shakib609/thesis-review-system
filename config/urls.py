@@ -18,11 +18,18 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from website.registration.views import StudentCSVUploadView
+
 admin.site.site_header = 'Thesis Review System'
 admin.site.site_title = 'Thesis Review System'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(
+        'admin/upload-student-csv/',
+        StudentCSVUploadView.as_view(),
+        name='upload-student-csv',
+    ),
     path(
         '',
         include('website.registration.urls'), name='registration'),

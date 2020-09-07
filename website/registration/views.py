@@ -1,5 +1,8 @@
-from django.contrib.auth import login
+from email import message
+from io import StringIO
 from django.db.models import Count
+from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -14,14 +17,18 @@ from django.views.generic import (
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
+from django.views.generic.edit import FormView
 from django_weasyprint import WeasyTemplateResponseMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
+import csv
+
 from .forms import (
-    StudentSignUpForm, UserUpdateForm, TeacherUpdateForm)
+    CSVUploadForm, StudentSignUpForm, UserUpdateForm, TeacherUpdateForm)
 from .models import Result, User
 from ..thesis.models import Batch
+from website.thesis.mixins import UserIsSuperuserMixin
 
 
 class LoginRedirectView(LoginRequiredMixin, RedirectView):
@@ -191,3 +198,57 @@ class ReportPDFView(
         context['department'] = self.kwargs['department']
         context['batch'] = self.get_batch()
         return context
+
+
+class StudentCSVUploadView(LoginRequiredMixin, UserIsSuperuserMixin, FormView):
+    http_method_names = ['post', 'head', 'options']
+    form_class = CSVUploadForm
+    success_url = '/admin/registration/student/'
+    template_name = 'registration/about.html'
+
+    def form_valid(self, form):
+        csv_file = form.files.get('csv_file')
+        self.process_csv_file(StringIO(csv_file.read().decode('utf-8')))
+        return super().form_valid(form)
+
+    def process_csv_file(self, file):
+        reader = csv.DictReader(file, delimiter=",")
+        successful = []
+        errored = []
+        for row in reader:
+            created, username = self.create_student_for_row(row)
+            if created:
+                successful.append(username)
+            else:
+                errored.append(username)
+        self.show_message(successful, 'success')
+        self.show_message(errored, 'error')
+
+    def show_message(self, usernames, message_type):
+        count = len(usernames)
+        joined_usernames = ', '.join(usernames)
+        if count > 0:
+            if message_type == 'success':
+                messages.success(self.request, f'Created {count} students successfully. {joined_usernames}')
+            elif message_type == 'error':
+                messages.error(self.request, f'Could not create {count} students. {joined_usernames}')
+
+    def create_student_for_row(self, row):
+        username = row.get('id')
+        if User.objects.filter(username=username).exists():
+            return (False, username)
+        student = User.objects.create(
+            username=row.get('id'),
+            department=row.get('department'),
+            full_name=row.get('full_name'),
+            email=row.get('email'),
+            phone_number=row.get('phone_number'),
+            cgpa=row.get('cgpa'),
+            is_student=True,
+        )
+        student.set_password(row.get('email'))
+        return (True, username)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Invalid CSV File')
+        return redirect(self.success_url)
