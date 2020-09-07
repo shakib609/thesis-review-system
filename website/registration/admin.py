@@ -9,7 +9,7 @@ from .forms import (
     AdminTeacherChangeForm,
     AdminTeacherCreateForm,
 )
-from .models import User, Student, Teacher, Admin, Result, Mark
+from .models import User, Student, Teacher, Admin, Result, Mark, WebsiteSettings
 
 
 class CustomUserAdmin(UserAdmin):
@@ -264,9 +264,18 @@ class AdminAdmin(UserAdmin):
         return super().save_model(request, obj, form, change)
 
 
+class WebsiteSettingsAdmin(admin.ModelAdmin):
+    def has_delete_permission(self, *args, **kwargs) -> bool:
+        return False
+
+    def has_add_permission(self, *args, **kwargs) -> bool:
+        return False
+
+
 admin.site.unregister(Group)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Admin, AdminAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Teacher, TeacherAdmin)
 admin.site.register(Result, ResultAdmin)
+admin.site.register(WebsiteSettings, WebsiteSettingsAdmin)

@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.core import validators
 from django.db.models import Value, Case, When, Sum, F
@@ -20,6 +21,22 @@ def generate_cv_upload_location(instance, filename):
     _, extension = os.path.splitext(filename)
     return 'cvs/{}/cv{}'.format(
         instance.username, extension)
+
+
+class WebsiteSettings(models.Model):
+    enable_registration = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = 'website setting'
+
+    def save(self, *args, **kwargs):
+        if self.id or (WebsiteSettings.objects.count() == 0 and not self.id):
+            return super().save(*args, **kwargs)
+        else:
+            raise Exception("Only one instance can be created")
+    
+    def __str__(self) -> str:
+        return 'Default Settings'
 
 
 class DepartmentType(models.TextChoices):

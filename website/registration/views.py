@@ -26,7 +26,7 @@ import csv
 
 from .forms import (
     CSVUploadForm, StudentSignUpForm, UserUpdateForm, TeacherUpdateForm)
-from .models import Result, User
+from .models import Result, User, WebsiteSettings
 from ..thesis.models import Batch
 from website.thesis.mixins import UserIsSuperuserMixin
 
@@ -63,6 +63,12 @@ class UserCreateView(CreateView):
         if request.user.is_authenticated:
             return HttpResponseRedirect(self.get_success_url())
         return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        settings = WebsiteSettings.objects.first()
+        context["enable_registration"] = settings.enable_registration
+        return context
 
     def form_valid(self, form):
         response = super().form_valid(form)

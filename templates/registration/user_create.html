@@ -10,6 +10,7 @@
 <div class="column is-4 is-offset-4">
     <div class="box">
         <h3 class="title">Register</h3>
+        {% if enable_registration %}
         <form method="post">
             {% csrf_token %}
             <div class="field">
@@ -212,6 +213,13 @@
                 value="Register"
                 class="button is-block is-link is-fullwidth">
         </form>
+        {% else %}
+        <h4 class="has-text-danger has-text-weight-bold is-size-5">
+          Registration process is currently turned off by admin.
+        </h4>
+        <br>
+        <h6 class="has-text-danger has-text-weight-bold is-size-7">Contact Admin for further enquiry.</h6>
+        {% endif %}
     </div>
 </div>
 {% endblock content %}
