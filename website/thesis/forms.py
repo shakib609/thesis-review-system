@@ -1,4 +1,5 @@
 from django import forms
+from django.forms.widgets import DateTimeInput
 from django.shortcuts import get_object_or_404
 import magic
 
@@ -7,7 +8,7 @@ from ..registration.models import (
     Mark,
 )
 from .models import (
-    StudentGroup,
+    Logbook, StudentGroup,
     Batch,
     Document,
     Comment,
@@ -172,4 +173,51 @@ class MarkForm(forms.ModelForm):
         self.instance.studentgroup = self.studentgroup
         self.instance.student = student
         self.instance.result = student.result
+        return super().save(commit=commit)
+
+
+class LogbookAdminForm(forms.ModelForm):
+    class Meta:
+        model = Logbook
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'studentgroup' in self.initial:
+            print(self.initial)
+            self.fields['students_present'].queryset = User.objects.filter(
+                studentgroup_id=self.initial['studentgroup'],
+            )
+
+
+class LogbookCreateForm(forms.ModelForm):
+    time = forms.DateTimeField(input_formats=['%Y/%m/%d %H:%M'])
+
+    class Meta:
+        model = Logbook
+        exclude = [
+            'id',
+            'studentgroup',
+            'approved',
+        ]
+
+    def __init__(self, *args, studentgroup, **kwargs):
+        self.studentgroup = studentgroup
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'input'
+            print(dir(visible.field.widget))
+            if getattr(visible.field.widget, 'allow_multiple_selected', None):
+                visible.field.widget.attrs['style'] = 'min-height: 75px;'
+            if not getattr(visible.field.widget, 'input_type', None):
+                visible.field.widget.attrs['style'] = 'min-height: 90px;'
+        self.fields['time'].widget.attrs['id'] = 'date-time-input'
+        self.fields['students_present'].choices = [
+            (s.id, s) for s in studentgroup.students.all()
+        ]
+
+    def save(self, commit=True):
+        # student_id = self.cleaned_data.pop('students_present')
+        # student = get_object_or_404(Student, pk=student_id)
+        self.instance.studentgroup = self.studentgroup
         return super().save(commit=commit)

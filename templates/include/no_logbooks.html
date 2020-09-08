@@ -1,0 +1,16 @@
+<div class="content has-text-centered">
+    <div class="hero is-medium">
+        <div class="hero-body">
+            <p>
+                No Logbooks Submitted Yet!
+            </p>
+            {% if not user.is_teacher %}
+            <p>
+                <a href="{% url 'thesis:logbook_upload' %}" class="button is-link">
+                    <i class="fas fa-upload"></i>&nbsp; Submit Now!
+                </a>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</div>

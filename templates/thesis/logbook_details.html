@@ -1,0 +1,54 @@
+{% extends 'base/thesis_dashboard_base.html' %}
+{% load static %}
+{% load my_tags %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/jquery.datetimepicker.min.css' %}">
+{% endblock extra_css %}
+
+{% block title %}
+    {{ block.super }} | Logbook Details
+{% endblock title %}
+
+
+{% block page_title %}
+    <h1 class="title">Logbook Details - {{ logbook.time }}</h1>
+{% endblock page_title %}
+
+
+{% block dashboard_content %}
+<div class="column">
+    <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+        <tbody>
+            <tr>
+                <th style="width: 250px;">Time</th>
+                <td>{{logbook.time}}</td>
+            </tr>
+            <tr>
+                <th style="width: 250px;">Students Present</th>
+                <td>{% for student in logbook.students_present.all %}{{ student }} <br>{% endfor %}</td>
+            </tr>
+            <tr>
+                <th style="width: 250px;">Description of the work done after the last meeting with the supervisor:</th>
+                <td>{{ logbook.work_done_after_last_meeting }}</td>
+            </tr>
+            <tr>
+                <th style="width: 250px;">Description of the topic/issue discussed with or presented to the supervisor:</th>
+                <td>{{ logbook.topic_discussed }}</td>
+            </tr>
+            <tr>
+                <th style="width: 250px;">Suggestions and assignments obtained from the supervisor:</th>
+                <td>{{ logbook.suggestions }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if user == studentgroup.teacher %}
+        {% if logbook.approved %}
+            <a href="{% url 'thesis:toggle-logbook-approval' group_code=logbook.studentgroup.md5hash logbook_id=logbook.id %}" class="button is-danger">Disapprove</a>
+        {% else %}
+            <a href="{% url 'thesis:toggle-logbook-approval' group_code=logbook.studentgroup.md5hash logbook_id=logbook.id %}" class="button is-success">Approve</a>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock dashboard_content %}

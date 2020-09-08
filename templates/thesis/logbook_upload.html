@@ -1,0 +1,54 @@
+{% extends 'base/thesis_dashboard_base.html' %}
+{% load static %}
+{% load my_tags %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/jquery.datetimepicker.min.css' %}">
+{% endblock extra_css %}
+
+{% block title %}
+    {{ block.super }} | Create Logbook
+{% endblock title %}
+
+
+{% block page_title %}
+    <h1 class="title">Create Logbook</h1>
+{% endblock page_title %}
+
+
+{% block dashboard_content %}
+<div class="column is-6">
+    <form method="POST" id="logbook-form">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="field is-fullwidth">
+                <label for="{{ field.id_for_label }}" class="label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <p class="help">{{ field.help_text|safe }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                    <div class="help has-text-danger">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+            </div>
+        {% endfor %}
+        <div style="margin-top:0.5rem;">
+            <button id="upload-btn" type="submit" class="button is-primary has-text-centered">
+                Create
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock dashboard_content %}
+
+
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'js/jquery-3.3.1.slim.min.js' %}"></script>
+  <script src="{% static 'js/jquery.datetimepicker.full.min.js' %}"></script>
+  <script>
+    $('#date-time-input').datetimepicker();
+  </script>
+{% endblock extra_js %}

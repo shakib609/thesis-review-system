@@ -1,3 +1,4 @@
+from venv import create
 from django.db import models
 from django.conf import settings
 from django.core import validators
@@ -192,6 +193,38 @@ class Document(models.Model):
         return os.path.basename(self.file.name)
 
 
+class Logbook(models.Model):
+    class MeetingType(models.TextChoices):
+        ON_SITE = "On-Site"
+        ONLINE = "Online"
+
+    studentgroup = models.ForeignKey(
+        StudentGroup,
+        on_delete=models.CASCADE,
+        related_name='logbooks',
+    )
+    time = models.DateTimeField()
+    meeting_type = models.CharField(
+        max_length=7,
+        choices=MeetingType.choices,
+    )
+    students_present = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        limit_choices_to={"is_student": True},
+    )
+    suggestions = models.TextField()
+    topic_discussed = models.TextField()
+    work_done_after_last_meeting = models.TextField()
+    approved = models.BooleanField(default=False)
+
+    class Meta:
+        default_related_name = 'logbooks'
+
+    def __str__(self) -> str:
+        return f'{self.studentgroup} - {self.time}'
+
+
 class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -296,6 +329,19 @@ def generate_notification_on_teacher_comment(sender, instance, **kwargs):
             user=student,
             studentgroup=studentgroup,
         )
+
+
+@receiver(post_save, sender=Logbook)
+def generate_notification_on_logbook_submission(sender, instance, created, **kwargs):
+    if created:
+        studentgroup = instance.studentgroup
+        content = f'A new Log book(#{instance.id}) has been uploaded in {studentgroup}'
+        if studentgroup.teacher:
+            Notification.objects.create(
+                content=content,
+                user=studentgroup.teacher,
+                studentgroup=studentgroup,
+            )
 
 
 @receiver(post_delete, sender=Document)

@@ -32,6 +32,14 @@ urlpatterns = [
         views.DocumentUploadView.as_view(),
         name='document_upload'),
     path(
+        'group/logbooks/create/',
+        views.LogbookCreateView.as_view(),
+        name='logbook_upload',),
+    path(
+        'group/logbooks/<int:pk>/',
+        views.LogbookDetailView.as_view(),
+        name='logbook_detail',),
+    path(
         'group/invite/',
         views.GroupInviteView.as_view(),
         name='group_invite'),
@@ -76,6 +84,14 @@ urlpatterns = [
         'group/<group_code>/',
         views.DocumentListView.as_view(),
         name='group_detail'),
+    path(
+        'group/<group_code>/logbooks/<int:pk>/',
+        views.LogbookDetailView.as_view(),
+        name='logbook_detail'),
+    path(
+        'group/<group_code>/toggle-logbook/<logbook_id>/',
+        views.LogbookApprovedToggleView.as_view(),
+        name='toggle-logbook-approval'),
     path(
         'group/<group_code>/toggle-document/<document_id>/',
         views.DocumentAcceptedToggleView.as_view(),

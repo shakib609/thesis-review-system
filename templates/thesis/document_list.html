@@ -38,6 +38,22 @@
 
             {% include "include/document_list_tab.html" with studentgroup=studentgroup container_id="defense_documents" documents=defense_documents style="display:none;" %}
         </section>
+
+        {% comment %} Logbooks Panel {% endcomment %}
+        {% if user.is_student or user == studentgroup.teacher %}
+        <section class="panel is-link">
+            <p class="panel-heading is-flex" style="justify-content:space-between;">
+                <span>Logbooks</span>
+                {% if not user.is_teacher %}
+                    <a href="{% url 'thesis:logbook_upload' %}" class="icon has-text-white">
+                        <i class="fas fa-upload"></i>
+                    </a>
+                {% endif %}
+            </p>
+        
+            {% include "include/logbook_list.html" with studentgroup=studentgroup logbooks=logbooks %}
+        </section>
+        {% endif %}
     </div>
     
     <div class="column">

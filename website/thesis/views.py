@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 from django.forms import formset_factory
 from django.views.generic import (
-    CreateView,
+    CreateView, DetailView,
     FormView,
     ListView,
     TemplateView,
@@ -21,7 +21,7 @@ import json
 
 from .forms import (
     CommentCreateForm,
-    DocumentUploadForm,
+    DocumentUploadForm, LogbookCreateForm,
     MarkForm,
     BaseMarkFormSet,
     StudentGroupForm,
@@ -30,7 +30,7 @@ from .forms import (
 from .mixins import (
     StudentGroupContextMixin, UserHasGroupAccessMixin, UserIsStudentMixin,
     UserIsTeacherMixin)
-from .models import Batch, Comment, Document, StudentGroup, Notification
+from .models import Batch, Comment, Document, Logbook, StudentGroup, Notification
 from ..registration.models import User
 
 
@@ -125,6 +125,7 @@ class DocumentListView(
             Document.DocumentType.PRE_DEFENSE.value)
         context['defense_documents'] = self.filter_by_document_type(
             Document.DocumentType.DEFENSE.value)
+        context['logbooks'] = self.studentgroup.logbooks.all().order_by('-time')
         return context
 
     def get(self, request, *args, **kwargs):
@@ -158,6 +159,70 @@ class DocumentUploadView(
             'Document Uploaded successfully!',
             extra_tags='is-success')
         return HttpResponseRedirect(self.get_success_url())
+
+
+class LogbookCreateView(
+        LoginRequiredMixin, UserIsStudentMixin, UserHasGroupAccessMixin,
+        StudentGroupContextMixin, CreateView):
+    model = Logbook
+    template_name = 'thesis/logbook_upload.html'
+    form_class = LogbookCreateForm
+    success_url = reverse_lazy('thesis:document_list')
+    http_method_names = ['get', 'post']
+
+    def get_form(self, *args, **kwargs):
+        return self.form_class(
+            studentgroup=self.studentgroup,
+            **self.get_form_kwargs(),
+        )
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            'Logbook Created Successfully!',
+            extra_tags='is-success',
+        )
+        return super().form_valid(form)
+
+
+class LogbookDetailView(
+        LoginRequiredMixin, UserHasGroupAccessMixin, StudentGroupContextMixin,
+        DetailView):
+    model = Logbook
+    context_object_name = 'logbook'
+    template_name = 'thesis/logbook_details.html'
+
+
+class LogbookApprovedToggleView(
+        LoginRequiredMixin,
+        UserIsTeacherMixin,
+        StudentGroupContextMixin,
+        RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        logbook = get_object_or_404(
+            Logbook,
+            studentgroup=self.studentgroup,
+            id=self.kwargs['logbook_id'],
+        )
+        logbook.approved = not logbook.approved
+        logbook.save()
+        if logbook.approved:
+            messages.success(
+                self.request,
+                f'Logbook {logbook.id} has been approved',
+                extra_tags='is-success',
+            )
+        else:
+            messages.error(
+                self.request,
+                f'Logbook #{logbook.id} has been disapproved',
+                extra_tags='is-danger',
+            )
+        return reverse_lazy(
+            'thesis:group_detail',
+            args=(self.studentgroup.md5hash,),
+        )
 
 
 class DocumentAcceptedToggleView(

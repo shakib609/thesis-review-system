@@ -1,10 +1,17 @@
+from calendar import c
+from website.thesis.forms import LogbookAdminForm
 from django.contrib import admin
 from django.db.models import Max
 from django.contrib.admin.views.main import ChangeList
 
 from .filters import CgpaOrderingFilter
 from .models import (
-    StudentGroup, Batch,  Document, ResearchField)
+    StudentGroup,
+    Batch,
+    Document,
+    ResearchField,
+    Logbook,
+)
 
 
 class DocumentInline(admin.StackedInline):
@@ -76,6 +83,12 @@ class StudentGroupAdmin(admin.ModelAdmin):
         return StudentGroupChangeList
 
 
+class LogbookAdmin(admin.ModelAdmin):
+    form = LogbookAdminForm
+    list_display = ('studentgroup', 'time',)
+
+
 admin.site.register(Batch)
 admin.site.register(ResearchField)
+admin.site.register(Logbook, LogbookAdmin)
 admin.site.register(StudentGroup, StudentGroupAdmin)

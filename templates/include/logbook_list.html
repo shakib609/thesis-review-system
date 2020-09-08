@@ -1,0 +1,33 @@
+<div class="content-tab" style="{{ style }}">
+    {% if logbooks %}
+        {% for d in logbooks %}
+        <div class="columns is-mobile panel-block">
+            <div class="column is-7 has-text-small">
+                Logbook ID: {{ d.id }} {% if d.approved %}<span title="Accepted" class="fas fa-check-circle has-text-success"></span>{% endif %} <br>
+                <p class="is-size-7">
+                    <span class="icon"><i class="fas fa-upload"></i></span>
+                    <time datetime="{{ d.time }}">
+                        {{ d.time|date:"d M Y" }} - {{ d.time|date:"H:i" }}
+                    </time>
+                </p>
+            </div>
+            <div class="column has-text-right">
+                <a
+                    {% if not user.is_teacher %}
+                        href="{% url 'thesis:logbook_detail' pk=d.id  %}"
+                    {% else %}
+                        href="{% url 'thesis:logbook_detail' group_code=studentgroup.md5hash pk=d.id  %}"
+                    {% endif %}
+                    data-sg-code="{{ studentgroup.md5hash }}"
+                    data-file-name="{{ d.filename }}"
+                    title="View"
+                    class="button is-small is-link">
+                    <span class="icon"><i class="fas fa-eye"></i></span>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        {% include "include/no_logbooks.html" %}
+    {% endif %}
+</div>
