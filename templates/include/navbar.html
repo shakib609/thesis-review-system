@@ -24,6 +24,9 @@
                 {% url 'registration:teacher_list' as teacher_list %}
                 {% url 'thesis:group_list' as group_list %}
                 {% if user.is_authenticated %}
+                    <span class="navbar-item">
+                        Logged in as: ({{ user.username }})
+                    </span>
                     <a href="{{ teacher_list }}"
                         class="navbar-item {% if request.path == teacher_list %}is-active{% endif %}">
                         Teachers

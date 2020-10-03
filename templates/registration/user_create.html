@@ -100,7 +100,7 @@
                       {% endif %}
                         type="text"
                         name="username"
-                        placeholder="Varsity ID"
+                        placeholder="Varsity ID as username"
                         required=""
                         value="{{ form.username.value|default_if_none:'' }}"
                         spellcheck="false">
@@ -182,6 +182,12 @@
                         <li>{{ error }}</li>
                         {% endfor %}
                     </ul>
+                    {% endif %}
+
+                    {% if form.password1.help_text %}
+                      <div class="help has-text-left">
+                        {{ form.password1.help_text|safe }}
+                      </div>
                     {% endif %}
                 </div>
             </div>
