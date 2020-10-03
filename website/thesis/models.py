@@ -75,7 +75,8 @@ class StudentGroup(models.Model):
         default=None,
         related_name='internal_studentgroups',
         on_delete=models.SET_DEFAULT,
-        limit_choices_to={"is_teacher": True}
+        limit_choices_to={"is_teacher": True},
+        verbose_name='Reviewer',
     )
     external = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -141,14 +142,16 @@ class StudentGroup(models.Model):
     @property
     def status(self):
         documents_queryset = self.documents.filter(is_accepted=True)
-        if documents_queryset.filter(document_type=Document.DocumentType.DEFENSE.value).exists():
+        if not self.approved:
+            return 'Pending Admin Approval'
+        elif documents_queryset.filter(document_type=Document.DocumentType.DEFENSE.value).exists():
             return 'Defense Done'
         elif documents_queryset.filter(document_type=Document.DocumentType.PRE_DEFENSE.value).exists():
             return 'Pre-Defense Done'
         elif documents_queryset.filter(document_type=Document.DocumentType.PROPOSAL.value).exists():
             return 'Proposal Done'
         else:
-            return 'Pending'
+            return 'Supervisor Approved'
 
     def graded(self, user):
         return self.marks.filter(graded_by=user).exists()

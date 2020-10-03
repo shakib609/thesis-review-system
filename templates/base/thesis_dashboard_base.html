@@ -58,7 +58,7 @@
                           <i class="fas fa-align-justify"></i>&nbsp; Groups</a></li>
                       <li><a href="{{ internal_group_list }}"
                       class="{% if request.path|startswith:internal_group_list %}is-active{% endif %}">
-                          <i class="fas fa-align-justify"></i>&nbsp; Groups(As Internal)</a></li>
+                          <i class="fas fa-align-justify"></i>&nbsp; Groups(As Reviewer)</a></li>
                       {% endif %}
                       {% if user.is_superuser %}
                         <li><a href="/admin">
