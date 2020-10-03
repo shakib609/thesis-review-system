@@ -66,6 +66,7 @@ class StudentGroup(models.Model):
         related_name='studentgroups',
         on_delete=models.SET_DEFAULT,
         limit_choices_to={"is_teacher": True},
+        verbose_name='Supervisor',
     )
     internal = models.ForeignKey(
         settings.AUTH_USER_MODEL,
