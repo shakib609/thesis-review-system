@@ -118,6 +118,15 @@ class StudentGroup(models.Model):
     )
     md5hash = models.CharField(max_length=10, null=True)
     progress = models.IntegerField(default=0)
+    student_list = models.CharField(
+        max_length=64,
+        blank=True,
+        validators=[
+            validators.RegexValidator(
+                r'(([A-Z]{1,2}\d{6})+)(,\s*([A-Z]{1,2}\d{6})+)*',
+            ),
+        ],
+    )
     approved = models.BooleanField(default=False)
     batch = models.ForeignKey(
         Batch,

@@ -44,6 +44,22 @@ class StudentGroupForm(forms.ModelForm):
         self.user = user
         return super().__init__(*args, **kwargs)
 
+    def clean_student_list(self):
+        student_list = self.cleaned_data['student_list']
+        student_ids = student_list.split(",")
+        errors = []
+        for student_id in student_ids:
+            processed_student_id = student_id.strip()
+            student = User.objects.filter(username=processed_student_id)
+            student_group = StudentGroup.objects.filter(
+                student_list__contains=processed_student_id,
+            )
+            if (student.exists() and student.first().studentgroup) or student_group:
+                errors.append(f'{student_id} already has a group.')
+        if errors:
+            raise forms.ValidationError(errors)
+        return student_list
+
     def clean(self):
         cleaned_data = super().clean()
         first_choice = cleaned_data['first_choice']
@@ -66,7 +82,15 @@ class StudentGroupForm(forms.ModelForm):
 
     class Meta:
         model = StudentGroup
-        fields = 'title', 'batch', 'field', 'first_choice', 'second_choice', 'third_choice'
+        fields = (
+            'title',
+            'field',
+            'batch',
+            'student_list',
+            'first_choice',
+            'second_choice',
+            'third_choice',
+        )
 
 
 class StudentGroupJoinForm(forms.ModelForm):

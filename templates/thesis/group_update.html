@@ -84,6 +84,28 @@
             {% endif %}
         </p>
     </div>
+    <div class="field">
+        <label for="title" class="label">Group Members</label>
+        <div class="control has-icons-left">
+            <input class="input {% if 'student_list' in form.errors %} is-danger{% endif %}"
+                    type="text" name="student_list" id="title"
+                    placeholder="C123456, C987654" required
+                    value="{{ form.student_list.value|default_if_none:'' }}">
+            <span class="icon is-small is-left">
+                <i class="fas fa-users"></i>
+            </span>
+            <p class="help">
+            A comma separated list of group members.
+            </p>
+            {% if 'student_list' in form.errors %}
+            <ul class="help is-danger">
+                {% for error in form.errors|get_item:'student_list' %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
     <div class="field is-fullwidth">
         <label for="first_choice" class="label">Supervisor(1st Choice)</label>
         <p class="control has-icons-left">
