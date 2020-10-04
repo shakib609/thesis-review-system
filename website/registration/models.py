@@ -34,7 +34,7 @@ class WebsiteSettings(models.Model):
             return super().save(*args, **kwargs)
         else:
             raise Exception("Only one instance can be created")
-    
+
     def __str__(self) -> str:
         return 'Default Settings'
 
@@ -248,6 +248,19 @@ def remove_studentgroup_if_empty(sender, instance, **kwargs):
             if old_s.students.count() == 1:
                 if old_s != instance.studentgroup:
                     old_s.delete()
+
+
+@receiver(pre_save, sender=User)
+def add_student_to_student_group_if_defined_in_student_list(sender, instance, **kwargs):
+    from website.thesis.models import StudentGroup
+
+    if instance.is_student and not instance.studentgroup:
+        student_group = StudentGroup.objects.filter(
+            student_list__contains=instance.username,
+        ).first()
+        if student_group:
+            instance.studentgroup = student_group
+            instance.save()
 
 
 @receiver(post_save, sender=User)

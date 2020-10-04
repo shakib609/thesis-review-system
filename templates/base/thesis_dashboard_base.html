@@ -71,9 +71,9 @@
                     <li><a href="{{ document_upload }}"
                     class="{% if request.path == document_upload %}is-active{% endif %}">
                         <i class="fas fa-upload"></i>&nbsp; Upload</a></li>
-                    <li><a href="{{ group_invite }}"
+                    {% comment %} <li><a href="{{ group_invite }}"
                     class="{% if request.path == group_invite %}is-active{% endif %}">
-                        <i class="fas fa-share"></i>&nbsp; Invite</a></li>
+                        <i class="fas fa-share"></i>&nbsp; Invite</a></li> {% endcomment %}
                     <li><a href="{{ group_update }}"
                     class="{% if request.path == group_update %}is-active{% endif %}">
                         <i class="fas fa-wrench"></i>&nbsp; Group Settings</a></li>
