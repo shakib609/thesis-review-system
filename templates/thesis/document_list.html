@@ -105,8 +105,14 @@
             {% endif %}
             {% if comments %}
                 {% for comment in comments %}
-                    {% if not user.is_teacher or user == studentgroup.teacher %}
-                        {% include "include/comment_item.html" with comment=comment user=user studentgroup=studentgroup %}
+                    {% if user.is_student %}
+                        {% if comment.user == studentgroup.teacher or comment.user == studentgroup.internal or comment.user.is_student %}
+                            {% include "include/comment_item.html" with comment=comment user=user studentgroup=studentgroup %}
+                        {% endif %}
+                    {% elif user == studentgroup.teacher %}
+                        {% if comment.user.is_student or comment.user == user %}
+                            {% include "include/comment_item.html" with comment=comment user=user studentgroup=studentgroup %}
+                        {% endif %}
                     {% elif user == studentgroup.internal and user == comment.user %}
                         {% include "include/comment_item.html" with comment=comment user=user studentgroup=studentgroup %}
                     {% elif user == studentgroup.external and user == comment.user %}
